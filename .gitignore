@@ -1,0 +1,69 @@
+### IntelliJ IDEA/Android Studio ###
+
+# - metadata
+.idea/*
+!.idea/artifacts/
+!.idea/libraries/
+!.idea/modules.xml
+
+# IMPORTANT: Comment out the line below this comment if JDK names configured in
+#   IntelliJ can't be made consistent across team members' machines; otherwise,
+#   including misc.xml in Git will result in needless merge conflicts.
+!.idea/misc.xml
+
+# - temporary files
+/captures/
+
+# - build output
+/out/
+
+
+### Eclipse ###
+
+# - metadata
+/.settings/
+/.metadata/
+.project
+.classpath
+
+# - build output
+/bin/
+
+
+### Gradle ###
+
+# - temporary files
+/.gradle/
+
+# - local properties
+local.properties
+
+# - build output
+/build/
+
+
+### Maven ###
+
+# Developer information
+HELP.md
+
+# - build output
+/target/
+
+
+### Database ###
+
+# BE SURE TO EXCLUDE ANY LOCAL DATABASE DIRECTORY/FILES AND LOG FILES!
+
+
+### Floobits ###
+
+# - metadata
+.floo
+.flooignore
+
+
+### OS X ###
+
+# - metadata
+.DS_Store
