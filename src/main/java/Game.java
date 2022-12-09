@@ -56,14 +56,12 @@ public class Game {
                 "                                                                                                         "
                 + ANSI_RESET;
         String logoSubTitle = ANSI_BLUE + "\t\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
-        String storyIntro = "You look at your desk. On your laptop, you have X lines of code. \n";
+        String storyIntro = "You look at your desk. On your laptop, you have X lines of code.";
         //display intro to user
         System.out.println(gameIntroLogo);
         System.out.println(logoSubTitle);
         System.out.println(Script.getFirstScene());
         System.out.println(storyIntro);
-        System.out.print("> ");
-
     }
 
     public void ventureOut() throws IOException {
@@ -112,13 +110,12 @@ public class Game {
         //get commands from player
         while (true) {
             renderUserInterface();
+            System.out.println("\nWhat would you like to do?");
             String[] determineAvailableCommands = determineAvailableCommands(player.getRoom().getName());
             for (String c: determineAvailableCommands){
                 System.out.print(c + "    ");
             }
-            System.out.println(Arrays.toString(determineAvailableCommands));
-            System.out.println("\nWhat would you like to do?");
-            System.out.print("> ");
+            System.out.println("\n> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine().strip();
             if (Objects.equals(command, "venture out")) {
@@ -174,4 +171,9 @@ public class Game {
         System.out.println(gameOverLogo);
         System.out.println(gameOverLogoSubtitle);
     }
+
+//    public void clearScreen() throws IOException {
+//        Runtime.getRuntime().exec("cls");
+//    }
+
 }
