@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,6 +19,10 @@ public class Game {
     private static final String ANSI_BLUE = "\u001B[34m";
     private final Player player = new Player();
     private final List<Room> gameMap;
+    private final String[] wordsForNorth = {"north", "n"};
+    private final String[] wordsForSouth = {"south", "s"};
+    private final String[] wordsForWest = {"west", "w"};
+    private final String[] wordsForEast = {"east", "e"};
 
     public Game() {
         //array of rooms and set player location to workstation
@@ -64,45 +69,55 @@ public class Game {
     public void ventureOut() throws IOException {
         //move player to different rooms
         System.out.println("where would you like to go?");
+        System.out.print("> ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String command = br.readLine();
-        int go;
+        String[] checkDirection = command.split(" ");
+        String direction = checkDirection[1].toLowerCase();
+        int go = -1;
         Room currentRoom = player.getRoom();
-        switch (command) {
-            case "go north":
-                go = currentRoom.getNorth();
-                break;
-            case "go south":
-                go = currentRoom.getSouth();
-                break;
-            case "go west":
-                go = currentRoom.getWest();
-                break;
-            case "go east":
-                go = currentRoom.getEast();
-                break;
-            default:
-                go = -1;
-                break;
+        //check command for direction
+        if (Arrays.asList(wordsForNorth).contains(direction)) {
+            go = currentRoom.getNorth();
         }
+        if (Arrays.asList(wordsForSouth).contains(direction)) {
+            go = currentRoom.getSouth();
+        }
+        if (Arrays.asList(wordsForWest).contains(direction)) {
+            go = currentRoom.getWest();
+        }
+        if (Arrays.asList(wordsForEast).contains(direction)) {
+            go = currentRoom.getEast();
+        }
+        //determine if direction exists
         if (go != -1){
             player.setRoom(gameMap.get(go));
             System.out.println(gameMap.get(go).getName() + " " + gameMap.get(go).getDescription());
         }
         else {
-            System.out.println("hmm you cant go that way");
-            System.out.println(gameMap.get(0).getName() + " " + gameMap.get(0).getDescription());
+            System.out.println("looks like this way is blocked");
+//            System.out.println(gameMap.get(0).getName() + " " + gameMap.get(0).getDescription());
         }
     }
 
+    public void renderUserInterface(){
+        String userStats =
+                "==============================================================================================================================\n" +
+                player.getRoom().getName() + "                          hunger = 0   employability = 0   sanity = 0                                SDE-1 \n" +
+                "==============================================================================================================================";
+        System.out.println(userStats);
+    }
+
+
     public void commandInput() throws IOException {
+        renderUserInterface();
         //get commands from player
         gameMenu:
         while (true) {
-            System.out.println("What would you like to do?");
+            System.out.println("\nWhat would you like to do?");
             System.out.print("> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String command = br.readLine();
+            String command = br.readLine().strip();
             if (Objects.equals(command, "venture out")) {
                 ventureOut();
             }
