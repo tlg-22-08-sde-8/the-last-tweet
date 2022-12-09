@@ -20,6 +20,7 @@ public class Game {
     private final List<Room> gameMap;
 
     public Game() {
+        //array of rooms and set player location to workstation
         gameMap = new ArrayList<>();
         gameMap.add(new Room("WorkStation", "You are standing in a bleak, cold room that smells like feet and despair. You are exhausted, but alive. You sit back down at your work computer, pondering your next steps. ",1, -1,3, 4));
         gameMap.add(new Room("Break Room", "Huh weird this room is empty. ", -1, -1, 2, 5));
@@ -61,8 +62,7 @@ public class Game {
     }
 
     public void ventureOut() throws IOException {
-//        player.setRoom(gameMap.get(0));
-//        System.out.println(gameMap.get(0).getName() + " " + gameMap.get(0).getDescription());
+        //move player to different rooms
         System.out.println("where would you like to go?");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String command = br.readLine();
@@ -96,6 +96,7 @@ public class Game {
     }
 
     public void commandInput() throws IOException {
+        //get commands from player
         gameMenu:
         while (true) {
             System.out.println("What would you like to do?");
