@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,15 +18,7 @@ public class Game {
     private static final String ANSI_BLUE = "\u001B[34m";
     private final Player player = new Player();
     private final List<Room> gameMap;
-    private final String[] wordsForNorth = {"north", "n"};
-    private final String[] wordsForSouth = {"south", "s"};
-    private final String[] wordsForWest = {"west", "w"};
-    private final String[] wordsForEast = {"east", "e"};
-    private final String[] workstationCommands = {"> Code", "> Venture out", "> More"};
-    private final String[] breakRoomCommands = {"> Access Vending Machine", "> Venture Out", "> More"};
-    private final String[] coffeeBarCommands = {"> Make Coffee", "> Venture out", "> More"};
-    private final String[] emptyWorkstationCommands = {"> Search Desk", "> Venture out", "> More"};
-    private final String[] meetingRoomCommands = {"> Negotiate with Manager", "> Venture out", "> More"};
+
     public Game() {
         //array of rooms and set player location to workstation
         gameMap = new ArrayList<>();
@@ -35,7 +26,7 @@ public class Game {
         gameMap.add(new Room("Break Room", "Huh weird this room is empty. ", -1, -1, 2, 5));
         gameMap.add(new Room("Meeting Room-1", "The room is composed of brilliant white marble. The air smells of citrus. A heavenly glow eliminates from the coffee bar, like the open arms of an angel. The Kuerig machine is running. A lone laptop is in the room. ", -1, 3, -1, 1));
         gameMap.add(new Room("Coffee Bar", "A nasty, dark cell", 2, -1, -1, 0));
-        gameMap.add(new Room("Empty Workstation", "This workstation still has pictures of a recently fired employee and their family", 5, -1, 0, -1));
+        gameMap.add(new Room("Empty workstation", "This workstation still has pictures of a recently fired employee and their family", 5, -1, 0, -1));
         gameMap.add(new Room("Meeting Room-2", "The room is composed of brilliant white marble. The air smells of citrus. A heavenly glow eliminates from the coffee bar, like the open arms of an angel. The Kuerig machine is running. A lone laptop is in the room. ", -1, 4, 1, -1));
         player.setRoom(gameMap.get(0));
     }
@@ -54,68 +45,63 @@ public class Game {
                 "          ░  ░  ░   ░  ░       ░  ░      ░  ░      ░                           ░       ░  ░   ░  ░         \n" +
                 "                                                                                                         "
                 + ANSI_RESET;
-        String gameIntroLogoSubtitle = ANSI_BLUE + "\t\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
+        String logoSubTitle = ANSI_BLUE + "\t\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
+        String storyIntro = "You look at your desk. On your laptop, you have X lines of code. \n" +
+                "What would you like to do? \n" +
+                "> Code     > Program    > Venture Out         > More ?\n" +
+                "(or enter q to quit)";
+
         //display intro to user
-        System.out.println(gameIntroLogo);
+        System.out.println(gameLogo);
+        System.out.println(logoSubTitle);
+        System.out.println(Script.getFirstScene());
+        System.out.println(storyIntro);
+        System.out.print("> ");
+
     }
 
     public void ventureOut() throws IOException {
         //move player to different rooms
         System.out.println("where would you like to go?");
-        System.out.print("> ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String command = br.readLine();
-        String[] checkDirection = command.split(" ");
-        String direction = checkDirection[1].toLowerCase();
-        int go = -1;
+        int go;
         Room currentRoom = player.getRoom();
-        //check command for direction
-        if (Arrays.asList(wordsForNorth).contains(direction)) {
-            go = currentRoom.getNorth();
+        switch (command) {
+            case "go north":
+                go = currentRoom.getNorth();
+                break;
+            case "go south":
+                go = currentRoom.getSouth();
+                break;
+            case "go west":
+                go = currentRoom.getWest();
+                break;
+            case "go east":
+                go = currentRoom.getEast();
+                break;
+            default:
+                go = -1;
+                break;
         }
-        if (Arrays.asList(wordsForSouth).contains(direction)) {
-            go = currentRoom.getSouth();
-        }
-        if (Arrays.asList(wordsForWest).contains(direction)) {
-            go = currentRoom.getWest();
-        }
-        if (Arrays.asList(wordsForEast).contains(direction)) {
-            go = currentRoom.getEast();
-        }
-        //determine if direction exists
         if (go != -1){
             player.setRoom(gameMap.get(go));
-            System.out.println("\n" + gameMap.get(go).getName() + " " + gameMap.get(go).getDescription());
+            System.out.println(gameMap.get(go).getName() + " " + gameMap.get(go).getDescription());
         }
         else {
-            System.out.println("looks like this way is blocked");
-//            System.out.println(gameMap.get(0).getName() + " " + gameMap.get(0).getDescription());
+            System.out.println("hmm you cant go that way");
+            System.out.println(gameMap.get(0).getName() + " " + gameMap.get(0).getDescription());
         }
     }
-
-    public void renderUserInterface(){
-        String userStats =
-                "\n==============================================================================================================================\n" +
-                "  Location = " + player.getRoom().getName() + "                    hunger = 0   employability = 0   sanity = 0                               SDE-1 \n" +
-                "==============================================================================================================================";
-        System.out.println(userStats);
-    }
-
 
     public void commandInput() throws IOException {
         //get commands from player
         gameMenu:
         while (true) {
-            renderUserInterface();
-            String[] determineAvailableCommands = determineAvailableCommands(player.getRoom().getName());
-            for (String c: determineAvailableCommands){
-                System.out.print(c + "    ");
-            }
-            System.out.println(Arrays.toString(determineAvailableCommands));
-            System.out.println("\nWhat would you like to do?");
+            System.out.println("What would you like to do?");
             System.out.print("> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String command = br.readLine().strip();
+            String command = br.readLine();
             if (Objects.equals(command, "venture out")) {
                 ventureOut();
             }
@@ -124,29 +110,6 @@ public class Game {
             }
         }
 
-    }
-
-    private String[] determineAvailableCommands(String currentRoom) {
-        String[] commands = new String[0];
-        if (Objects.equals(currentRoom, "WorkStation")){
-            commands =  workstationCommands;
-        }
-        if (Objects.equals(currentRoom, "Break Room")){
-            commands = breakRoomCommands;
-        }
-        if (Objects.equals(currentRoom, "Coffee Bar")){
-            commands = coffeeBarCommands;
-        }
-        if (Objects.equals(currentRoom, "Meeting Room-1")){
-            commands = meetingRoomCommands;
-        }
-        if (Objects.equals(currentRoom, "Meeting Room-2")){
-            commands = meetingRoomCommands;
-        }
-        if (Objects.equals(currentRoom, "Empty Workstation")){
-            commands = emptyWorkstationCommands;
-        }
-        return commands;
     }
 
 
