@@ -5,6 +5,7 @@ public class Main {
         //create new game
         //for now the only commands are "venture out" -> "go [north, west, east, south]
         Game game = new Game();
+        game.gameIntro();
         game.commandInput();
     }
 }
