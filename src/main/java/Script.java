@@ -28,7 +28,6 @@ public class Script {
         firstScene.add("Elon Musk has acquired Twitter.");
         firstScene.add("Half of the Twitter workforce has been laid off.");
         firstScene.add("You are one of the survivors.");
-        firstScene.add("You look at your desk. On your laptop, you have X lines of code.");
 
 
     }
