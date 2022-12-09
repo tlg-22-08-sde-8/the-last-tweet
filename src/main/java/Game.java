@@ -45,17 +45,16 @@ public class Game {
                 "          ░  ░  ░   ░  ░       ░  ░      ░  ░      ░                           ░       ░  ░   ░  ░         \n" +
                 "                                                                                                         "
                 + ANSI_RESET;
-        String gameIntroLogoSubtitle = ANSI_BLUE + "\t\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
-        String storyIntro =
-                "\nIt is October 27th.You wake up at your desk, groggy from an attack.You look around you. There are pink slips everywhere. Fires raging." + "\n" +
-                "Employees crying.Elon Musk has acquired Twitter.Half of the Twitter workforce has been laid off.You are one of the survivors. \n" +
-                "You look at your desk. On your laptop, you have X lines of code. \n" +
+        String logoSubTitle = ANSI_BLUE + "\t\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
+        String storyIntro = "You look at your desk. On your laptop, you have X lines of code. \n" +
                 "What would you like to do? \n" +
-                "> Code   > Program   > Venture Out   > More  > Quit";
+                "> Code     > Program    > Venture Out         > More ?\n" +
+                "(or enter q to quit)";
 
         //display intro to user
-        System.out.println(gameIntroLogo);
-        System.out.println(gameIntroLogoSubtitle);
+        System.out.println(gameLogo);
+        System.out.println(logoSubTitle);
+        System.out.println(Script.getFirstScene());
         System.out.println(storyIntro);
         System.out.print("> ");
 
