@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 
-public class Script {
+public final class Script {
 
 
     // Contains the basic information script about the game
-    ArrayList<String> basicInfo = new ArrayList<String>();
+    private static ArrayList<String> basicInfo = new ArrayList<String>();
     // Contains the first scene of the game
-    ArrayList<String> firstScene = new ArrayList<String>();
+    private static ArrayList<String> firstScene = new ArrayList<String>();
 
     /**
      * Constructor for the Script class. It initializes text for all the different static scenarios, i.e., the portions
@@ -32,12 +32,11 @@ public class Script {
 
     }
 
-    public ArrayList<String> getBasicInfo() {
+    public static ArrayList<String> getBasicInfo() {
         return basicInfo;
     }
 
-
-    public void getScriptLine(int line) {
-        System.out.println(basicInfo.get(line));
+    public static ArrayList<String> getFirstScene() {
+        return firstScene;
     }
 }
