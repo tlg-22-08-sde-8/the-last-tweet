@@ -103,7 +103,7 @@ public class Game {
     public void renderUserInterface(){
         String userStats =
                 "==============================================================================================================================\n" +
-                player.getRoom().getName() + "                          hunger = 0   employability = 0   sanity = 0                                SDE-1 \n" +
+                "  Location = " + player.getRoom().getName() + "                    hunger = 0   employability = 0   sanity = 0                               SDE-1 \n" +
                 "==============================================================================================================================";
         System.out.println(userStats);
     }
