@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,6 +19,15 @@ public class Game {
     private static final String ANSI_BLUE = "\u001B[34m";
     private final Player player = new Player();
     private final List<Room> gameMap;
+    private final String[] wordsForNorth = {"north", "n"};
+    private final String[] wordsForSouth = {"south", "s"};
+    private final String[] wordsForWest = {"west", "w"};
+    private final String[] wordsForEast = {"east", "e"};
+    private final String[] workstationCommands = {"> Code", "> Venture out", "> More"};
+    private final String[] breakRoomCommands = {"> Access Vending Machine", "> Venture Out", "> More"};
+    private final String[] coffeeBarCommands = {"> Make Coffee", "> Venture out", "> More"};
+    private final String[] emptyWorkstationCommands = {"> Search Desk", "> Venture out", "> More"};
+    private final String[] meetingRoomCommands = {"> Negotiate with Manager", "> Venture out", "> More"};
 
     public Game() {
         //array of rooms and set player location to workstation
@@ -46,13 +56,9 @@ public class Game {
                 "                                                                                                         "
                 + ANSI_RESET;
         String logoSubTitle = ANSI_BLUE + "\t\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
-        String storyIntro = "You look at your desk. On your laptop, you have X lines of code. \n" +
-                "What would you like to do? \n" +
-                "> Code     > Program    > Venture Out         > More ?\n" +
-                "(or enter q to quit)";
-
+        String storyIntro = "You look at your desk. On your laptop, you have X lines of code. \n";
         //display intro to user
-        System.out.println(gameLogo);
+        System.out.println(gameIntroLogo);
         System.out.println(logoSubTitle);
         System.out.println(Script.getFirstScene());
         System.out.println(storyIntro);
@@ -63,55 +69,90 @@ public class Game {
     public void ventureOut() throws IOException {
         //move player to different rooms
         System.out.println("where would you like to go?");
+        System.out.print("> ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String command = br.readLine();
-        int go;
+        String[] checkDirection = command.split(" ");
+        String direction = checkDirection[1].toLowerCase();
+        int go = -1;
         Room currentRoom = player.getRoom();
-        switch (command) {
-            case "go north":
-                go = currentRoom.getNorth();
-                break;
-            case "go south":
-                go = currentRoom.getSouth();
-                break;
-            case "go west":
-                go = currentRoom.getWest();
-                break;
-            case "go east":
-                go = currentRoom.getEast();
-                break;
-            default:
-                go = -1;
-                break;
+        //check command for direction
+        if (Arrays.asList(wordsForNorth).contains(direction)) {
+            go = currentRoom.getNorth();
         }
+        if (Arrays.asList(wordsForSouth).contains(direction)) {
+            go = currentRoom.getSouth();
+        }
+        if (Arrays.asList(wordsForWest).contains(direction)) {
+            go = currentRoom.getWest();
+        }
+        if (Arrays.asList(wordsForEast).contains(direction)) {
+            go = currentRoom.getEast();
+        }
+        //determine if direction exists
         if (go != -1){
             player.setRoom(gameMap.get(go));
-            System.out.println(gameMap.get(go).getName() + " " + gameMap.get(go).getDescription());
+            System.out.println("\n" + gameMap.get(go).getName() + " " + gameMap.get(go).getDescription());
         }
         else {
-            System.out.println("hmm you cant go that way");
-            System.out.println(gameMap.get(0).getName() + " " + gameMap.get(0).getDescription());
+            System.out.println("looks like this way is blocked");
+//            System.out.println(gameMap.get(0).getName() + " " + gameMap.get(0).getDescription());
         }
+    }
+
+    public void renderUserInterface(){
+        String userStats =
+                "\n==============================================================================================================================\n" +
+                        "  Location = " + player.getRoom().getName() + "                    hunger = 0   employability = 0   sanity = 0                               SDE-1 \n" +
+                        "==============================================================================================================================";
+        System.out.println(userStats);
     }
 
     public void commandInput() throws IOException {
         //get commands from player
-        gameMenu:
         while (true) {
-            System.out.println("What would you like to do?");
+            renderUserInterface();
+            String[] determineAvailableCommands = determineAvailableCommands(player.getRoom().getName());
+            for (String c: determineAvailableCommands){
+                System.out.print(c + "    ");
+            }
+            System.out.println(Arrays.toString(determineAvailableCommands));
+            System.out.println("\nWhat would you like to do?");
             System.out.print("> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String command = br.readLine();
+            String command = br.readLine().strip();
             if (Objects.equals(command, "venture out")) {
                 ventureOut();
             }
             else {
-                break gameMenu;
+                break;
             }
         }
 
     }
 
+    private String[] determineAvailableCommands(String currentRoom) {
+        String[] commands = new String[0];
+        if (Objects.equals(currentRoom, "WorkStation")){
+            commands =  workstationCommands;
+        }
+        if (Objects.equals(currentRoom, "Break Room")){
+            commands = breakRoomCommands;
+        }
+        if (Objects.equals(currentRoom, "Coffee Bar")){
+            commands = coffeeBarCommands;
+        }
+        if (Objects.equals(currentRoom, "Meeting Room-1")){
+            commands = meetingRoomCommands;
+        }
+        if (Objects.equals(currentRoom, "Meeting Room-2")){
+            commands = meetingRoomCommands;
+        }
+        if (Objects.equals(currentRoom, "Empty Workstation")){
+            commands = emptyWorkstationCommands;
+        }
+        return commands;
+    }
 
     public void gameOver(){
         //create game over logo
