@@ -2,8 +2,7 @@ public class Player {
     private Room room;
 
     //player room field allows the game class to move character around the map
-    public Player(Room room) {
-        this.room = room;
+    public Player() {
     }
 
     // accessor methods

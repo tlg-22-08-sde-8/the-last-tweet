@@ -1,3 +1,11 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 public class Game {
 
 //    private static final String ANSI_PURPLE = "\u001B[35m";
@@ -9,7 +17,19 @@ public class Game {
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_BLUE = "\u001B[34m";
+    private final Player player = new Player();
+    private final List<Room> gameMap;
 
+    public Game() {
+        gameMap = new ArrayList<>();
+        gameMap.add(new Room("WorkStation", "You are standing in a bleak, cold room that smells like feet and despair. You are exhausted, but alive. You sit back down at your work computer, pondering your next steps. ",1, -1,3, 4));
+        gameMap.add(new Room("Break Room", "Huh weird this room is empty. ", -1, -1, 2, 5));
+        gameMap.add(new Room("Meeting Room-1", "The room is composed of brilliant white marble. The air smells of citrus. A heavenly glow eliminates from the coffee bar, like the open arms of an angel. The Kuerig machine is running. A lone laptop is in the room. ", -1, 3, -1, 1));
+        gameMap.add(new Room("Coffee Bar", "A nasty, dark cell", 2, -1, -1, 0));
+        gameMap.add(new Room("Empty workstation", "This workstation still has pictures of a recently fired employee and their family", 5, -1, 0, -1));
+        gameMap.add(new Room("Meeting Room-2", "The room is composed of brilliant white marble. The air smells of citrus. A heavenly glow eliminates from the coffee bar, like the open arms of an angel. The Kuerig machine is running. A lone laptop is in the room. ", -1, 4, 1, -1));
+        player.setRoom(gameMap.get(0));
+    }
 
     public void gameIntro() {
         //create game intro logo and intro story lines
@@ -40,6 +60,59 @@ public class Game {
         System.out.print("> ");
 
     }
+
+    public void ventureOut() throws IOException {
+//        player.setRoom(gameMap.get(0));
+//        System.out.println(gameMap.get(0).getName() + " " + gameMap.get(0).getDescription());
+        System.out.println("where would you like to go?");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String command = br.readLine();
+        int go;
+        Room currentRoom = player.getRoom();
+        switch (command) {
+            case "go north":
+                go = currentRoom.getNorth();
+                break;
+            case "go south":
+                go = currentRoom.getSouth();
+                break;
+            case "go west":
+                go = currentRoom.getWest();
+                break;
+            case "go east":
+                go = currentRoom.getEast();
+                break;
+            default:
+                go = -1;
+                break;
+        }
+        if (go != -1){
+            player.setRoom(gameMap.get(go));
+            System.out.println(gameMap.get(go).getName() + " " + gameMap.get(go).getDescription());
+        }
+        else {
+            System.out.println("hmm you cant go that way");
+            System.out.println(gameMap.get(0).getName() + " " + gameMap.get(0).getDescription());
+        }
+    }
+
+    public void commandInput() throws IOException {
+        gameMenu:
+        while (true) {
+            System.out.println("What would you like to do?");
+            System.out.print("> ");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String command = br.readLine();
+            if (Objects.equals(command, "venture out")) {
+                ventureOut();
+            }
+            else {
+                break gameMenu;
+            }
+        }
+
+    }
+
 
     public void gameOver(){
         //create game over logo
