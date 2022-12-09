@@ -15,7 +15,7 @@ public class Room {
         this.east = mapEast;
     }
 
-    // --- accessor methods ---
+    // accessor methods
     public int getNorth() {
         return north;
     }
