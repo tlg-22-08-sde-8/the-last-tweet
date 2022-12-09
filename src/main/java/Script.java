@@ -14,7 +14,7 @@ public final class Script {
             "Fires raging. Employees crying. \n" +
             "Elon Musk has acquired Twitter. Half of the Twitter workforce has been laid off. \n" +
             "You are one of the survivors. \n";
-
+//test
     /**
      * Constructor for the Script class. It initializes text for all the different static scenarios, i.e., the portions
      * of the script that do not require parsing of text to provide unique information.

@@ -17,7 +17,7 @@ public class Game {
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_BLUE = "\u001B[34m";
-    private final Player player = new Player();
+    private final Player player = new Player(25, 25,25);
     private final List<Room> gameMap;
     private final String[] wordsForNorth = {"north", "n"};
     private final String[] wordsForSouth = {"south", "s"};
@@ -41,7 +41,7 @@ public class Game {
         player.setRoom(gameMap.get(0));
     }
 
-    public void gameIntro() {
+    public void gameIntro() throws IOException {
         //create game intro logo and intro story lines
         String gameIntroLogo = ANSI_BLUE +
                 "▄▄▄█████▓ ██░ ██ ▓█████     ██▓     ▄▄▄        ██████ ▄▄▄█████▓   ▄▄▄█████▓ █     █░▓█████ ▓█████ ▄▄▄█████▓\n" +
@@ -63,6 +63,8 @@ public class Game {
         System.out.println(Script.getFirstScene());
         System.out.println(storyIntro);
     }
+
+
 
     public void ventureOut() throws IOException {
         //move player to different rooms
@@ -101,7 +103,7 @@ public class Game {
     public void renderUserInterface(){
         String userStats =
                 "\n==============================================================================================================================\n" +
-                        "  Location = " + player.getRoom().getName() + "                    hunger = 0   employability = 0   sanity = 0                               SDE-1 \n" +
+                        "  Location = " + player.getRoom().getName() + "                    hunger = " + player.getHunger() +  "   employability = " + player.getEmployability() + "  sanity = " + player.getSanity() + "                             SDE-1 \n" +
                         "==============================================================================================================================";
         System.out.println(userStats);
     }
@@ -172,8 +174,6 @@ public class Game {
         System.out.println(gameOverLogoSubtitle);
     }
 
-//    public void clearScreen() throws IOException {
-//        Runtime.getRuntime().exec("cls");
-//    }
+
 
 }

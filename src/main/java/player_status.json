@@ -1,0 +1,15 @@
+{
+  "player": {
+    "status": [
+      "hunger: 25",
+      "employability: 25",
+      "sanity: 25"
+    ],
+    "inventory": [
+        "lines of code: 0",
+        "coffee: 0"
+    ],
+      "programs":  [
+        ]
+  }
+}
