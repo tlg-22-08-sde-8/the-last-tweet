@@ -1,75 +1,67 @@
-import java.util.Random;
-
 public class Enemy {
-  /* class fields */
-  /** An array of possible enemy types. */
-  public static final String[] ENEMY_NAMES = { "One", "Two", "Three", "Four", "Five", "Six" };
+    private int health;
+    private String title;
+    private String normalAttack;
+    private int normalAttackDmg;
+    private String superAttack;
+    private int superAttackDmg;
 
-  /** The maximum attack damage of this enemy. */
-  public static final int MAXIMUM_ATTACK_DAMAGE = 25;
+    public Enemy(int health, String title, String normalAttack, int normalAttackDmg, String superAttack, int superAttackDmg) {
+        this.health = health;
+        this.title = title;
+        this.normalAttack = normalAttack;
+        this.normalAttackDmg = normalAttackDmg;
+        this.superAttack = superAttack;
+        this.superAttackDmg = superAttackDmg;
+    }
 
-  /** The maximum health of this enemy. */
-  public static final int MAXIMUM_HEALTH = 75;
+    //accessor methods
+    public int getNormalAttackDmg() {
+        return normalAttackDmg;
+    }
 
-  /** The minimum health of this enemy. */
-  public static final int MINIMUM_HEALTH = 1;
+    public void setNormalAttackDmg(int normalAttackDmg) {
+        this.normalAttackDmg = normalAttackDmg;
+    }
 
-  /** The random number generator of this enemy. */
-  public static final Random RANDOM = new Random();
+    public int getSuperAttackDmg() {
+        return superAttackDmg;
+    }
 
-  /* instance fields */
-  private int health;
-  private String name;
+    public void setSuperAttackDmg(int superAttackDmg) {
+        this.superAttackDmg = superAttackDmg;
+    }
 
-  /**
-   * Constructs a new enemy.
-   */
-  public Enemy()
-  {
-    /* Fetch a random name from the list of enemies. */
-    name = ENEMY_NAMES[RANDOM.nextInt(ENEMY_NAMES.length)];
+    public int getHealth() {
+        return health;
+    }
 
-    /* Give the enemy a random health */
-    health = RANDOM.nextInt(MAXIMUM_HEALTH);
-  } // end of constructor Enemy()
+    public void setHealth(int health) {
+        this.health = health;
+    }
 
-  /**
-   * Returns the damage dealt by this enemy.
-   *
-   * @return the damage dealt by this enemy
-   */
-  public int attack()
-  {
-    return RANDOM.nextInt(MAXIMUM_ATTACK_DAMAGE);
-  } // end of method attack()
+    public String getTitle() {
+        return title;
+    }
 
-  /**
-   * Reduces the HP of this enemy by a specifed value.
-   *
-   * @param damage the amount to reduce the
-   */
-  public void takeDamage(int damage)
-  {
-    health = health - damage;
-  } // end of method damageDealt(int damage)
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-  /**
-   * The name of this enemy.
-   *
-   * @return the name of the enemy
-   */
-  public String name()
-  {
-    return name;
-  } // end of method name()
+    public String getNormalAttack() {
+        return normalAttack;
+    }
 
-  /**
-   * Returns the health of this enemy.
-   *
-   * @return heatlh of this enemy
-   */
-  public int health()
-  {
-    return health;
-  } // end of method health()
-} // end of class Enemy
+    public void setNormalAttack(String normalAttack) {
+        this.normalAttack = normalAttack;
+    }
+
+    public String getSuperAttack() {
+        return superAttack;
+    }
+
+    public void setSuperAttack(String superAttack) {
+        this.superAttack = superAttack;
+    }
+}
+

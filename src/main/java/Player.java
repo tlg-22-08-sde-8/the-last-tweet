@@ -4,6 +4,7 @@ public class Player {
     private int employability;
     private int sanity;
     private int score;
+    private int codeLines = 0;
 
     //player room field allows the game class to move character around the map
     public Player(int hunger, int employability, int sanity) {
@@ -12,7 +13,25 @@ public class Player {
         this.employability = employability;
     }
 
+    public int normalAttack(){
+        return 4;
+    }
+
+    public int superAttack(){
+        return 7;
+    }
+
+
+
     // accessor methods
+    public int getCodeLines() {
+        return codeLines;
+    }
+
+    public void setCodeLines(int codeLines) {
+        this.codeLines = codeLines;
+    }
+
     public int getScore() {
         return score;
     }
