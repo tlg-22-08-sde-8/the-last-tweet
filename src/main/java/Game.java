@@ -146,9 +146,11 @@ public class Game {
             System.out.print("\n> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine().strip().toLowerCase();
+            //travel
             if (command.equals("venture out")) {
                 ventureOut();
             }
+            //gain one line of code
             if (command.equals("code")) {
                 if (player.getRoom().getName().equals("WorkStation")) {
                     code();
@@ -157,10 +159,12 @@ public class Game {
                     System.out.println("command not valid in this location");
                 }
             }
+            //display stats and instructions
             if (command.equals("more")) {
                 more();
                 continue;
             }
+            //quit game
             if (Objects.equals(command, "quit")){
                 gameOver();
                 return;
