@@ -6,6 +6,7 @@ public class Room {
     private final String name;
     private final String description;
 
+    //create room for game
     public Room(String name, String description, int mapNorth, int mapSouth, int mapWest, int mapEast) {
         this.name = name;
         this.description = description;
