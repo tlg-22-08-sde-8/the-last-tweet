@@ -13,6 +13,8 @@ public final class Script {
             "Elon Musk has acquired Twitter. Half of the Twitter workforce has been laid off. \n" +
             "You are one of the survivors. \n";
 
+    private static final String userRequest = "What do you do?";
+
     //access methods
     public static String getBasicInfo() {
         return basicInfo;
