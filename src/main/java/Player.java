@@ -12,6 +12,16 @@ public class Player {
         this.employability = employability;
     }
 
+    public int normalAttack(){
+        return 4;
+    }
+
+    public int superAttack(){
+        return 7;
+    }
+
+
+
     // accessor methods
     public int getScore() {
         return score;

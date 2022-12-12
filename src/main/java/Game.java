@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,7 +23,7 @@ public class Game {
     private final String[] wordsForSouth = {"south", "s"};
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
-    private final String[] workstationCommands = {"Code", "Venture out", "More"};
+    private final String[] workstationCommands = {"Code", "Venture out", "More", "save"};
     private final String[] breakRoomCommands = {"Access Vending Machine", "Venture Out", "More"};
     private final String[] coffeeBarCommands = {"Make Coffee", "Venture out", "More"};
     private final String[] emptyWorkstationCommands = {"Search Desk", "Venture out", "More"};
@@ -42,8 +44,8 @@ public class Game {
         //create enemies
         enemyArray = new ArrayList<Enemy>();
         enemyArray.add(new Enemy(10, "jrDev", "ask-for-help", 5, "merge-with-main", 10));
-        enemyArray.add(new Enemy(10, "SrDev", "negative-feedback", 5, "unreasonable-deadline", 10));
-        enemyArray.add(new Enemy(10, "Product-Manager", "promised-feature-to-client", 5, "set-secret-deadline", 10));
+        enemyArray.add(new Enemy(20, "SrDev", "negative-feedback", 5, "unreasonable-deadline", 10));
+        enemyArray.add(new Enemy(30, "Product-Manager", "promised-feature-to-client", 5, "set-secret-deadline", 10));
     }
 
     public void gameIntro() throws IOException {
@@ -134,6 +136,7 @@ public class Game {
 
     }
 
+
     private String[] determineAvailableCommands(String currentRoom) {
         //check if command can be completed in room
         String[] commands = new String[0];
@@ -208,13 +211,13 @@ public class Game {
                 System.out.println("Which attack would you like to use \n> normal > super ");
                 String attack = br1.readLine().toLowerCase();
                 if (attack.equals("normal")) {
-                    System.out.println("you attacked with x \n" + enemy.getTitle() + " lost x health");
-                    enemy.setHealth(enemy.getHealth() - 3);
+                    System.out.println("you attacked with code block \n" + enemy.getTitle() + " lost  " + player.normalAttack() + " health");
+                    enemy.setHealth(enemy.getHealth() - player.normalAttack());
                     break;
                 }
                 if (attack.equals("super")) {
-                    System.out.println("you attacked with x \n" + enemy.getTitle() + " lost x health");
-                    enemy.setHealth(enemy.getHealth() - 7);
+                    System.out.println("you attacked with a class generation \n" + enemy.getTitle() + " lost " + player.superAttack() + " health");
+                    enemy.setHealth(enemy.getHealth() - player.superAttack());
                     break;
                 }
                 System.out.println("command not valid");
