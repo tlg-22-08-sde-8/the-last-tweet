@@ -29,7 +29,7 @@ public final class Script {
     private static final String playerBuildsProgram = "The following program +" +
             /* Store.getMagicKeyboard() +*/
             "has been built. \n" +
-            "You have lost " + /*Player.getHunger() +*/ "hunger. You have X hunger left. \n";
+            "You have lost " + /*Player.getHunger() +*/ "hunger. You have X hunger left.\n";
 
 
     //access methods
