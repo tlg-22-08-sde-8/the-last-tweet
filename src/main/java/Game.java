@@ -112,14 +112,21 @@ public class Game {
     }
 
     public void more(){
-        System.out.println(Script.getBasicInfo() + "\n");
-        System.out.println(
+        System.out.println( "Player Stats: \n" +
                 "Hunger = " + player.getHunger() + "\n" +
                 "Sanity = " + player.getSanity() + "\n" +
                 "Score = " + player.getScore() + "\n" +
                 "Employability = " + player.getEmployability() + "\n" +
                 "code-lines = " + player.getCodeLines() + "\n" +
                 "Room = " + player.getRoom().getName() + "\n"
+        );
+    }
+
+    public void help(){
+        System.out.println("Game Description:\n" + Script.getBasicInfo() + "\n");
+        System.out.println("Commands: \n" +
+                "To Travel through the game: go {direction} ex- go east" +
+                "To Quit: quit [enter]\n"
         );
     }
 
@@ -162,6 +169,11 @@ public class Game {
             //display stats and instructions
             if (command.equals("more")) {
                 more();
+                continue;
+            }
+            //help
+            if (command.equals("help")) {
+                help();
                 continue;
             }
             //quit game
