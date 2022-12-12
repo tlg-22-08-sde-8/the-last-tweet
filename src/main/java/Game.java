@@ -21,11 +21,11 @@ public class Game {
     private final String[] wordsForSouth = {"south", "s"};
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
-    private final String[] workstationCommands = {"Code", "Venture out", "More", "quit"};
-    private final String[] breakRoomCommands = {"Venture Out", "More", "quit"};
-    private final String[] coffeeBarCommands = {"Venture out", "More", "quit"};
-    private final String[] emptyWorkstationCommands = {"Venture out", "More", "quit"};
-    private final String[] meetingRoomCommands = {"Venture out", "More", "quit"};
+    private final String[] workstationCommands = {"Code", "Venture out", "More", "quit", "help"};
+    private final String[] breakRoomCommands = {"Venture Out", "More", "quit", "help"};
+    private final String[] coffeeBarCommands = {"Venture out", "More", "quit", "help"};
+    private final String[] emptyWorkstationCommands = {"Venture out", "More", "quit", "help"};
+    private final String[] meetingRoomCommands = {"Venture out", "More", "quit", "help"};
 
     public Game(Player player) {
         //array of rooms and set player location to workstation
@@ -128,9 +128,9 @@ public class Game {
     public void help() {
         System.out.println("Game Description:\n" + Script.getBasicInfo() + "\n");
         System.out.println("Commands: \n" +
-                "Travel through the game: go {direction} ex- go east" +
+                "Travel through the game: go {direction} ex: go east,  *each time you travel you have a random chance for a battle*\n" +
                 "Quit: quit [enter]\n" +
-                "To gain code-line: select code option at workstation or defeat enemies"
+                "To gain code-line: select code option at workstation or defeat enemies\n"
         );
     }
 
