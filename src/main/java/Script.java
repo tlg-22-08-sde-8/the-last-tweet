@@ -15,11 +15,39 @@ public final class Script {
 
     private static final String userRequest = "What do you do?";
 
+    private static final String playerCodes = "You log into your work computer. \n" +
+            "You’ve gained " /*+ Player.getCodeLines() */+ "lines of code. \n" +
+            "You’ve lost 1 hunger. You have X hunger left. ";
+
+    private static final String playerProgram = "The follow programs are available for building: \n" +
+            "\tMagic Keyboard (cost: 1000 lines of code) - Increases Attack in battle by +10 lines per code.  \n" +
+            "\tMagic mouse (cost: 500 lines of code) - Increases Attack in battle by +5 lines of code. \n" +
+            "\tDigital Assistant (cost: 10,000 lines of code) - auto generates code by +10 per action while you are away from your workstation. \n" +
+            "\n" +
+            "To “program” an item into your inventory, press the corresponding number or “q” to go back to your workstation." ;
+
+    private static final String playerBuildsProgram = "The following program +" +
+            /* Store.getMagicKeyboard() +*/
+            "has been built. \n" +
+            "You have lost " + /*Player.getHunger() +*/ "hunger. You have X hunger left. \n";
+
+
     //access methods
+
+    /**
+     * Returns the basic information script about the game.
+     * User requested when they type "about" into the console in the "more" menu.
+     * @return basicInfo
+     */
     public static String getBasicInfo() {
         return basicInfo;
     }
 
+    /**
+     * The first lines of the game when the game starts.
+     * Returns the first scene script.
+     * @return firstScene
+     */
     public static String getFirstScene() {
         return firstScene;
     }
