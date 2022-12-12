@@ -1,5 +1,3 @@
-import com.google.gson.Gson;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,7 +9,7 @@ public class Game {
 //    private static final String ANSI_WHITE = "\u001B[37m";
 //    private static final String ANSI_BLACK = "\u001B[30m";
 //    private static final String ANSI_GREEN = "\u001B[32m";
-//    private static final String ANSI_YELLOW = "\u001B[33m";
+    private static final String ANSI_YELLOW = "\u001B[33m";
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_BLUE = "\u001B[34m";
@@ -42,13 +40,13 @@ public class Game {
         this.player = player;
         player.setRoom(gameMap.get(0));
         //create enemies
-        enemyArray = new ArrayList<Enemy>();
+        enemyArray = new ArrayList<>();
         enemyArray.add(new Enemy(10, "jrDev", "ask-for-help", 5, "merge-with-main", 10));
         enemyArray.add(new Enemy(20, "SrDev", "negative-feedback", 5, "unreasonable-deadline", 10));
         enemyArray.add(new Enemy(30, "Product-Manager", "promised-feature-to-client", 5, "set-secret-deadline", 10));
     }
 
-    public void gameIntro() throws IOException {
+    public void gameIntro() {
         //create game intro logo and intro story lines
         String gameIntroLogo = ANSI_BLUE +
                 "▄▄▄█████▓ ██░ ██ ▓█████     ██▓     ▄▄▄        ██████ ▄▄▄█████▓   ▄▄▄█████▓ █     █░▓█████ ▓█████ ▄▄▄█████▓\n" +
@@ -74,35 +72,40 @@ public class Game {
 
     public void ventureOut() throws IOException {
         //move player to different rooms
-        System.out.println("where would you like to go?");
-        System.out.print("> ");
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String command = br.readLine();
-        String[] checkDirection = command.split(" ");
-        String direction = checkDirection[1].toLowerCase();
-        int go = -1;
-        Room currentRoom = player.getRoom();
-        //check command for direction
-        if (Arrays.asList(wordsForNorth).contains(direction)) {
-            go = currentRoom.getNorth();
-        }
-        if (Arrays.asList(wordsForSouth).contains(direction)) {
-            go = currentRoom.getSouth();
-        }
-        if (Arrays.asList(wordsForWest).contains(direction)) {
-            go = currentRoom.getWest();
-        }
-        if (Arrays.asList(wordsForEast).contains(direction)) {
-            go = currentRoom.getEast();
-        }
-        //determine if direction exists
-        if (go != -1) {
-            player.setRoom(gameMap.get(go));
-            determineBattle();
-            System.out.println(ANSI_RED + "You traveled " + direction + ANSI_RESET + "\n" + gameMap.get(go).getName() + "\n" + gameMap.get(go).getDescription());
-        } else {
-            System.out.println("looks like this way is blocked");
-//            System.out.println(gameMap.get(0).getName() + " " + gameMap.get(0).getDescription());
+        while (true) {
+            System.out.println("where would you like to go?");
+            System.out.print("> ");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String command = br.readLine();
+            String[] checkDirection = command.split(" ");
+            String direction = checkDirection[1].toLowerCase();
+            int go = -1;
+            Room currentRoom = player.getRoom();
+            //check command for direction
+            if (Arrays.asList(wordsForNorth).contains(direction)) {
+                System.out.println(go);
+                go = currentRoom.getNorth();
+                System.out.println(go);
+            }
+            if (Arrays.asList(wordsForSouth).contains(direction)) {
+                go = currentRoom.getSouth();
+            }
+            if (Arrays.asList(wordsForWest).contains(direction)) {
+                go = currentRoom.getWest();
+            }
+            if (Arrays.asList(wordsForEast).contains(direction)) {
+                go = currentRoom.getEast();
+            }
+            //determine if direction exists
+            if (go != -1) {
+                player.setRoom(gameMap.get(go));
+                determineBattle();
+                System.out.println(ANSI_RED + "You traveled " + direction + ANSI_RESET + "\n" + gameMap.get(go).getName() + "\n" + gameMap.get(go).getDescription());
+                player.setHunger(player.getHunger() - 5);
+                break;
+            } else {
+                System.out.println("looks like this way is blocked");
+            }
         }
     }
 
@@ -125,8 +128,9 @@ public class Game {
     public void help(){
         System.out.println("Game Description:\n" + Script.getBasicInfo() + "\n");
         System.out.println("Commands: \n" +
-                "To Travel through the game: go {direction} ex- go east" +
-                "To Quit: quit [enter]\n"
+                "Travel through the game: go {direction} ex- go east" +
+                "Quit: quit [enter]\n" +
+                "To gain code-line: select code option at workstation or defeat enemies"
         );
     }
 
@@ -213,12 +217,10 @@ public class Game {
     public void determineBattle() throws IOException {
         Random rand = new Random();
         int battleNum = rand.nextInt(10);
-        if (battleNum >= 7) {
-            return;
-        } else {
+        if (!(battleNum >= 7)) {
             Random rand1 = new Random();
-            int enemyIndex = rand1.nextInt(enemyArray.size());
-            battle(enemyArray.get(enemyIndex - 1));
+            int enemyIndex = rand1.nextInt(enemyArray.size() - 1);
+            battle(enemyArray.get(enemyIndex));
         }
     }
 
@@ -249,10 +251,10 @@ public class Game {
         int determineAttackType = rand2.nextInt(10);
         while (enemy.getHealth() > 0) {
             if (determineAttackType >= 7) {
-                System.out.println(enemy.getTitle() + " hit you with " + enemy.getSuperAttack() + ANSI_RED + "\nyou lost " + enemy.getSuperAttackDmg() + ANSI_RESET);
                 player.setSanity(player.getSanity() - enemy.getSuperAttackDmg());
+                System.out.println(enemy.getTitle() + " hit you with " + enemy.getSuperAttack() + ANSI_RED + "\nyou lost " + enemy.getSuperAttackDmg() + " sanity\n you have " + player.getSanity() + " remaining" + ANSI_RESET);
             } else {
-                System.out.println(enemy.getTitle() + " hit you with " + enemy.getNormalAttack() + ANSI_RED + "\nyou lost " + enemy.getNormalAttackDmg() + ANSI_RESET);
+                System.out.println(enemy.getTitle() + " hit you with " + enemy.getNormalAttack() + ANSI_RED + "\nyou lost " + enemy.getNormalAttackDmg() + " sanity\n you have " + player.getSanity() + " remaining" + ANSI_RESET);
                 player.setSanity(player.getSanity() - enemy.getNormalAttackDmg());
             }
             BufferedReader br1 = new BufferedReader(new InputStreamReader(System.in));
@@ -260,13 +262,13 @@ public class Game {
                 System.out.println("Which attack would you like to use \n> normal > super ");
                 String attack = br1.readLine().toLowerCase();
                 if (attack.equals("normal")) {
-                    System.out.println("you attacked with code block \n" + enemy.getTitle() + " lost  " + player.normalAttack() + " health");
                     enemy.setHealth(enemy.getHealth() - player.normalAttack());
+                    System.out.println(ANSI_YELLOW + "you attacked with code block \n" + enemy.getTitle() + " lost  " + player.normalAttack() + " health \n they have " + enemy.getHealth() + "remaining" + ANSI_RESET);
                     break;
                 }
                 if (attack.equals("super")) {
-                    System.out.println("you attacked with a class generation \n" + enemy.getTitle() + " lost " + player.superAttack() + " health");
                     enemy.setHealth(enemy.getHealth() - player.superAttack());
+                    System.out.println(ANSI_YELLOW + "you attacked with a class generation \n" + enemy.getTitle() + " lost " + player.superAttack() + " health" + ANSI_RESET);
                     break;
                 }
                 System.out.println("command not valid");
