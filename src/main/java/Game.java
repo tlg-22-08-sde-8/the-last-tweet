@@ -228,6 +228,7 @@ public class Game {
     public void battle(Enemy enemy) throws IOException {
         System.out.println(ANSI_RED + "You are starting a battle" + ANSI_RESET);
         while (true) {
+            //determine if player wants to battle
             System.out.println("What would you like to do \n > Attack > Runaway");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine().toLowerCase();
@@ -247,6 +248,8 @@ public class Game {
             }
             System.out.println("command not valid");
         }
+
+        //fight logic
         Random rand2 = new Random();
         int determineAttackType = rand2.nextInt(10);
         while (enemy.getHealth() > 0) {
