@@ -3,6 +3,7 @@ public class Player {
     private int hunger;
     private int employability;
     private int sanity;
+    private int score;
 
     //player room field allows the game class to move character around the map
     public Player(int hunger, int employability, int sanity) {
@@ -12,6 +13,14 @@ public class Player {
     }
 
     // accessor methods
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public int getHunger() {
         return hunger;
     }

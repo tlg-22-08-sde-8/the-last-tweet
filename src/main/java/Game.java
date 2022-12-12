@@ -23,11 +23,11 @@ public class Game {
     private final String[] wordsForSouth = {"south", "s"};
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
-    private final String[] workstationCommands = {"> Code", "> Venture out", "> More"};
-    private final String[] breakRoomCommands = {"> Access Vending Machine", "> Venture Out", "> More"};
-    private final String[] coffeeBarCommands = {"> Make Coffee", "> Venture out", "> More"};
-    private final String[] emptyWorkstationCommands = {"> Search Desk", "> Venture out", "> More"};
-    private final String[] meetingRoomCommands = {"> Negotiate with Manager", "> Venture out", "> More"};
+    private final String[] workstationCommands = {"Code", "Venture out", "More"};
+    private final String[] breakRoomCommands = {"Access Vending Machine", "Venture Out", "More"};
+    private final String[] coffeeBarCommands = {"Make Coffee", "Venture out", "More"};
+    private final String[] emptyWorkstationCommands = {"Search Desk", "Venture out", "More"};
+    private final String[] meetingRoomCommands = {"Negotiate with Manager", "Venture out", "More"};
 
     public Game() {
         //array of rooms and set player location to workstation
@@ -92,7 +92,7 @@ public class Game {
         //determine if direction exists
         if (go != -1){
             player.setRoom(gameMap.get(go));
-            System.out.println("\n" + gameMap.get(go).getName() + " " + gameMap.get(go).getDescription());
+            System.out.println(ANSI_RED + "You traveled " + direction + ANSI_RESET + "\n"  + gameMap.get(go).getName() + "\n" + gameMap.get(go).getDescription());
         }
         else {
             System.out.println("looks like this way is blocked");
@@ -101,8 +101,9 @@ public class Game {
     }
 
     public void renderUserInterface(){
+        //display user stats
         String userStats =
-                "\n==============================================================================================================================\n" +
+                "==============================================================================================================================\n" +
                         "  Location = " + player.getRoom().getName() + "                    hunger = " + player.getHunger() +  "   employability = " + player.getEmployability() + "  sanity = " + player.getSanity() + "                             SDE-1 \n" +
                         "==============================================================================================================================";
         System.out.println(userStats);
@@ -115,11 +116,11 @@ public class Game {
             System.out.println("\nWhat would you like to do?");
             String[] determineAvailableCommands = determineAvailableCommands(player.getRoom().getName());
             for (String c: determineAvailableCommands){
-                System.out.print(c + "    ");
+                System.out.print("> " + c + "    ");
             }
-            System.out.println("\n> ");
+            System.out.print("\n> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String command = br.readLine().strip();
+            String command = br.readLine().strip().toLowerCase();
             if (Objects.equals(command, "venture out")) {
                 ventureOut();
             }
@@ -131,6 +132,7 @@ public class Game {
     }
 
     private String[] determineAvailableCommands(String currentRoom) {
+        //check if command can be completed in room
         String[] commands = new String[0];
         if (Objects.equals(currentRoom, "WorkStation")){
             commands =  workstationCommands;
@@ -153,8 +155,10 @@ public class Game {
         return commands;
     }
 
+
+
     public void gameOver(){
-        //create game over logo
+        //display game over logo
         String gameOverLogo = "\n\n" + ANSI_RED +
                 "  ▄████  ▄▄▄       ███▄ ▄███▓▓█████     ▒█████   ██▒   █▓▓█████  ██▀███  \n" +
                 " ██▒ ▀█▒▒████▄    ▓██▒▀█▀ ██▒▓█   ▀    ▒██▒  ██▒▓██░   █▒▓█   ▀ ▓██ ▒ ██▒\n" +
