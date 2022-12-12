@@ -21,8 +21,6 @@ public class Player {
         return 7;
     }
 
-
-
     // accessor methods
     public int getCodeLines() {
         return codeLines;
