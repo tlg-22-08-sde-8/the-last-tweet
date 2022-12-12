@@ -7,9 +7,6 @@ public class Main {
         final Player player = new Player(25, 25, 25);;
         Game game = new Game(player);
         game.gameIntro();
-        while (player.getSanity() > 0 || player.getHunger() > 0 || player.getEmployability() > 0) {
-            game.commandInput();
-        }
-        game.gameOver();
+        game.commandInput();
     }
 }

@@ -23,11 +23,11 @@ public class Game {
     private final String[] wordsForSouth = {"south", "s"};
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
-    private final String[] workstationCommands = {"Code", "Venture out", "More", "save"};
-    private final String[] breakRoomCommands = {"Access Vending Machine", "Venture Out", "More"};
-    private final String[] coffeeBarCommands = {"Make Coffee", "Venture out", "More"};
-    private final String[] emptyWorkstationCommands = {"Search Desk", "Venture out", "More"};
-    private final String[] meetingRoomCommands = {"Negotiate with Manager", "Venture out", "More"};
+    private final String[] workstationCommands = {"Code", "Venture out", "More", "quit"};
+    private final String[] breakRoomCommands = {"Venture Out", "More", "quit"};
+    private final String[] coffeeBarCommands = {"Venture out", "More", "quit"};
+    private final String[] emptyWorkstationCommands = {"Venture out", "More", "quit"};
+    private final String[] meetingRoomCommands = {"Venture out", "More", "quit"};
 
     public Game(Player player) {
         //array of rooms and set player location to workstation
@@ -106,6 +106,25 @@ public class Game {
         }
     }
 
+    public void code(){
+        System.out.println(ANSI_RED + "you gained 1 code-line" + ANSI_RESET);
+        player.setCodeLines(player.getCodeLines() + 1);
+    }
+
+    public void more(){
+        System.out.println(Script.getBasicInfo() + "\n");
+        System.out.println(
+                "Hunger = " + player.getHunger() + "\n" +
+                "Sanity = " + player.getSanity() + "\n" +
+                "Score = " + player.getScore() + "\n" +
+                "Employability = " + player.getEmployability() + "\n" +
+                "code-lines = " + player.getCodeLines() + "\n" +
+                "Room = " + player.getRoom().getName() + "\n"
+        );
+    }
+
+
+
     public void renderUserInterface() {
         //display user stats
         String userStats =
@@ -117,7 +136,7 @@ public class Game {
 
     public void commandInput() throws IOException {
         //get commands from player
-        while (true) {
+        while (player.getSanity() > 0 || player.getHunger() > 0 || player.getEmployability() > 0) {
             renderUserInterface();
             System.out.println("\nWhat would you like to do?");
             String[] determineAvailableCommands = determineAvailableCommands(player.getRoom().getName());
@@ -127,15 +146,29 @@ public class Game {
             System.out.print("\n> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine().strip().toLowerCase();
-            if (Objects.equals(command, "venture out")) {
+            if (command.equals("venture out")) {
                 ventureOut();
-            } else {
-                break;
             }
+            if (command.equals("code")) {
+                if (player.getRoom().getName().equals("WorkStation")) {
+                    code();
+                    continue;
+                }else {
+                    System.out.println("command not valid in this location");
+                }
+            }
+            if (command.equals("more")) {
+                more();
+                continue;
+            }
+            if (Objects.equals(command, "quit")){
+                gameOver();
+                return;
+            }
+            System.out.println("command not valid");
         }
 
     }
-
 
     private String[] determineAvailableCommands(String currentRoom) {
         //check if command can be completed in room
@@ -168,8 +201,8 @@ public class Game {
             return;
         } else {
             Random rand1 = new Random();
-            int enemyIndex = rand1.nextInt(enemyArray.size() - 1);
-            battle(enemyArray.get(enemyIndex));
+            int enemyIndex = rand1.nextInt(enemyArray.size());
+            battle(enemyArray.get(enemyIndex - 1));
         }
     }
 
