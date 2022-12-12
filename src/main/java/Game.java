@@ -31,7 +31,7 @@ public class Game {
         //array of rooms and set player location to workstation
         gameMap = new ArrayList<>();
         gameMap.add(new Room("WorkStation", "You are standing in a bleak, cold room that smells like feet and despair. You are exhausted, but alive. You sit back down at your work computer, pondering your next steps. ", 1, -1, 3, 4));
-        gameMap.add(new Room("Break Room", "Huh weird this room is empty. ", -1, -1, 2, 5));
+        gameMap.add(new Room("Break Room", "Huh weird this room is empty. ", -1, 0, 2, 5));
         gameMap.add(new Room("Meeting Room-1", "The room is composed of brilliant white marble. The air smells of citrus. A heavenly glow eliminates from the coffee bar, like the open arms of an angel. The Kuerig machine is running. A lone laptop is in the room. ", -1, 3, -1, 1));
         gameMap.add(new Room("Coffee Bar", "A nasty, dark cell", 2, -1, -1, 0));
         gameMap.add(new Room("Empty workstation", "This workstation still has pictures of a recently fired employee and their family", 5, -1, 0, -1));
@@ -128,7 +128,7 @@ public class Game {
     public void help() {
         System.out.println("Game Description:\n" + Script.getBasicInfo() + "\n");
         System.out.println("Commands: \n" +
-                "Travel through the game: go {direction} ex: go east,  *each time you travel you have a random chance for a battle*\n" +
+                "Travel through the game: go {direction} ex: go east,  *each time you travel, you have a random chance for a battle*\n" +
                 "Quit: quit [enter]\n" +
                 "To gain code-line: select code option at workstation or defeat enemies\n"
         );
@@ -145,7 +145,7 @@ public class Game {
 
     public void commandInput() throws IOException {
         //get commands from player
-        while (player.getSanity() > 0 || player.getHunger() > 0 || player.getEmployability() > 0) {
+        while (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
             renderUserInterface();
             System.out.println("\nWhat would you like to do?");
             String[] determineAvailableCommands = determineAvailableCommands(player.getRoom().getName());
@@ -186,6 +186,12 @@ public class Game {
             System.out.println("command not valid");
         }
 
+        if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
+            System.out.println("you beat the game");
+        }
+        else {
+            gameOver();
+        }
     }
 
     private String[] determineAvailableCommands(String currentRoom) {
@@ -248,14 +254,15 @@ public class Game {
         }
 
         //fight logic
+        int storeEnemyHealth = enemy.getHealth();
         Random rand2 = new Random();
         int determineAttackType = rand2.nextInt(10);
-        while (enemy.getHealth() > 0) {
+        while (enemy.getHealth() > 0 && player.getSanity() > 0) {
             if (determineAttackType >= 7) {
                 player.setSanity(player.getSanity() - enemy.getSuperAttackDmg());
-                System.out.println(enemy.getTitle() + " hit you with " + enemy.getSuperAttack() + ANSI_RED + "\nyou lost " + enemy.getSuperAttackDmg() + " sanity\n you have " + player.getSanity() + " remaining" + ANSI_RESET);
+                System.out.println(enemy.getTitle() + " hit you with " + enemy.getSuperAttack() + ANSI_RED + "\nyou lost " + enemy.getSuperAttackDmg() + " sanity\nyou have " + player.getSanity() + " remaining" + ANSI_RESET);
             } else {
-                System.out.println(enemy.getTitle() + " hit you with " + enemy.getNormalAttack() + ANSI_RED + "\nyou lost " + enemy.getNormalAttackDmg() + " sanity\n you have " + player.getSanity() + " remaining" + ANSI_RESET);
+                System.out.println(enemy.getTitle() + " hit you with " + enemy.getNormalAttack() + ANSI_RED + "\nyou lost " + enemy.getNormalAttackDmg() + " sanity\nyou have " + player.getSanity() + " remaining" + ANSI_RESET);
                 player.setSanity(player.getSanity() - enemy.getNormalAttackDmg());
             }
             BufferedReader br1 = new BufferedReader(new InputStreamReader(System.in));
@@ -264,19 +271,22 @@ public class Game {
                 String attack = br1.readLine().toLowerCase();
                 if (attack.equals("normal")) {
                     enemy.setHealth(enemy.getHealth() - player.normalAttack());
-                    System.out.println(ANSI_YELLOW + "you attacked with code block \n" + enemy.getTitle() + " lost  " + player.normalAttack() + " health \n they have " + enemy.getHealth() + "remaining" + ANSI_RESET);
+                    System.out.println(ANSI_YELLOW + "you attacked with code block \n" + enemy.getTitle() + " lost  " + player.normalAttack() + " health \nthey have " + enemy.getHealth() + " remaining" + ANSI_RESET);
                     break;
                 }
                 if (attack.equals("super")) {
                     enemy.setHealth(enemy.getHealth() - player.superAttack());
-                    System.out.println(ANSI_YELLOW + "you attacked with a class generation \n" + enemy.getTitle() + " lost " + player.superAttack() + " health" + ANSI_RESET);
+                    System.out.println(ANSI_YELLOW + "you attacked with a class generation \n" + enemy.getTitle() + " lost " + player.superAttack() + " health\nthey have " + enemy.getHealth() + " remaining" + ANSI_RESET);
                     break;
                 }
                 System.out.println("command not valid");
             }
-
         }
-        System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
+        if (player.getSanity() > 0){
+            System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
+            enemy.setHealth(storeEnemyHealth);
+        }
+
     }
 
     public void gameOver() {
