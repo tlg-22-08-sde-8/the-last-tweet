@@ -109,13 +109,13 @@ public class Game {
         }
     }
 
-    public void code(){
+    public void code() {
         System.out.println(ANSI_RED + "you gained 1 code-line" + ANSI_RESET);
         player.setCodeLines(player.getCodeLines() + 1);
     }
 
-    public void more(){
-        System.out.println( "Player Stats: \n" +
+    public void more() {
+        System.out.println("Player Stats: \n" +
                 "Hunger = " + player.getHunger() + "\n" +
                 "Sanity = " + player.getSanity() + "\n" +
                 "Score = " + player.getScore() + "\n" +
@@ -125,7 +125,7 @@ public class Game {
         );
     }
 
-    public void help(){
+    public void help() {
         System.out.println("Game Description:\n" + Script.getBasicInfo() + "\n");
         System.out.println("Commands: \n" +
                 "Travel through the game: go {direction} ex- go east" +
@@ -133,8 +133,6 @@ public class Game {
                 "To gain code-line: select code option at workstation or defeat enemies"
         );
     }
-
-
 
     public void renderUserInterface() {
         //display user stats
@@ -166,7 +164,7 @@ public class Game {
                 if (player.getRoom().getName().equals("WorkStation")) {
                     code();
                     continue;
-                }else {
+                } else {
                     System.out.println("command not valid in this location");
                 }
             }
@@ -181,7 +179,7 @@ public class Game {
                 continue;
             }
             //quit game
-            if (Objects.equals(command, "quit")){
+            if (Objects.equals(command, "quit")) {
                 gameOver();
                 return;
             }
@@ -243,7 +241,7 @@ public class Game {
                     break;
                 }
             }
-            if (command.equals("attack")){
+            if (command.equals("attack")) {
                 break;
             }
             System.out.println("command not valid");
@@ -280,7 +278,6 @@ public class Game {
         }
         System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
     }
-
 
     public void gameOver() {
         //display game over logo
