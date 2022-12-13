@@ -64,4 +64,3 @@ public class Enemy {
         this.superAttack = superAttack;
     }
 }
-
