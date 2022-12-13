@@ -27,6 +27,7 @@ public class Game {
     private final String[] emptyWorkstationCommands = {};
     private final String[] meetingRoomCommands = {};
     private boolean playerAlive = true;
+    //test
 
     public Game(Player player) {
         //array of rooms and set player location to workstation
