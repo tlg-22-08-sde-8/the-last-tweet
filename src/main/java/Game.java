@@ -1,6 +1,6 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import com.google.gson.Gson;
+
+import java.io.*;
 import java.util.*;
 
 public class Game {
@@ -13,7 +13,7 @@ public class Game {
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_BLUE = "\u001B[34m";
-    private final Player player;
+    private Player player;
     private Enemy enemy;
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
@@ -127,11 +127,38 @@ public class Game {
             String command = br.readLine().strip().toLowerCase();
             if (Objects.equals(command, "venture out")) {
                 ventureOut();
+            }
+            if (Objects.equals(command, "save")) {
+                save();
+            }
+            if (Objects.equals(command, "load")) {
+                load();
             } else {
                 break;
             }
         }
 
+    }
+
+    public void save() throws IOException {
+        //save game
+        System.out.println("Saving game...");
+        String saveFile = "save.json";
+        BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile));
+        Gson gson = new Gson();
+        bw.write(gson.toJson(player));
+        bw.close();
+        System.out.println("Game saved!");
+    }
+
+    public void load() throws IOException   {
+        //load game
+        System.out.println("Loading game...");
+        String saveFile = "save.json";
+        BufferedReader br = new BufferedReader(new FileReader(saveFile));
+        Gson gson = new Gson();
+        player = gson.fromJson(br, Player.class);
+        System.out.println("Game loaded!");
     }
 
     private String[] determineAvailableCommands(String currentRoom) {

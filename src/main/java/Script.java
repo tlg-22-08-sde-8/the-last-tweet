@@ -75,7 +75,7 @@ public final class Script {
             "The purchased item will be added to your inventory. press the corresponding number or “q” to go back.";
 
     private static final String PlayerInMeetingRoom = "This room looks like it belongs to a manager. " +
-            "(recommeded codelines: "+  /*Enemy.bossRecommended() + */ "/current codelines: " +
+            "(recommended codelines: "+  /*Enemy.bossRecommended() + */ "/current codelines: " +
             /*Player.getCodeLines() +*/ "\n" +
             "\tWhat do you do?";
 
@@ -86,6 +86,22 @@ public final class Script {
     private static final String PlayerSearchesDeskSuccessfully = "You stick your hand into the drawer of the desk." +
             "You feel something push back. \n" +
             "You gained " + /*Player.gainFood() +*/ "foods, and " + /*Player.getCoffee() +*/ " coffee.";
+
+    private static final String PlayerSearchesDeskCaught = "You feel a presence behind you as you try to search the " +
+            "desk. \n" + "" +
+            "The product Manager shows up! \n" +
+            "“What ARE YOU DOING?!” \n" +
+            "Employability reduces to –5. ";
+
+    private static final String PlayerSearchesDeskEmpty = "You stick your hand into the drawer of the desk. \n" +
+            "Your hands feel only the desk itself push back against your fingers as you crawl your hand deeper! \n" +
+            "“The desk is empty. You attained nothing.” \n";
+
+    private static final String PlayerInCoffeeBar = "The room is composed of brilliant white marble. The air " +
+            "smells of citrus. A heavenly glow eminates from the coffee bar, like the open arms of an angel. " +
+            "The Kuerig machine is running. A lone laptop is in the room.";
+
+
 
 
 
