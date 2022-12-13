@@ -228,22 +228,22 @@ public class Game {
     private String[] determineAvailableCommands(String currentRoom) {
         //check if command can be completed in room
         String[] commands = new String[0];
-        if (Objects.equals(currentRoom, "WorkStation")) {
+        if (currentRoom.equals("WorkStation")) {
             commands = workstationCommands;
         }
-        if (Objects.equals(currentRoom, "Break Room")) {
+        if (currentRoom.equals("Break Room")) {
             commands = breakRoomCommands;
         }
-        if (Objects.equals(currentRoom, "Coffee Bar")) {
+        if (currentRoom.equals("Coffee Bar")) {
             commands = coffeeBarCommands;
         }
-        if (Objects.equals(currentRoom, "Meeting Room-1")) {
+        if (currentRoom.equals("Meeting Room-1")) {
             commands = meetingRoomCommands;
         }
-        if (Objects.equals(currentRoom, "Meeting Room-2")) {
+        if (currentRoom.equals("Meeting Room-2")) {
             commands = meetingRoomCommands;
         }
-        if (Objects.equals(currentRoom, "Empty workstation")) {
+        if (currentRoom.equals("Empty workstation")) {
             commands = emptyWorkstationCommands;
         }
         return commands;
