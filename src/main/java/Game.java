@@ -21,11 +21,12 @@ public class Game {
     private final String[] wordsForSouth = {"south", "s"};
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
-    private final String[] workstationCommands = {"Code", "Venture out", "More", "quit", "help"};
-    private final String[] breakRoomCommands = {"Venture Out", "More", "quit", "help"};
-    private final String[] coffeeBarCommands = {"Venture out", "More", "quit", "help"};
-    private final String[] emptyWorkstationCommands = {"Venture out", "More", "quit", "help"};
-    private final String[] meetingRoomCommands = {"Venture out", "More", "quit", "help"};
+    private final String[] workstationCommands = {"Code"};
+    private final String[] breakRoomCommands = {};
+    private final String[] coffeeBarCommands = {};
+    private final String[] emptyWorkstationCommands = {};
+    private final String[] meetingRoomCommands = {};
+    private boolean playerAlive = true;
 
     public Game(Player player) {
         //array of rooms and set player location to workstation
@@ -71,41 +72,44 @@ public class Game {
 
 
     public void ventureOut() throws IOException {
-        //move player to different rooms
+        //move player to a different room
         while (true) {
             System.out.println("where would you like to go?");
             System.out.print("> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine();
             String[] checkDirection = command.split(" ");
-            String direction = checkDirection[1].toLowerCase();
-            int go = -1;
-            Room currentRoom = player.getRoom();
-            //check command for direction
-            if (Arrays.asList(wordsForNorth).contains(direction)) {
-                System.out.println(go);
-                go = currentRoom.getNorth();
-                System.out.println(go);
+            if (checkDirection.length == 2) {
+                String direction = checkDirection[1].toLowerCase();
+                int go = -1;
+                Room currentRoom = player.getRoom();
+                //check command for direction
+                if (Arrays.asList(wordsForNorth).contains(direction)) {
+                    go = currentRoom.getNorth();
+                }
+                if (Arrays.asList(wordsForSouth).contains(direction)) {
+                    go = currentRoom.getSouth();
+                }
+                if (Arrays.asList(wordsForWest).contains(direction)) {
+                    go = currentRoom.getWest();
+                }
+                if (Arrays.asList(wordsForEast).contains(direction)) {
+                    go = currentRoom.getEast();
+                }
+                //determine if direction exists
+                if (go != -1) {
+                    player.setRoom(gameMap.get(go));
+                    determineBattle();
+                    if (playerAlive){
+                        System.out.println(ANSI_RED + "You traveled " + direction + ANSI_RESET + "\n" + gameMap.get(go).getName() + "\n" + gameMap.get(go).getDescription());
+                        player.setHunger(player.getHunger() - 5);
+                    }
+                    break;
+                } else {
+                    System.out.println("looks like this way is blocked");
+                }
             }
-            if (Arrays.asList(wordsForSouth).contains(direction)) {
-                go = currentRoom.getSouth();
-            }
-            if (Arrays.asList(wordsForWest).contains(direction)) {
-                go = currentRoom.getWest();
-            }
-            if (Arrays.asList(wordsForEast).contains(direction)) {
-                go = currentRoom.getEast();
-            }
-            //determine if direction exists
-            if (go != -1) {
-                player.setRoom(gameMap.get(go));
-                determineBattle();
-                System.out.println(ANSI_RED + "You traveled " + direction + ANSI_RESET + "\n" + gameMap.get(go).getName() + "\n" + gameMap.get(go).getDescription());
-                player.setHunger(player.getHunger() - 5);
-                break;
-            } else {
-                System.out.println("looks like this way is blocked");
-            }
+            System.out.println("not a valid direction, use: go {direction}");
         }
     }
 
@@ -148,24 +152,25 @@ public class Game {
         while (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
             renderUserInterface();
             System.out.println("\nWhat would you like to do?");
+
             String[] determineAvailableCommands = determineAvailableCommands(player.getRoom().getName());
             for (String c : determineAvailableCommands) {
                 System.out.print("> " + c + "    ");
             }
+            System.out.print("> Venture out    > More    > quit    > help    ");
             System.out.print("\n> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine().strip().toLowerCase();
             //travel
             if (command.equals("venture out")) {
                 ventureOut();
+                continue;
             }
             //gain one line of code
             if (command.equals("code")) {
                 if (player.getRoom().getName().equals("WorkStation")) {
                     code();
                     continue;
-                } else {
-                    System.out.println("command not valid in this location");
                 }
             }
             //display stats and instructions
@@ -257,16 +262,20 @@ public class Game {
         int storeEnemyHealth = enemy.getHealth();
         Random rand2 = new Random();
         int determineAttackType = rand2.nextInt(10);
-        while (enemy.getHealth() > 0 && player.getSanity() > 0) {
+        battle:
+        while (enemy.getHealth() > 1 && player.getSanity() > 0) {
             if (determineAttackType >= 7) {
                 player.setSanity(player.getSanity() - enemy.getSuperAttackDmg());
-                System.out.println(enemy.getTitle() + " hit you with " + enemy.getSuperAttack() + ANSI_RED + "\nyou lost " + enemy.getSuperAttackDmg() + " sanity\nyou have " + player.getSanity() + " remaining" + ANSI_RESET);
+                System.out.println(enemy.getTitle() + " hit you with " + enemy.getSuperAttack() + ANSI_RED + "\nyou lost " + enemy.getSuperAttackDmg() + " sanity\nyou have " + player.getSanity() + " sanity remaining" + ANSI_RESET);
             } else {
                 System.out.println(enemy.getTitle() + " hit you with " + enemy.getNormalAttack() + ANSI_RED + "\nyou lost " + enemy.getNormalAttackDmg() + " sanity\nyou have " + player.getSanity() + " remaining" + ANSI_RESET);
                 player.setSanity(player.getSanity() - enemy.getNormalAttackDmg());
             }
             BufferedReader br1 = new BufferedReader(new InputStreamReader(System.in));
             while (true) {
+                if (player.getSanity() < 0){
+                    break battle;
+                }
                 System.out.println("Which attack would you like to use \n> normal > super ");
                 String attack = br1.readLine().toLowerCase();
                 if (attack.equals("normal")) {
@@ -286,7 +295,7 @@ public class Game {
             System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
             enemy.setHealth(storeEnemyHealth);
         }
-
+        playerAlive = false;
     }
 
     public void gameOver() {
