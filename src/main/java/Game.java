@@ -72,7 +72,7 @@ public class Game {
 
 
     public void ventureOut() throws IOException {
-        //move player to different rooms
+        //move player to a different room
         while (true) {
             System.out.println("where would you like to go?");
             System.out.print("> ");
