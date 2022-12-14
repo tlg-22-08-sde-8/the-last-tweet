@@ -1,15 +1,10 @@
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-
-
-import com.google.gson.Gson;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.security.Key;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Game {
 //    private static final String ANSI_PURPLE = "\u001B[35m";
@@ -30,12 +25,13 @@ public class Game {
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
     private final String[] workstationCommands = {"Code", "go north", "go east", "go west"};
-    private final String[] breakRoomCommands = {"go south", "go west", "go east"};
+    private final String[] breakRoomCommands = {"access vending machine", "go south", "go west", "go east"};
     private final String[] coffeeBarCommands = {"go north", "go east"};
     private final String[] emptyWorkstationCommands = {"go north", "go west"};
     private final String[] meetingRoom1Commands = {"go south", "go east"};
     private final String[] meetingRoom2Commands = {"go south", "go west"};
     private boolean playerAlive = true;
+    private boolean gameOver = false;
     //test1
 
     public Game(Player player) throws IOException {
@@ -85,7 +81,6 @@ public class Game {
 
     public void travel(String[] checkDirection) throws IOException {
         //move player to a different room
-        while (true) {
             if (checkDirection.length == 2) {
                 String direction = checkDirection[1].toLowerCase();
                 int go = -1;
@@ -111,13 +106,10 @@ public class Game {
                         System.out.println(ANSI_RED + "You traveled " + direction + ANSI_RESET + "\n" + gameMap.get(go).getName() + "\n" + gameMap.get(go).getDescription());
                         player.setHunger(player.getHunger() - 5);
                     }
-                    break;
                 } else {
                     System.out.println("looks like this way is blocked");
                 }
             }
-            break;
-        }
     }
 
 
@@ -161,7 +153,7 @@ public class Game {
     public void commandInput() throws IOException {
         //get commands from player
         String command;
-        while (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
+        while (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0 && !gameOver) {
             renderUserInterface();
             System.out.println("\nWhat would you like to do?");
 
@@ -169,7 +161,7 @@ public class Game {
             for (String c : determineAvailableCommands) {
                 System.out.print("> " + c + "    ");
             }
-            System.out.print("> More    > save    > load    > help");
+            System.out.print("> Inventory    > More    > save    > load    > help");
             System.out.print("\n> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             command = br.readLine().strip().toLowerCase();
@@ -177,10 +169,16 @@ public class Game {
         }
         if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
             System.out.println("you beat the game");
-        } else {
+        }
+        if (!playerAlive){
             gameOver();
         }
     }
+
+    public void Inventory(){
+        System.out.println(player.getInventory());
+    }
+
 
         public void parseCommand (String command) throws IOException {
             String[] commands = command.split(" ");
@@ -196,6 +194,11 @@ public class Game {
                     }
                     break;
                     //display stats and instructions
+                case "access":
+                    if (player.getRoom().getName().equals("Break Room")){
+                        accessStorage();
+                    }
+                    break;
                 case "more":
                     more();
                     break;
@@ -209,12 +212,55 @@ public class Game {
                 case "load":
                     load();
                     break;
+                case "inventory":
+                    Inventory();
+                    break;
                     //quit game
                 case "quit":
                     gameOver();
                     break;
                 default:
                     System.out.println("command not valid");
+            }
+        }
+
+        public void accessStorage() throws IOException {
+            while(true){
+                System.out.println(Script.getPlayerAtVendingMachine());
+                System.out.println("> Buy Jerky    > Buy Chips    > Buy Candy Bar > quit");
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                String choice = br.readLine().toLowerCase();
+                if ("buy jerky".equals(choice)) {
+                    if (player.getCodeLines() >= 650) {
+                        player.getInventory().put("jerky", player.getInventory().get("jerky") + 1);
+                        player.setCodeLines(player.getCodeLines() - 650);
+                    } else {
+                        System.out.println("you do not have enough code-lines");
+                    }
+                    continue;
+                }
+                if ("buy chips".equals(choice)) {
+                    if (player.getCodeLines() >= 500) {
+                        player.getInventory().put("Chips", player.getInventory().get("Chips") + 1);
+                        player.setCodeLines(player.getCodeLines() - 500);
+                    } else {
+                        System.out.println("you do not have enough code-lines");
+                    }
+                    continue;
+                }
+                if ("buy candy bar".equals(choice)) {
+                    if (player.getCodeLines() >= 200) {
+                        player.getInventory().put("Candy Bar", player.getInventory().get("Candy Bar") + 1);
+                        player.setCodeLines(player.getCodeLines() - 200);
+                    } else {
+                        System.out.println("you do not have enough code-lines");
+                    }
+                    continue;
+                }
+                if ("q".equals(choice) || "quit".equals(choice)) {
+                    break;
+                }
+                System.out.println("command not valid");
             }
         }
 
@@ -336,12 +382,15 @@ public class Game {
         if (player.getSanity() > 0){
             System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
             enemy.setHealth(storeEnemyHealth);
+        } else {
+            playerAlive = false;
         }
-        playerAlive = false;
+
     }
 
     public void gameOver() {
         //display game over logo
+        gameOver = true;
         String gameOverLogo = "\n\n" + ANSI_RED +
                 " ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄       ▄▄ ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄▄ ▄               ▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ \n" +
                 "▐░░░░░░░░░░░▐░░░░░░░░░░░▐░░▌     ▐░░▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▐░▌             ▐░▐░░░░░░░░░░░▐░░░░░░░░░░░▌\n" +

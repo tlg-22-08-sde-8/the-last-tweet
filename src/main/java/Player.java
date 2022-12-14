@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class Player {
     private Room room;
     private int hunger;
@@ -5,12 +8,19 @@ public class Player {
     private int sanity;
     private int score;
     private int codeLines = 0;
+    private Map<String, Integer> inventory;
 
     //player room field allows the game class to move character around the map
     public Player(int hunger, int employability, int sanity) {
         this.hunger = hunger;
         this.sanity = sanity;
         this.employability = employability;
+        inventory = new HashMap<>();
+        inventory.put("jerky", 0);
+        inventory.put("Chips", 0);
+        inventory.put("Candy Bar", 0);
+
+
     }
 
     public int normalAttack(){
@@ -22,6 +32,14 @@ public class Player {
     }
 
     // accessor methods
+    public Map<String, Integer> getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(Map<String, Integer> inventory) {
+        this.inventory = inventory;
+    }
+
     public int getCodeLines() {
         return codeLines;
     }

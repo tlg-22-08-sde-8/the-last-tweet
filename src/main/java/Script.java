@@ -72,7 +72,6 @@ public final class Script {
             "Candy Bar (cost: 200 lines of code) - increases hunger by 5 \n" +
             "Chips (cost: 500 lines of code) - increases hunger by 10\n" +
             "Jerky (cost: 650 lines of code) - refill hunger to 15\n" +
-            "Gum (cost: 350 line of code) - hunger level doesn’t decrease for 3 moves\n" +
             "The purchased item will be added to your inventory. press the corresponding number or “q” to go back.";
 
     private static final String playerInMeetingRoom = "This room looks like it belongs to a manager. " +
