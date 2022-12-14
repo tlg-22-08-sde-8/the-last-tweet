@@ -48,42 +48,54 @@ public class PlayerTest {
 
   @Test
   public void getScore() {
+    assertEquals(0, player.getScore());
 
   }
 
   @Test
   public void setScore() {
+    player.setCodeLines(0);
+    assertEquals(0, player.getScore());
   }
 
   @Test
   public void getHunger() {
+    assertEquals(1, player.getHunger());
   }
 
   @Test
   public void setHunger() {
+    player.setCodeLines(1);
+    assertEquals(1, player.getHunger());
   }
 
   @Test
   public void getEmployability() {
+    assertEquals(1, player.getEmployability());
   }
 
   @Test
   public void setEmployability() {
+    player.setCodeLines(1);
+    assertEquals(1, player.getEmployability());
   }
 
   @Test
   public void getSanity() {
+    assertEquals(1, player.getSanity());
   }
 
   @Test
   public void setSanity() {
+    player.setCodeLines(1);
+    assertEquals(1, player.getSanity());
   }
 
   @Test
   public void getRoom() {
+    assertEquals(0, player.getScore());
   }
 
-  @Test
-  public void setRoom() {
-  }
+
+
 }
