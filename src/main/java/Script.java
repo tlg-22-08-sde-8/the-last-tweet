@@ -22,7 +22,7 @@ public final class Script {
 
     private static final String playerProgram = "The follow programs are available for building: \n" +
             "\tMagic Keyboard (cost: 1000 lines of code) - Increases Attack in battle by +10 lines per code.  \n" +
-            "\tMagic mouse (cost: 500 lines of code) - Increases Attack in battle by +5 lines of code. \n" +
+            "\tMagic Mouse (cost: 500 lines of code) - Increases Attack in battle by +5 lines of code. \n" +
             "\tDigital Assistant (cost: 10,000 lines of code) - auto generates code by +10 per action while you " +
             "are away from your workstation. \n" +
             "\n" +

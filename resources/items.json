@@ -1,0 +1,88 @@
+{
+  "player": {
+    "inventory": {
+      "code lines": 0,
+      "coffee": 0,
+      "foodstuffs": 0
+      },
+    "programs": {
+      "magic keyboard": false,
+      "magic mouse":  false,
+      "digital assistant": false
+    }
+  },
+  "rooms": {
+    "Break Room": {
+      "vending machine": {
+        "foodstuff: chips": 3,
+        "foodstuff: candy bar": 5,
+        "foodstuff: jerky": 10
+      },
+      "laptop": {
+        "code lines": 10
+      }
+    },
+    "Abandoned Workstation": {
+      "desk": {
+        "coffee": 1,
+        "foodstuff: chips": 3,
+        "foodstuff: candy bar": 5
+      },
+      "laptop": {
+        "code lines": 10
+      }
+    },
+    "Coffee Bar": {
+      "coffee machine": {
+        "coffee": 3
+      },
+        "laptop": {
+            "code lines": 10
+        }
+    }
+  },
+  "enemy drops": {
+    "Jr Developer": {
+      "code lines": 25,
+      "coffee": 1,
+        "foodstuff: chips": 3,
+        "foodstuff: candy bar": 5
+    },
+    "Sr Developer": {
+      "code lines": 50,
+      "coffee": 5,
+      "foodstuff: chips": 3,
+      "foodstuff: candy bar": 5
+    },
+    "Product Manager": {
+      "code lines": 100,
+      "coffee": 10,
+      "foodstuff: chips": 3,
+      "foodstuff: candy bar": 5
+    },
+    "Elon Musk Superfan": {
+      "code lines": 250,
+      "coffee": 25,
+      "foodstuff: chips": 3,
+      "foodstuff: candy bar": 5
+    },
+    "Lead Project Manager":  {
+        "code lines": 500,
+        "coffee": 50,
+        "foodstuff: chips": 3,
+        "foodstuff: candy bar": 5
+    },
+    "Electric Vehicle": {
+      "code lines": 1000,
+      "coffee": 100,
+      "foodstuff: chips": 3,
+      "foodstuff: candy bar": 5
+    },
+    "Human Resource Director": {
+        "code lines": 2500,
+        "coffee": 200 ,
+        "foodstuff: chips": 3,
+        "foodstuff: candy bar": 5
+        }
+    }
+  }
