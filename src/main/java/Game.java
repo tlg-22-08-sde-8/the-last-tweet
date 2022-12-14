@@ -19,25 +19,27 @@ public class Game {
     private static final String ANSI_BLUE = "\u001B[34m";
     private Player player;
     private Enemy enemy;
-    private final List<Room> gameMap;
-    private final ArrayList<Enemy> enemyArray;
+    private List<Room> gameMap;
+    private ArrayList<Enemy> enemyArray;
     private final String[] wordsForNorth = {"north", "n"};
     private final String[] wordsForSouth = {"south", "s"};
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
-    private final String[] workstationCommands = {"Code"};
-    private final String[] breakRoomCommands = {};
-    private final String[] coffeeBarCommands = {};
-    private final String[] emptyWorkstationCommands = {};
-    private final String[] meetingRoomCommands = {};
+    private final String[] workstationCommands = {"Code", "go north", "go east", "go west"};
+    private final String[] breakRoomCommands = {"go south", "go west", "go east"};
+    private final String[] coffeeBarCommands = {"go north", "go east"};
+    private final String[] emptyWorkstationCommands = {"go north", "go west"};
+    private final String[] meetingRoom1Commands = {"go south", "go east"};
+    private final String[] meetingRoom2Commands = {"go south", "go west"};
     private boolean playerAlive = true;
     //test1
 
     public Game(Player player) throws IOException {
-        //array of rooms and set player location to workstation
-        BufferedReader br = new BufferedReader(new FileReader("rooms.json"));
+        //array of rooms from json
+        BufferedReader br = new BufferedReader(new FileReader("resources/rooms.json"));
         Gson gson = new Gson();
         gameMap = gson.fromJson(br, new TypeToken<List<Room>>(){}.getType());
+        br.close();
         //set player room
         this.player = player;
         player.setRoom(gameMap.get(0));
@@ -77,14 +79,9 @@ public class Game {
         System.out.println(storyIntro);
     }
 
-    public void ventureOut() throws IOException {
+    public void travel(String[] checkDirection) throws IOException {
         //move player to a different room
         while (true) {
-            System.out.println("where would you like to go?");
-            System.out.print("> ");
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String command = br.readLine();
-            String[] checkDirection = command.split(" ");
             if (checkDirection.length == 2) {
                 String direction = checkDirection[1].toLowerCase();
                 int go = -1;
@@ -115,7 +112,7 @@ public class Game {
                     System.out.println("looks like this way is blocked");
                 }
             }
-            System.out.println("not a valid direction, use: go {direction}");
+            break;
         }
     }
 
@@ -138,10 +135,13 @@ public class Game {
 
     public void help() {
         System.out.println("Game Description:\n" + Script.getBasicInfo() + "\n");
-        System.out.println("Commands: \n" +
-                "Travel through the game: go {direction} ex: go east,  *each time you travel, you have a random chance for a battle*\n" +
-                "Quit: quit [enter]\n" +
-                "To gain code-line: select code option at workstation or defeat enemies\n"
+        System.out.println(
+                "|ACTION       | TYPE | \n" +
+                "|Travel       | go N or go North | \n" +
+                "|Quit         | quit             | \n" +
+                "|Player Stats | More             | \n" +
+                "|Save Game    | save             | \n" +
+                "|Load Game    | load             | \n"
         );
     }
 
@@ -164,15 +164,16 @@ public class Game {
             for (String c : determineAvailableCommands) {
                 System.out.print("> " + c + "    ");
             }
-            System.out.print("> Venture out    > More    > save    > load    > help");
+            System.out.print("> More    > save    > load    > help");
             System.out.print("\n> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine().strip().toLowerCase();
+            String[] commands = command.split(" ");
             //travel
-            switch (command) {
+            switch (commands[0]) {
 
-                case "venture out":
-                    ventureOut();
+                case "go":
+                    travel(commands);
                     continue;
                 //gain one line of code
                 case "code":
@@ -214,7 +215,7 @@ public class Game {
     public void save() throws IOException {
         //save game
         System.out.println("Saving game...");
-        String saveFile = "save.json";
+        String saveFile = "resources/save.json";
         BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile));
         Gson gson = new Gson();
         bw.write(gson.toJson(player));
@@ -225,10 +226,11 @@ public class Game {
     public void load() throws IOException   {
         //load game
         System.out.println("Loading game...");
-        String saveFile = "save.json";
+        String saveFile = "resources/save.json";
         BufferedReader br = new BufferedReader(new FileReader(saveFile));
         Gson gson = new Gson();
         player = gson.fromJson(br, Player.class);
+        br.close();
         System.out.println("Game loaded!");
     }
 
@@ -245,10 +247,10 @@ public class Game {
             commands = coffeeBarCommands;
         }
         if (currentRoom.equals("Meeting Room-1")) {
-            commands = meetingRoomCommands;
+            commands = meetingRoom1Commands;
         }
         if (currentRoom.equals("Meeting Room-2")) {
-            commands = meetingRoomCommands;
+            commands = meetingRoom2Commands;
         }
         if (currentRoom.equals("Empty workstation")) {
             commands = emptyWorkstationCommands;
