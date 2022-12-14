@@ -1,12 +1,14 @@
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class Game {
-    //    private static final String ANSI_PURPLE = "\u001B[35m";
+//    private static final String ANSI_PURPLE = "\u001B[35m";
 //    private static final String ANSI_CYAN = "\u001B[36m";
 //    private static final String ANSI_WHITE = "\u001B[37m";
 //    private static final String ANSI_BLACK = "\u001B[30m";
@@ -31,15 +33,11 @@ public class Game {
     private boolean playerAlive = true;
     //test1
 
-    public Game(Player player) {
+    public Game(Player player) throws IOException {
         //array of rooms and set player location to workstation
-        gameMap = new ArrayList<>();
-        gameMap.add(new Room("WorkStation", "You are standing in a bleak, cold room that smells like feet and despair. You are exhausted, but alive. You sit back down at your work computer, pondering your next steps. ", 1, -1, 3, 4));
-        gameMap.add(new Room("Break Room", "Huh weird this room is empty. ", -1, 0, 2, 5));
-        gameMap.add(new Room("Meeting Room-1", "The room is composed of brilliant white marble. The air smells of citrus. A heavenly glow eliminates from the coffee bar, like the open arms of an angel. The Kuerig machine is running. A lone laptop is in the room. ", -1, 3, -1, 1));
-        gameMap.add(new Room("Coffee Bar", "A nasty, dark cell", 2, -1, -1, 0));
-        gameMap.add(new Room("Empty workstation", "This workstation still has pictures of a recently fired employee and their family", 5, -1, 0, -1));
-        gameMap.add(new Room("Meeting Room-2", "The room is composed of brilliant white marble. The air smells of citrus. A heavenly glow eliminates from the coffee bar, like the open arms of an angel. The Kuerig machine is running. A lone laptop is in the room. ", -1, 4, 1, -1));
+        BufferedReader br = new BufferedReader(new FileReader("rooms.json"));
+        Gson gson = new Gson();
+        gameMap = gson.fromJson(br, new TypeToken<List<Room>>(){}.getType());
         //set player room
         this.player = player;
         player.setRoom(gameMap.get(0));
@@ -72,7 +70,7 @@ public class Game {
         //display intro to user
         System.out.println(gameIntroLogo);
         System.out.println(logoSubTitle);
-        Thread.sleep(5000);
+        Thread.sleep(8000);
         System.out.print("\033[H\033[2J");
         System.out.flush();
         System.out.println(Script.getFirstScene());
@@ -108,7 +106,7 @@ public class Game {
                 if (go != -1) {
                     player.setRoom(gameMap.get(go));
                     determineBattle();
-                    if (playerAlive){
+                    if (playerAlive) {
                         System.out.println(ANSI_RED + "You traveled " + direction + ANSI_RESET + "\n" + gameMap.get(go).getName() + "\n" + gameMap.get(go).getDescription());
                         player.setHunger(player.getHunger() - 5);
                     }
@@ -120,6 +118,7 @@ public class Game {
             System.out.println("not a valid direction, use: go {direction}");
         }
     }
+
 
     public void code() {
         System.out.println(ANSI_RED + "you gained 1 code-line" + ANSI_RESET);
