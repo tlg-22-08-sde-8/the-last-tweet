@@ -1,13 +1,18 @@
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+
 
 import com.google.gson.Gson;
 import java.io.*;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class Game {
-    //    private static final String ANSI_PURPLE = "\u001B[35m";
+//    private static final String ANSI_PURPLE = "\u001B[35m";
 //    private static final String ANSI_CYAN = "\u001B[36m";
 //    private static final String ANSI_WHITE = "\u001B[37m";
 //    private static final String ANSI_BLACK = "\u001B[30m";
@@ -18,29 +23,27 @@ public class Game {
     private static final String ANSI_BLUE = "\u001B[34m";
     private Player player;
     private Enemy enemy;
-    private final List<Room> gameMap;
-    private final ArrayList<Enemy> enemyArray;
+    private List<Room> gameMap;
+    private ArrayList<Enemy> enemyArray;
     private final String[] wordsForNorth = {"north", "n"};
     private final String[] wordsForSouth = {"south", "s"};
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
-    private final String[] workstationCommands = {"Code"};
-    private final String[] breakRoomCommands = {};
-    private final String[] coffeeBarCommands = {};
-    private final String[] emptyWorkstationCommands = {};
-    private final String[] meetingRoomCommands = {};
+    private final String[] workstationCommands = {"Code", "go north", "go east", "go west"};
+    private final String[] breakRoomCommands = {"go south", "go west", "go east"};
+    private final String[] coffeeBarCommands = {"go north", "go east"};
+    private final String[] emptyWorkstationCommands = {"go north", "go west"};
+    private final String[] meetingRoom1Commands = {"go south", "go east"};
+    private final String[] meetingRoom2Commands = {"go south", "go west"};
     private boolean playerAlive = true;
     //test1
 
-    public Game(Player player) {
-        //array of rooms and set player location to workstation
-        gameMap = new ArrayList<>();
-        gameMap.add(new Room("WorkStation", "You are standing in a bleak, cold room that smells like feet and despair. You are exhausted, but alive. You sit back down at your work computer, pondering your next steps. ", 1, -1, 3, 4));
-        gameMap.add(new Room("Break Room", "Huh weird this room is empty. ", -1, 0, 2, 5));
-        gameMap.add(new Room("Meeting Room-1", "The room is composed of brilliant white marble. The air smells of citrus. A heavenly glow eliminates from the coffee bar, like the open arms of an angel. The Kuerig machine is running. A lone laptop is in the room. ", -1, 3, -1, 1));
-        gameMap.add(new Room("Coffee Bar", "A nasty, dark cell", 2, -1, -1, 0));
-        gameMap.add(new Room("Empty workstation", "This workstation still has pictures of a recently fired employee and their family", 5, -1, 0, -1));
-        gameMap.add(new Room("Meeting Room-2", "The room is composed of brilliant white marble. The air smells of citrus. A heavenly glow eliminates from the coffee bar, like the open arms of an angel. The Kuerig machine is running. A lone laptop is in the room. ", -1, 4, 1, -1));
+    public Game(Player player) throws IOException {
+        //array of rooms from json
+        BufferedReader br = new BufferedReader(new FileReader("resources/rooms.json"));
+        Gson gson = new Gson();
+        gameMap = gson.fromJson(br, new TypeToken<List<Room>>(){}.getType());
+        br.close();
         //set player room
         this.player = player;
         player.setRoom(gameMap.get(0));
@@ -73,21 +76,16 @@ public class Game {
         //display intro to user
         System.out.println(gameIntroLogo);
         System.out.println(logoSubTitle);
-        Thread.sleep(5000);
+        Thread.sleep(8000);
         System.out.print("\033[H\033[2J");
         System.out.flush();
         System.out.println(Script.getFirstScene());
         System.out.println(storyIntro);
     }
 
-    public void ventureOut() throws IOException {
+    public void travel(String[] checkDirection) throws IOException {
         //move player to a different room
         while (true) {
-            System.out.println("where would you like to go?");
-            System.out.print("> ");
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String command = br.readLine();
-            String[] checkDirection = command.split(" ");
             if (checkDirection.length == 2) {
                 String direction = checkDirection[1].toLowerCase();
                 int go = -1;
@@ -109,7 +107,7 @@ public class Game {
                 if (go != -1) {
                     player.setRoom(gameMap.get(go));
                     determineBattle();
-                    if (playerAlive){
+                    if (playerAlive) {
                         System.out.println(ANSI_RED + "You traveled " + direction + ANSI_RESET + "\n" + gameMap.get(go).getName() + "\n" + gameMap.get(go).getDescription());
                         player.setHunger(player.getHunger() - 5);
                     }
@@ -118,9 +116,10 @@ public class Game {
                     System.out.println("looks like this way is blocked");
                 }
             }
-            System.out.println("not a valid direction, use: go {direction}");
+            break;
         }
     }
+
 
     public void code() {
         System.out.println(ANSI_RED + "you gained 1 code-line" + ANSI_RESET);
@@ -140,10 +139,13 @@ public class Game {
 
     public void help() {
         System.out.println("Game Description:\n" + Script.getBasicInfo() + "\n");
-        System.out.println("Commands: \n" +
-                "Travel through the game: go {direction} ex: go east,  *each time you travel, you have a random chance for a battle*\n" +
-                "Quit: quit [enter]\n" +
-                "To gain code-line: select code option at workstation or defeat enemies\n"
+        System.out.println(
+                "|ACTION       | TYPE | \n" +
+                "|Travel       | go N or go North | \n" +
+                "|Quit         | quit             | \n" +
+                "|Player Stats | More             | \n" +
+                "|Save Game    | save             | \n" +
+                "|Load Game    | load             | \n"
         );
     }
 
@@ -158,6 +160,7 @@ public class Game {
 
     public void commandInput() throws IOException {
         //get commands from player
+        String command;
         while (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
             renderUserInterface();
             System.out.println("\nWhat would you like to do?");
@@ -166,57 +169,60 @@ public class Game {
             for (String c : determineAvailableCommands) {
                 System.out.print("> " + c + "    ");
             }
-            System.out.print("> Venture out    > More    > save    > load    > help");
+            System.out.print("> More    > save    > load    > help");
             System.out.print("\n> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String command = br.readLine().strip().toLowerCase();
-            //travel
-            switch (command) {
+            command = br.readLine().strip().toLowerCase();
+            parseCommand(command);
+        }
+        if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
+            System.out.println("you beat the game");
+        } else {
+            gameOver();
+        }
+    }
 
-                case "venture out":
-                    ventureOut();
-                    continue;
-                //gain one line of code
+        public void parseCommand (String command) throws IOException {
+            String[] commands = command.split(" ");
+            //travel
+            switch (commands[0]) {
+                case "go":
+                    travel(commands);
+                    break;
+                    //gain one line of code
                 case "code":
                     if (player.getRoom().getName().equals("WorkStation")) {
                         code();
-                        continue;
                     }
-                //display stats and instructions
+                    break;
+                    //display stats and instructions
                 case "more":
                     more();
-                    continue;
-                //help
+                    break;
+                    //help
                 case "help":
                     help();
-                    continue;
+                    break;
                 case "save":
                     save();
-                    continue;
+                    break;
                 case "load":
                     load();
-                    continue;
-                //quit game
+                    break;
+                    //quit game
                 case "quit":
                     gameOver();
-                    return;
+                    break;
                 default:
                     System.out.println("command not valid");
             }
         }
 
-        if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
-            System.out.println("you beat the game");
-        }
-        else {
-            gameOver();
-        }
-    }
 
     public void save() throws IOException {
         //save game
         System.out.println("Saving game...");
-        String saveFile = "save.json";
+        String saveFile = "resources/save.json";
         BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile));
         Gson gson = new Gson();
         bw.write(gson.toJson(player));
@@ -227,10 +233,11 @@ public class Game {
     public void load() throws IOException   {
         //load game
         System.out.println("Loading game...");
-        String saveFile = "save.json";
+        String saveFile = "resources/save.json";
         BufferedReader br = new BufferedReader(new FileReader(saveFile));
         Gson gson = new Gson();
         player = gson.fromJson(br, Player.class);
+        br.close();
         System.out.println("Game loaded!");
     }
 
@@ -247,10 +254,10 @@ public class Game {
             commands = coffeeBarCommands;
         }
         if (currentRoom.equals("Meeting Room-1")) {
-            commands = meetingRoomCommands;
+            commands = meetingRoom1Commands;
         }
         if (currentRoom.equals("Meeting Room-2")) {
-            commands = meetingRoomCommands;
+            commands = meetingRoom2Commands;
         }
         if (currentRoom.equals("Empty workstation")) {
             commands = emptyWorkstationCommands;
