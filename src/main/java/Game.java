@@ -156,6 +156,7 @@ public class Game {
 
     public void commandInput() throws IOException {
         //get commands from player
+        String command;
         while (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
             renderUserInterface();
             System.out.println("\nWhat would you like to do?");
@@ -167,50 +168,52 @@ public class Game {
             System.out.print("> More    > save    > load    > help");
             System.out.print("\n> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String command = br.readLine().strip().toLowerCase();
+            command = br.readLine().strip().toLowerCase();
+            parseCommand(command);
+        }
+        if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
+            System.out.println("you beat the game");
+        } else {
+            gameOver();
+        }
+    }
+
+        public void parseCommand (String command) throws IOException {
             String[] commands = command.split(" ");
             //travel
             switch (commands[0]) {
-
                 case "go":
                     travel(commands);
-                    continue;
-                //gain one line of code
+                    break;
+                    //gain one line of code
                 case "code":
                     if (player.getRoom().getName().equals("WorkStation")) {
                         code();
-                        continue;
                     }
-                //display stats and instructions
+                    break;
+                    //display stats and instructions
                 case "more":
                     more();
-                    continue;
-                //help
+                    break;
+                    //help
                 case "help":
                     help();
-                    continue;
+                    break;
                 case "save":
                     save();
-                    continue;
+                    break;
                 case "load":
                     load();
-                    continue;
-                //quit game
+                    break;
+                    //quit game
                 case "quit":
                     gameOver();
-                    return;
+                    break;
                 default:
                     System.out.println("command not valid");
             }
         }
 
-        if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
-            System.out.println("you beat the game");
-        }
-        else {
-            gameOver();
-        }
-    }
 
     public void save() throws IOException {
         //save game

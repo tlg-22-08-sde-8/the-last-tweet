@@ -8,7 +8,7 @@ public class Main {
         while (true) {
             final Player player = new Player(25, 25, 25);
             Game game = new Game(player);
-            game.gameIntro();
+//            game.gameIntro();
             game.commandInput();
             System.out.println("want to play again? (enter 'yes' for new game)");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
