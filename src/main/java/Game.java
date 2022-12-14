@@ -50,6 +50,7 @@ public class Game {
 
     public void gameIntro() {
         //create game intro logo and intro story lines
+
         String gameIntroLogo = ANSI_BLUE +
                 "▄▄▄█████▓ ██░ ██ ▓█████     ██▓     ▄▄▄        ██████ ▄▄▄█████▓   ▄▄▄█████▓ █     █░▓█████ ▓█████ ▄▄▄█████▓\n" +
                 "▓  ██▒ ▓▒▓██░ ██▒▓█   ▀    ▓██▒    ▒████▄    ▒██    ▒ ▓  ██▒ ▓▒   ▓  ██▒ ▓▒▓█░ █ ░█░▓█   ▀ ▓█   ▀ ▓  ██▒ ▓▒\n" +
@@ -69,8 +70,9 @@ public class Game {
         System.out.println(logoSubTitle);
         System.out.println(Script.getFirstScene());
         System.out.println(storyIntro);
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
-
 
     public void ventureOut() throws IOException {
         //move player to a different room
@@ -158,7 +160,7 @@ public class Game {
             for (String c : determineAvailableCommands) {
                 System.out.print("> " + c + "    ");
             }
-            System.out.print("> Venture out    > More    > save    > load    > help    > load");
+            System.out.print("> Venture out    > More    > save    > load    > help");
             System.out.print("\n> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine().strip().toLowerCase();
