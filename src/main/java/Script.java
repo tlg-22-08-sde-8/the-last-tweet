@@ -14,20 +14,21 @@ public final class Script {
             "Elon Musk has acquired Twitter. Half of the Twitter workforce has been laid off. \n" +
             "You are one of the survivors. \n";
 
-    private static final String userRequest = "What do you do?";
+    private static final String playerRequest = "What do you do?";
 
-    private static final String playerCodes = "You log into your work computer. \n" +
-            "You’ve gained " /*+ Player.getCodeLines() */+ "lines of code. \n" +
+    private static final String playerCodes = "You log into the computer using your Twitter credentials, then open" +
+            "up an Development Environment. Your fingers start tapping away. \n" +
+            "You’ve gained " /*+ Player.getCodeLines() */ + "lines of code. \n" +
             "You’ve lost 1 hunger. You have X hunger left. ";
 
-    private static final String playerProgram = "The follow programs are available for building: \n" +
+    private static final String playerPrograms = "The follow programs are available for building: \n" +
             "\tMagic Keyboard (cost: 1000 lines of code) - Increases Attack in battle by +10 lines per code.  \n" +
             "\tMagic mouse (cost: 500 lines of code) - Increases Attack in battle by +5 lines of code. \n" +
             "\tDigital Assistant (cost: 10,000 lines of code) - auto generates code by +10 per action while you " +
             "are away from your workstation. \n" +
             "\n" +
             "To “program” an item into your inventory, press the corresponding number or “q” to go back to " +
-            "your workstation." ;
+            "your workstation.";
 
     private static final String playerBuildsProgram = "The following program +" +
             /* Store.getMagicKeyboard() +*/
@@ -37,7 +38,7 @@ public final class Script {
     private static final String playerChoosesMore = "What would you like to know?";
 
     private static final String playerChecksStatus = "Status: \n" +
-        "\tEmployment: " + /*Player.getCurrentEmployment() + */ "/" + /*Player.getMaxEmployment() + */ "\n" +
+            "\tEmployment: " + /*Player.getCurrentEmployment() + */ "/" + /*Player.getMaxEmployment() + */ "\n" +
             "\t\tDon't let this reach 0 or it's game over!\n" +
             "\n" +
             "\tSanity: " + /*Player.getCurrentSanity() + */ "/" + /*Player.getMaxSanity() + */ "\n" +
@@ -69,19 +70,20 @@ public final class Script {
 
     private static final String playerAtVendingMachine = "Food items availible: \n" +
             "Candy Bar (cost: 200 lines of code) - increases hunger by 5 \n" +
-            "Chips (cost: 500 lines of code) - increases hunger by 10\n"    +
+            "Chips (cost: 500 lines of code) - increases hunger by 10\n" +
             "Jerky (cost: 650 lines of code) - refill hunger to 15\n" +
             "Gum (cost: 350 line of code) - hunger level doesn’t decrease for 3 moves\n" +
             "The purchased item will be added to your inventory. press the corresponding number or “q” to go back.";
 
     private static final String playerInMeetingRoom = "This room looks like it belongs to a manager. " +
-            "(recommended codelines: "+  /*Enemy.bossRecommended() + */ "/current codelines: " +
+            "(recommended codelines: " +  /*Enemy.bossRecommended() + */ "/current codelines: " +
             /*Player.getCodeLines() +*/ "\n" +
             "\tWhat do you do?";
 
-    private static final String PlayerFindsAbandonedWorkstation =  "There is an abandoned workstation desk,possibly" +
+    private static final String PlayerFindsAbandonedWorkstation = "There is an abandoned workstation desk,possibly" +
             "belonging to a former employee that was just laid off hours ago. You ponder if there might be " +
-            "useful supplies left behind within its innards.";
+            "useful supplies left behind within its innards, but I could seriously put my Employability in jeopardy " +
+            "if I am caught!";
 
     private static final String playerSearchesDeskSuccessfully = "You stick your hand into the drawer of the desk." +
             "You feel something push back. \n" +
@@ -110,29 +112,12 @@ public final class Script {
             "No coffee gained.";
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //access methods
 
     /**
      * Returns the basic information script about the game.
      * User requested when they type "about" into the console in the "more" menu.
+     *
      * @return basicInfo
      */
     public static String getBasicInfo() {
@@ -142,9 +127,99 @@ public final class Script {
     /**
      * The first lines of the game when the game starts.
      * Returns the first scene script.
+     *
      * @return firstScene
      */
     public static String getFirstScene() {
         return firstScene;
     }
+
+    /**
+     * Returns the script to ask the player what they would like to do before being presented with options.
+     * @return the first lines the player sees.
+     */
+    public static String getPlayerRequest() {
+        return playerRequest;
+    }
+
+    /**
+     * Returns the script when the player decides they want to add 'code lines' to their inventory.
+     * @return
+     */
+    public static String getPlayerCodes() {
+        return playerCodes;
+    }
+
+    public static String getPlayerPrograms() {
+        return playerPrograms;
+    }
+
+    public static String getPlayerBuildsProgram() {
+        return playerBuildsProgram;
+    }
+
+    public static String getPlayerChoosesMore() {
+        return playerChoosesMore;
+    }
+
+    public static String getPlayerChecksStatus() {
+        return playerChecksStatus;
+    }
+
+    public static String getPlayerChecksInventory() {
+        return playerChecksInventory;
+    }
+
+    public static String getRandomEncounter() {
+        return randomEncounter;
+    }
+
+    public static String getPlayerReturnsToWorkstation() {
+        return playerReturnsToWorkstation;
+    }
+
+    public static String getPlayerInBreakRoom() {
+        return playerInBreakRoom;
+    }
+
+    public static String getPlayerAtVendingMachine() {
+        return playerAtVendingMachine;
+    }
+
+    public static String getPlayerInMeetingRoom() {
+        return playerInMeetingRoom;
+    }
+
+    public static String getPlayerFindsAbandonedWorkstation() {
+        return PlayerFindsAbandonedWorkstation;
+    }
+
+    public static String getPlayerSearchesDeskSuccessfully() {
+        return playerSearchesDeskSuccessfully;
+    }
+
+    public static String getPlayerSearchesDeskCaught() {
+        return playerSearchesDeskCaught;
+    }
+
+    public static String getPlayerSearchesDeskEmpty() {
+        return playerSearchesDeskEmpty;
+    }
+
+    public static String getPlayerInCoffeeBar() {
+        return playerInCoffeeBar;
+    }
+
+    public static String getPlayerBrewsCoffee() {
+        return playerBrewsCoffee;
+    }
+
+    public static String getPlayerBrewsCoffee3x() {
+        return playerBrewsCoffee3x;
+    }
+
+
+
+
+
 }
