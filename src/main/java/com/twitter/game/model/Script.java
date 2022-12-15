@@ -112,8 +112,28 @@ public final class Script {
             "Seems like it’s about to overheat. I’ll need to come back later when it has cooled down.\n" +
             "No coffee gained.";
 
+    private static final String survivalGuide =
+                    "╭━━━━╮╱╱╱╱╭╮╱╭╮╱╱╱╱╱╱╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╭╮╱╭━━━╮╱╱╱╱╱╭╮\n" +
+                    "┃╭╮╭╮┃╱╱╱╭╯╰┳╯╰╮╱╱╱╱╱┃╭━╮┃╱╱╱╱╱╱╱╱╱╱╱╱╱╱┃┃╱┃╭━╮┃╱╱╱╱╱┃┃\n" +
+                    "╰╯┃┃┣┫╭╮╭╋╮╭┻╮╭╋━━┳━╮┃╰━━┳╮╭┳━┳╮╭┳┳╮╭┳━━┫┃╱┃┃╱╰╋╮╭┳┳━╯┣━━╮\n" +
+                    "╱╱┃┃┃╰╯╰╯┣┫┃╱┃┃┃┃━┫╭╯╰━━╮┃┃┃┃╭┫╰╯┣┫╰╯┃╭╮┃┃╱┃┃╭━┫┃┃┣┫╭╮┃┃━┫\n" +
+                    "╱╱┃┃╰╮╭╮╭┫┃╰╮┃╰┫┃━┫┃╱┃╰━╯┃╰╯┃┃╰╮╭┫┣╮╭┫╭╮┃╰╮┃╰┻━┃╰╯┃┃╰╯┃┃━┫\n" +
+                    "╱╱╰╯╱╰╯╰╯╰┻━╯╰━┻━━┻╯╱╰━━━┻━━┻╯╱╰╯╰╯╰╯╰╯╰┻━╯╰━━━┻━━┻┻━━┻━━╯\n" +
+
+            "Hi I don't know who is reading this but I was recently promoted to Principal Engineer by Elon Musk himself \n" +
+             "In order to survive and thrive at Twitter I have a couple recommendations: \n" +
+                            "1. Before you travel anywhere in the office have at least 50 lines of code ready. The office is scattered with people who want to outperform/embarrass you \n" +
+                            "2. If you start feeling like your going insane, grab a cup of coffee. It has always helped me \n" +
+                            "3. Remember to get some food when your hungry. There is a break room for a reason"
+
+            ;
+
 
     //access methods
+    public static String getSurvivalGuide(){
+        return survivalGuide;
+    }
+
 
     /**
      * Returns the basic information script about the game.
