@@ -191,6 +191,7 @@ public class Game {
             command = br.readLine().strip().toLowerCase();
             parseCommand(command);
         }
+
         if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
             System.out.println("you beat the game");
         }
