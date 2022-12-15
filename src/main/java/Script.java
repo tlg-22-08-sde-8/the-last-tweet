@@ -150,6 +150,10 @@ public final class Script {
         return playerCodes;
     }
 
+    /**
+     * Returns the script when the player decides they want to add 'code lines' to their inventory.
+     * @return playerPrograms - returns a string that says that the player is programming.
+     */
     public static String getPlayerPrograms() {
         return playerPrograms;
     }
