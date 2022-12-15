@@ -1,3 +1,5 @@
+package com.twitter.game.model;
+
 public class Enemy {
     private int health;
     private String title;

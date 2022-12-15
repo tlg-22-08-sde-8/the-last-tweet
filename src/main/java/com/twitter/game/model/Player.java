@@ -1,4 +1,7 @@
-import java.util.HashMap;
+package com.twitter.game.model;
+
+import com.twitter.game.model.Room;
+
 import java.util.Map;
 
 public class Player {

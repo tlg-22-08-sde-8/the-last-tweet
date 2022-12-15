@@ -1,3 +1,8 @@
+package com.twitter.game.client;
+
+import com.twitter.game.controller.Game;
+import com.twitter.game.model.Player;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

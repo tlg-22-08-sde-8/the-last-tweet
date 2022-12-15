@@ -1,8 +1,10 @@
+package com.twitter.game.model;
+
 public final class Script {
 
 
     // Contains the basic information script about the game
-    private static final String basicInfo = "A Text-Based Parody Survival Horror Adventure Game about the Great " +
+    private static final String basicInfo = "A Text-Based Parody Survival Horror Adventure com.twitter.game.controller.Game about the Great " +
             "Twitter Purge of 2022! You navigate and interact with the game by typing in the commands to the " +
             "console below." +
             "Type 'help' for a list of commands. \n" +
@@ -18,7 +20,7 @@ public final class Script {
 
     private static final String playerCodes = "You log into the computer using your Twitter credentials, then open" +
             "up an Development Environment. Your fingers start tapping away. \n" +
-            "You’ve gained " /*+ Player.getCodeLines() */ + "lines of code. \n" +
+            "You’ve gained " /*+ com.twitter.game.model.Player.getCodeLines() */ + "lines of code. \n" +
             "You’ve lost 1 hunger. You have X hunger left. ";
 
     private static final String playerPrograms = "The follow programs are available for building: \n" +
@@ -33,36 +35,36 @@ public final class Script {
     private static final String playerBuildsProgram = "The following program +" +
             /* Store.getMagicKeyboard() +*/
             "has been built. \n" +
-            "You have lost " + /*Player.getHunger() +*/ "hunger. You have X hunger left.\n";
+            "You have lost " + /*com.twitter.game.model.Player.getHunger() +*/ "hunger. You have X hunger left.\n";
 
     private static final String playerChoosesMore = "What would you like to know?";
 
     private static final String playerChecksStatus = "Status: \n" +
-            "\tEmployment: " + /*Player.getCurrentEmployment() + */ "/" + /*Player.getMaxEmployment() + */ "\n" +
+            "\tEmployment: " + /*com.twitter.game.model.Player.getCurrentEmployment() + */ "/" + /*com.twitter.game.model.Player.getMaxEmployment() + */ "\n" +
             "\t\tDon't let this reach 0 or it's game over!\n" +
             "\n" +
-            "\tSanity: " + /*Player.getCurrentSanity() + */ "/" + /*Player.getMaxSanity() + */ "\n" +
+            "\tSanity: " + /*com.twitter.game.model.Player.getCurrentSanity() + */ "/" + /*com.twitter.game.model.Player.getMaxSanity() + */ "\n" +
             "\t\tIf 0, Employment will start depleting instead!\n" +
             "\n" +
-            "\tHunger: " + /*Player.getCurrentHunger() + */ "/" + /*Player.getHunger() + */ "\n" +
+            "\tHunger: " + /*com.twitter.game.model.Player.getCurrentHunger() + */ "/" + /*com.twitter.game.model.Player.getHunger() + */ "\n" +
             "\t\tIf 0, Sanity will start depleting instead!\n";
 
     private static final String playerChecksInventory = " Inventory: \n" +
-            "\tLines of Code: " + /*Player.getCodeLines() +*/ "\n" +
+            "\tLines of Code: " + /*com.twitter.game.model.Player.getCodeLines() +*/ "\n" +
             "\t\t Currency for programming and used in battle for fights. If you are low, you can't attack, so keep " +
             "this high! \n" +
-            "\tCoffee: " + /*Player.getCoffeeSupply() +*/ "\n" +
+            "\tCoffee: " + /*com.twitter.game.model.Player.getCoffeeSupply() +*/ "\n" +
             "\t\tEach coffee restores 5 sanity\n" +
-            "\tFood: " + /*Player.getFoodSupply() +*/ "\n" +
+            "\tFood: " + /*com.twitter.game.model.Player.getFoodSupply() +*/ "\n" +
             "\t\tEach food restores 5 of hunger meter\n";
 
-    private static final String randomEncounter = "You ran into " /*+ Enemy.getEnemyType()*/;
+    private static final String randomEncounter = "You ran into " /*+ com.twitter.game.model.Enemy.getEnemyType()*/;
 
     private static final String playerReturnsToWorkstation = "You are standing in a bleak, cold room that smells " +
             "like feet and despair. You are exhausted, but alive. You sit back down at your work computer, " +
             "pondering your next steps. \n" +
             "\n" +
-            "You have " + /*Player.getCodeLines() +*/ " lines of code in inventory. ";
+            "You have " + /*com.twitter.game.model.Player.getCodeLines() +*/ " lines of code in inventory. ";
 
     private static final String playerInBreakRoom = "You feel uneasy...there is no presence in this room, as if " +
             "those who stayed behind were afraid to take breaks. In the corner, however, is some form of temporary " +
@@ -75,8 +77,8 @@ public final class Script {
             "The purchased item will be added to your inventory. press the corresponding number or “q” to go back.";
 
     private static final String playerInMeetingRoom = "This room looks like it belongs to a manager. " +
-            "(recommended codelines: " +  /*Enemy.bossRecommended() + */ "/current codelines: " +
-            /*Player.getCodeLines() +*/ "\n" +
+            "(recommended codelines: " +  /*com.twitter.game.model.Enemy.bossRecommended() + */ "/current codelines: " +
+            /*com.twitter.game.model.Player.getCodeLines() +*/ "\n" +
             "\tWhat do you do?";
 
     private static final String PlayerFindsAbandonedWorkstation = "There is an abandoned workstation desk,possibly" +
@@ -86,7 +88,7 @@ public final class Script {
 
     private static final String playerSearchesDeskSuccessfully = "You stick your hand into the drawer of the desk." +
             "You feel something push back. \n" +
-            "You gained " + /*Player.gainFood() +*/ "foods, and " + /*Player.getCoffee() +*/ " coffee.";
+            "You gained " + /*com.twitter.game.model.Player.gainFood() +*/ "foods, and " + /*com.twitter.game.model.Player.getCoffee() +*/ " coffee.";
 
     private static final String playerSearchesDeskCaught = "You feel a presence behind you as you try to search the " +
             "desk. \n" + "" +
@@ -104,7 +106,7 @@ public final class Script {
 
     private static final String playerBrewsCoffee = "You put a coffee pod in. The Kuerig machine purrs. " +
             "The smell of earth fills the room.  \n" +
-            "You gained " + /*Player.addCoffee() +*/ " coffee in your inventory.";
+            "You gained " + /*com.twitter.game.model.Player.addCoffee() +*/ " coffee in your inventory.";
 
     private static final String playerBrewsCoffee3x = "You put a coffee pod in. The Kuerig machine blinks red. " +
             "Seems like it’s about to overheat. I’ll need to come back later when it has cooled down.\n" +

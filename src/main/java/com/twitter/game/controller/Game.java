@@ -1,6 +1,10 @@
+package com.twitter.game.controller;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
+import com.twitter.game.model.Enemy;
+import com.twitter.game.model.Player;
+import com.twitter.game.model.Room;
+import com.twitter.game.model.Script;
 import java.io.*;
 import java.util.*;
 
@@ -77,7 +81,7 @@ public class Game {
                 "      ▀      ▀         ▀ ▀▀▀▀▀▀▀▀▀▀▀       ▀▀▀▀▀▀▀▀▀▀▀ ▀         ▀ ▀▀▀▀▀▀▀▀▀▀▀      ▀                 ▀      ▀▀       ▀▀ ▀▀▀▀▀▀▀▀▀▀▀ ▀▀▀▀▀▀▀▀▀▀▀      ▀      \n" +
                 "                                                                                                                                                             "
                 + ANSI_RESET;
-        String logoSubTitle = ANSI_BLUE + "\t\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
+        String logoSubTitle = ANSI_BLUE + "\t\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival com.twitter.game.controller.Game" + ANSI_RESET;
         String storyIntro = "You look at your desk. On your laptop, you have X lines of code.";
         //display intro to user
         System.out.println(gameIntroLogo);
@@ -129,25 +133,25 @@ public class Game {
     }
 
     public void more() {
-        System.out.println("Player Stats: \n" +
+        System.out.println("com.twitter.game.model.Player Stats: \n" +
                 "Hunger = " + player.getHunger() + "\n" +
                 "Sanity = " + player.getSanity() + "\n" +
                 "Score = " + player.getScore() + "\n" +
                 "Employability = " + player.getEmployability() + "\n" +
                 "code-lines = " + player.getCodeLines() + "\n" +
-                "Room = " + player.getRoom().getName() + "\n"
+                "com.twitter.game.model.Room = " + player.getRoom().getName() + "\n"
         );
     }
 
     public void help() {
-        System.out.println("Game Description:\n" + Script.getBasicInfo() + "\n");
+        System.out.println("com.twitter.game.controller.Game Description:\n" + Script.getBasicInfo() + "\n");
         System.out.println(
                 "|ACTION       | TYPE             | \n" +
                         "|Travel       | go N or go North | \n" +
                         "|Quit         | quit             | \n" +
-                        "|Player Stats | More             | \n" +
-                        "|Save Game    | save             | \n" +
-                        "|Load Game    | load             | \n"
+                        "|com.twitter.game.model.Player Stats | More             | \n" +
+                        "|Save com.twitter.game.controller.Game    | save             | \n" +
+                        "|Load com.twitter.game.controller.Game    | load             | \n"
         );
     }
 
@@ -208,7 +212,7 @@ public class Game {
                 break;
             //display stats and instructions
             case "access":
-                if (player.getRoom().getName().equals("Break Room")) {
+                if (player.getRoom().getName().equals("Break com.twitter.game.model.Room")) {
                     accessStorage();
                 }
                 break;
@@ -286,7 +290,7 @@ public class Game {
         Gson gson = new Gson();
         bw.write(gson.toJson(player));
         bw.close();
-        System.out.println("Game saved!");
+        System.out.println("com.twitter.game.controller.Game saved!");
     }
 
     public void load() throws IOException {
@@ -297,7 +301,7 @@ public class Game {
         Gson gson = new Gson();
         player = gson.fromJson(br, Player.class);
         br.close();
-        System.out.println("Game loaded!");
+        System.out.println("com.twitter.game.controller.Game loaded!");
     }
 
     private String[] determineAvailableCommands(String currentRoom) {
@@ -306,16 +310,16 @@ public class Game {
         if (currentRoom.equals("WorkStation")) {
             commands = workstationCommands;
         }
-        if (currentRoom.equals("Break Room")) {
+        if (currentRoom.equals("Break com.twitter.game.model.Room")) {
             commands = breakRoomCommands;
         }
         if (currentRoom.equals("Coffee Bar")) {
             commands = coffeeBarCommands;
         }
-        if (currentRoom.equals("Meeting Room-1")) {
+        if (currentRoom.equals("Meeting com.twitter.game.model.Room-1")) {
             commands = meetingRoom1Commands;
         }
-        if (currentRoom.equals("Meeting Room-2")) {
+        if (currentRoom.equals("Meeting com.twitter.game.model.Room-2")) {
             commands = meetingRoom2Commands;
         }
         if (currentRoom.equals("Empty workstation")) {
