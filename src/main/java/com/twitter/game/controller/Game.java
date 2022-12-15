@@ -24,7 +24,7 @@ public class Game {
     private final String[] wordsForSouth = {"south", "s"};
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
-    private final String[] workstationCommands = {"Code", "go north", "go east", "go west"};
+    private final String[] workstationCommands = {"Code", "Read Book", "go north", "go east", "go west"};
     private final String[] breakRoomCommands = {"access vending machine", "go south", "go west", "go east"};
     private final String[] coffeeBarCommands = {"go north", "go east"};
     private final String[] emptyWorkstationCommands = {"go north", "go west"};
@@ -218,12 +218,16 @@ public class Game {
             case "code":
                 if (player.getRoom().getName().equals("WorkStation")) {
                     code();
+                } else {
+                    System.out.println("command not valid");
                 }
                 break;
             //display stats and instructions
             case "access":
                 if (player.getRoom().getName().equals("Break Room")) {
                     accessStorage();
+                } else {
+                    System.out.println("command not valid");
                 }
                 break;
             case "more":
@@ -243,6 +247,13 @@ public class Game {
                 Inventory();
                 break;
             //quit game
+            case "read":
+                if (player.getRoom().getName().equals("WorkStation") && command.equals("read book")) {
+                    System.out.println(Script.getSurvivalGuide());
+                }else {
+                    System.out.println("command not valid");
+                }
+                break;
             case "quit":
                 gameOver();
                 break;
