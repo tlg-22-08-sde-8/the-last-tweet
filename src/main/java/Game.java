@@ -35,6 +35,15 @@ public class Game {
     //test1
 
     public Game(Player player) throws IOException {
+        BufferedReader br2 = new BufferedReader(new FileReader("resources/items.json"));
+        Gson gson2 = new Gson();
+        Map<String, Integer> i = new HashMap<>();
+        List<String> l = gson2.fromJson(br2, new TypeToken<List<String>>(){}.getType());
+        for (String s: l){
+            i.put(s, 0);
+        }
+        player.setInventory(i);
+        System.out.println(player.getInventory());
         //array of rooms from json
         BufferedReader br = new BufferedReader(new FileReader("resources/rooms.json"));
         Gson gson = new Gson();

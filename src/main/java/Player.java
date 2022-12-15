@@ -15,11 +15,6 @@ public class Player {
         this.hunger = hunger;
         this.sanity = sanity;
         this.employability = employability;
-        inventory = new HashMap<>();
-        inventory.put("jerky", 0);
-        inventory.put("Chips", 0);
-        inventory.put("Candy Bar", 0);
-
 
     }
 
