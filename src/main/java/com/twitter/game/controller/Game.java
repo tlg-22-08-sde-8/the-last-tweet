@@ -35,12 +35,13 @@ public class Game {
     private final ArrayList<Enemy> enemyArray;
     private boolean playerAlive = true;
     private boolean gameOver = false;
+    Clip clip;
 
     public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
         //start music
         File file = new File("resources/Minecraft.wav");
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
-        Clip clip = AudioSystem.getClip();
+        clip = AudioSystem.getClip();
         clip.open(audioStream);
         clip.start();
 
@@ -161,7 +162,9 @@ public class Game {
                         "|Quit         | quit             | \n" +
                         "|Player Stats | More             | \n" +
                         "|Save Game    | save             | \n" +
-                        "|Load Game    | load             | \n"
+                        "|Load Game    | load             | \n" +
+                        "|Stop Music   | stop music       | \n" +
+                        "|Start Music  | start music      | \n"
         );
     }
 
@@ -246,6 +249,21 @@ public class Game {
                 break;
             case "inventory":
                 Inventory();
+                break;
+            case "stop":
+                if (command.equals("stop music")){
+                    clip.stop();
+                } else {
+                    System.out.println("command not valid");
+                }
+
+                break;
+            case "start":
+                if (command.equals("start music")) {
+                    clip.start();
+                } else {
+                    System.out.println("command not valid");
+                }
                 break;
             //quit game
             case "read":
