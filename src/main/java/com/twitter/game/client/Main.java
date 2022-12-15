@@ -17,6 +17,7 @@ public class Main {
             Game game = new Game(player);
             game.gameIntro();
             game.commandInput();
+            //new game logic
             System.out.println("want to play again? (enter 'yes' for new game)");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String newGame = br.readLine().toLowerCase();
