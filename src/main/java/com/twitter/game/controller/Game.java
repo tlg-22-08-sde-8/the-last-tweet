@@ -50,6 +50,7 @@ public class Game {
         Map<String, Integer> inventory = new HashMap<>();
         List<String> gameItems = gson2.fromJson(br2, new TypeToken<List<String>>() {
         }.getType());
+        br2.close();
         for (String s : gameItems) {
             inventory.put(s, 0);
         }
@@ -66,11 +67,11 @@ public class Game {
         this.player = player;
         player.setRoom(gameMap.get(0));
 
-        //create enemies
-        enemyArray = new ArrayList<>();
-        enemyArray.add(new Enemy(10, "jrDev", "ask-for-help", 5, "merge-with-main", 10));
-        enemyArray.add(new Enemy(20, "SrDev", "negative-feedback", 5, "unreasonable-deadline", 10));
-        enemyArray.add(new Enemy(30, "Product-Manager", "promised-feature-to-client", 5, "set-secret-deadline", 10));
+        //load enemies
+        BufferedReader br3 = new BufferedReader(new FileReader("resources/enemies.json"));
+        Gson gson3 = new Gson();
+        enemyArray = gson3.fromJson(br3, new TypeToken<List<Enemy>>(){}.getType());
+        br3.close();
     }
 
     public void gameIntro() throws InterruptedException {
