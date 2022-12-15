@@ -5,6 +5,8 @@ import com.twitter.game.model.Enemy;
 import com.twitter.game.model.Player;
 import com.twitter.game.model.Room;
 import com.twitter.game.model.Script;
+
+import javax.sound.sampled.*;
 import java.io.*;
 import java.util.*;
 
@@ -34,7 +36,14 @@ public class Game {
     private boolean playerAlive = true;
     private boolean gameOver = false;
 
-    public Game(Player player) throws IOException {
+    public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+        //start music
+        File file = new File("resources/Minecraft.wav");
+        AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioStream);
+        clip.start();
+
         //load items in game
         BufferedReader br2 = new BufferedReader(new FileReader("resources/items.json"));
         Gson gson2 = new Gson();
@@ -81,12 +90,12 @@ public class Game {
                 "      ▀      ▀         ▀ ▀▀▀▀▀▀▀▀▀▀▀       ▀▀▀▀▀▀▀▀▀▀▀ ▀         ▀ ▀▀▀▀▀▀▀▀▀▀▀      ▀                 ▀      ▀▀       ▀▀ ▀▀▀▀▀▀▀▀▀▀▀ ▀▀▀▀▀▀▀▀▀▀▀      ▀      \n" +
                 "                                                                                                                                                             "
                 + ANSI_RESET;
-        String logoSubTitle = ANSI_BLUE + "\t\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival com.twitter.game.controller.Game" + ANSI_RESET;
+        String logoSubTitle = ANSI_BLUE + "\t\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
         String storyIntro = "You look at your desk. On your laptop, you have X lines of code.";
         //display intro to user
         System.out.println(gameIntroLogo);
         System.out.println(logoSubTitle);
-        Thread.sleep(8000);
+        Thread.sleep(7000);
         System.out.print("\033[H\033[2J");
         System.out.flush();
         System.out.println(Script.getFirstScene());
@@ -133,25 +142,25 @@ public class Game {
     }
 
     public void more() {
-        System.out.println("com.twitter.game.model.Player Stats: \n" +
+        System.out.println("Player Stats: \n" +
                 "Hunger = " + player.getHunger() + "\n" +
                 "Sanity = " + player.getSanity() + "\n" +
                 "Score = " + player.getScore() + "\n" +
                 "Employability = " + player.getEmployability() + "\n" +
                 "code-lines = " + player.getCodeLines() + "\n" +
-                "com.twitter.game.model.Room = " + player.getRoom().getName() + "\n"
+                "Room = " + player.getRoom().getName() + "\n"
         );
     }
 
     public void help() {
-        System.out.println("com.twitter.game.controller.Game Description:\n" + Script.getBasicInfo() + "\n");
+        System.out.println("Game Description:\n" + Script.getBasicInfo() + "\n");
         System.out.println(
                 "|ACTION       | TYPE             | \n" +
                         "|Travel       | go N or go North | \n" +
                         "|Quit         | quit             | \n" +
-                        "|com.twitter.game.model.Player Stats | More             | \n" +
-                        "|Save com.twitter.game.controller.Game    | save             | \n" +
-                        "|Load com.twitter.game.controller.Game    | load             | \n"
+                        "|Player Stats | More             | \n" +
+                        "|Save Game    | save             | \n" +
+                        "|Load Game    | load             | \n"
         );
     }
 
@@ -212,7 +221,7 @@ public class Game {
                 break;
             //display stats and instructions
             case "access":
-                if (player.getRoom().getName().equals("Break com.twitter.game.model.Room")) {
+                if (player.getRoom().getName().equals("Break Room")) {
                     accessStorage();
                 }
                 break;
@@ -290,7 +299,7 @@ public class Game {
         Gson gson = new Gson();
         bw.write(gson.toJson(player));
         bw.close();
-        System.out.println("com.twitter.game.controller.Game saved!");
+        System.out.println("Game saved!");
     }
 
     public void load() throws IOException {
@@ -301,7 +310,7 @@ public class Game {
         Gson gson = new Gson();
         player = gson.fromJson(br, Player.class);
         br.close();
-        System.out.println("com.twitter.game.controller.Game loaded!");
+        System.out.println("Game loaded!");
     }
 
     private String[] determineAvailableCommands(String currentRoom) {
@@ -310,16 +319,16 @@ public class Game {
         if (currentRoom.equals("WorkStation")) {
             commands = workstationCommands;
         }
-        if (currentRoom.equals("Break com.twitter.game.model.Room")) {
+        if (currentRoom.equals("Break Room")) {
             commands = breakRoomCommands;
         }
         if (currentRoom.equals("Coffee Bar")) {
             commands = coffeeBarCommands;
         }
-        if (currentRoom.equals("Meeting com.twitter.game.model.Room-1")) {
+        if (currentRoom.equals("Meeting Room-1")) {
             commands = meetingRoom1Commands;
         }
-        if (currentRoom.equals("Meeting com.twitter.game.model.Room-2")) {
+        if (currentRoom.equals("Meeting Room-2")) {
             commands = meetingRoom2Commands;
         }
         if (currentRoom.equals("Empty workstation")) {

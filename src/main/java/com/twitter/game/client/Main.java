@@ -3,12 +3,14 @@ package com.twitter.game.client;
 import com.twitter.game.controller.Game;
 import com.twitter.game.model.Player;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, UnsupportedAudioFileException, LineUnavailableException {
         //create new game
         while (true) {
             final Player player = new Player(25, 25, 25);
