@@ -33,18 +33,12 @@ public class Game {
     private Player player;
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
-    private boolean playerAlive = true;
+    private Clip clip;
     private boolean gameOver = false;
-    Clip clip;
+    private boolean music = true;
 
     public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
-        //start music
-        File file = new File("resources/Minecraft.wav");
-        AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
-        clip = AudioSystem.getClip();
-        clip.open(audioStream);
-        clip.start();
-
+        backgroundMusic();
         //load items in game
         BufferedReader br2 = new BufferedReader(new FileReader("resources/items.json"));
         Gson gson2 = new Gson();
@@ -75,9 +69,45 @@ public class Game {
         br3.close();
     }
 
+    public void backgroundMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        if (music){
+            File file = new File("resources/Minecraft.wav");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+            clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start();
+        }
+    }
+
+    public void battleMusic() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+        clip.stop();
+        if (music){
+            File file = new File("resources/Pokemon.wav");
+            AudioInputStream audioStream1 = AudioSystem.getAudioInputStream(file);
+            clip = AudioSystem.getClip();
+            clip.open(audioStream1);
+            clip.start();
+        }
+    }
+
+    public void victoryMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        if (music){
+            File file1 = new File("resources/win_pokemon.wav");
+            AudioInputStream audioStream2 = AudioSystem.getAudioInputStream(file1);
+            clip = AudioSystem.getClip();
+            clip.open(audioStream2);
+            clip.start();
+        }
+    }
+
+    public void stopMusic(){
+        clip.stop();
+    }
+
+
+
     public void gameIntro() throws InterruptedException {
         //create game intro logo and intro story lines
-
         String gameIntroLogo = ANSI_BLUE +
                 " ▄▄▄▄▄▄▄▄▄▄▄ ▄         ▄ ▄▄▄▄▄▄▄▄▄▄▄       ▄           ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄▄ ▄         ▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ \n" +
                 "▐░░░░░░░░░░░▐░▌       ▐░▐░░░░░░░░░░░▌     ▐░▌         ▐░░░░░░░░░░░▐░░░░░░░░░░░▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▐░▌       ▐░▐░░░░░░░░░░░▐░░░░░░░░░░░▐░░░░░░░░░░░▌\n" +
@@ -104,7 +134,7 @@ public class Game {
         System.out.println(storyIntro);
     }
 
-    public void travel(String[] checkDirection) throws IOException {
+    public void travel(String[] checkDirection) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
         //move player to a different room
         if (checkDirection.length == 2) {
             String direction = checkDirection[1].toLowerCase();
@@ -127,7 +157,7 @@ public class Game {
             if (go != -1) {
                 player.setRoom(gameMap.get(go));
                 determineBattle();
-                if (playerAlive) {
+                if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
                     System.out.println(ANSI_RED + "You traveled " + direction + ANSI_RESET + "\n" + gameMap.get(go).getName() + "\n" + gameMap.get(go).getDescription());
                     player.setHunger(player.getHunger() - 5);
                 }
@@ -177,7 +207,7 @@ public class Game {
         System.out.println(userStats);
     }
 
-    public void commandInput() throws IOException {
+    public void commandInput() throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
         //get commands from player
         String command;
         while (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0 && !gameOver) {
@@ -195,12 +225,9 @@ public class Game {
             parseCommand(command);
         }
 
-        if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
-            System.out.println("you beat the game");
-        }
-        if (!playerAlive) {
-            gameOver();
-        }
+       if (!gameOver){
+           gameOver();
+       }
     }
 
     public void Inventory() {
@@ -210,8 +237,7 @@ public class Game {
         }
     }
 
-
-    public void parseCommand(String command) throws IOException {
+    public void parseCommand(String command) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
         String[] commands = command.split(" ");
         //travel
         switch (commands[0]) {
@@ -252,15 +278,17 @@ public class Game {
                 break;
             case "stop":
                 if (command.equals("stop music")){
-                    clip.stop();
+                    stopMusic();
+                    music = false;
                 } else {
                     System.out.println("command not valid");
                 }
-
                 break;
             case "start":
                 if (command.equals("start music")) {
-                    clip.start();
+                    music = true;
+                    backgroundMusic();
+
                 } else {
                     System.out.println("command not valid");
                 }
@@ -368,7 +396,7 @@ public class Game {
         return commands;
     }
 
-    public void determineBattle() throws IOException {
+    public void determineBattle() throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
         Random rand = new Random();
         int battleNum = rand.nextInt(10);
         if (!(battleNum >= 7)) {
@@ -378,8 +406,8 @@ public class Game {
         }
     }
 
-
-    public void battle(Enemy enemy) throws IOException {
+    public void battle(Enemy enemy) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
+        battleMusic();
         System.out.println(ANSI_RED + "You are starting a battle" + ANSI_RESET);
         while (true) {
             //determine if player wants to battle
@@ -436,18 +464,25 @@ public class Game {
                 System.out.println("command not valid");
             }
         }
-        if (player.getSanity() > 0) {
+        stopMusic();
+        if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
+            victoryMusic();
             System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
+            Thread.sleep(3000);
+            stopMusic();
             enemy.setHealth(storeEnemyHealth);
-        } else {
-            playerAlive = false;
         }
-
+        backgroundMusic();
     }
 
-    public void gameOver() {
+    public void gameOver() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
         //display game over logo
-        gameOver = true;
+        gameOver = true;  clip.stop();
+        File file = new File("resources/game-over.wav");
+        AudioInputStream audioStream1 = AudioSystem.getAudioInputStream(file);
+        clip = AudioSystem.getClip();
+        clip.open(audioStream1);
+        clip.start();
         String gameOverLogo = "\n\n" + ANSI_RED +
                 " ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄       ▄▄ ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄▄ ▄               ▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ \n" +
                 "▐░░░░░░░░░░░▐░░░░░░░░░░░▐░░▌     ▐░░▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▐░▌             ▐░▐░░░░░░░░░░░▐░░░░░░░░░░░▌\n" +
@@ -467,6 +502,8 @@ public class Game {
         //display game over to user
         System.out.println(gameOverLogo);
         System.out.println(gameOverLogoSubtitle);
+        Thread.sleep(4000);
+        clip.stop();
     }
 
 
