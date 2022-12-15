@@ -38,13 +38,13 @@ public class Game {
         //load items in game
         BufferedReader br2 = new BufferedReader(new FileReader("resources/items.json"));
         Gson gson2 = new Gson();
-        Map<String, Integer> i = new HashMap<>();
-        List<String> l = gson2.fromJson(br2, new TypeToken<List<String>>() {
+        Map<String, Integer> inventory = new HashMap<>();
+        List<String> gameItems = gson2.fromJson(br2, new TypeToken<List<String>>() {
         }.getType());
-        for (String s : l) {
-            i.put(s, 0);
+        for (String s : gameItems) {
+            inventory.put(s, 0);
         }
-        player.setInventory(i);
+        player.setInventory(inventory);
 
         //load rooms in game
         BufferedReader br = new BufferedReader(new FileReader("resources/rooms.json"));
