@@ -1,3 +1,5 @@
+package com.twitter.game.model;
+
 import java.util.ArrayList;
 
 public class GameMaps {
