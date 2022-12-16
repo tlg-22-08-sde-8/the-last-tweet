@@ -9,7 +9,7 @@ public class Room {
     private final int west;
     private final int east;
     private final String name;
-    private final String description;
+    private String description;
     private List<Map<String, Map<String, Integer>>> storage;
 
 
@@ -56,5 +56,9 @@ public class Room {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

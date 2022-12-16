@@ -66,9 +66,9 @@ public final class Script {
             "\n" +
             "You have " + /*com.twitter.game.model.Player.getCodeLines() +*/ " lines of code in inventory. ";
 
-    private static final String playerInBreakRoom = "You feel uneasy...there is no presence in this room, as if " +
-            "those who stayed behind were afraid to take breaks. In the corner, however, is some form of temporary " +
-            "respite: an old clunky vending machine with a flickering blue light.";
+    private static final String playerInBreakRoom = "You feel uneasy...there is no presence in this room, as if \n" +
+            "those who stayed behind were afraid to take breaks. In the corner, however, is some form of temporary \n" +
+            "respite: an old clunky vending machine with a flickering blue light.\n";
 
     private static final String playerAtVendingMachine = "Food items availible: \n" +
             "Candy Bar (cost: 200 lines of code) - increases hunger by 5 \n" +
@@ -76,14 +76,13 @@ public final class Script {
             "Jerky (cost: 650 lines of code) - refill hunger to 15\n" +
             "The purchased item will be added to your inventory. press the corresponding number or “q” to go back.";
 
-    private static final String playerInMeetingRoom = "This room looks like it belongs to a manager. " +
+    private static final String playerInMeetingRoom = "This room looks like it belongs to a manager. \n" +
             "(recommended codelines: " +  /*com.twitter.game.model.Enemy.bossRecommended() + */ "/current codelines: " +
-            /*com.twitter.game.model.Player.getCodeLines() +*/ "\n" +
-            "\tWhat do you do?";
+            /*com.twitter.game.model.Player.getCodeLines() +*/ "\n";
 
-    private static final String PlayerFindsAbandonedWorkstation = "There is an abandoned workstation desk,possibly" +
-            "belonging to a former employee that was just laid off hours ago. You ponder if there might be " +
-            "useful supplies left behind within its innards, but I could seriously put my Employability in jeopardy " +
+    private static final String PlayerFindsAbandonedWorkstation = "There is an abandoned workstation desk,possibly\n" +
+            "belonging to a former employee that was just laid off hours ago. You ponder if there might be \n" +
+            "useful supplies left behind within its innards, but I could seriously put \nmy Employability in jeopardy " +
             "if I am caught!";
 
     private static final String playerSearchesDeskSuccessfully = "You stick your hand into the drawer of the desk." +
@@ -100,8 +99,8 @@ public final class Script {
             "Your hands feel only the desk itself push back against your fingers as you crawl your hand deeper! \n" +
             "“The desk is empty. You attained nothing.” \n";
 
-    private static final String playerInCoffeeBar = "The room is composed of brilliant white marble. The air " +
-            "smells of citrus. A heavenly glow eminates from the coffee bar, like the open arms of an angel. " +
+    private static final String playerInCoffeeBar = "The room is composed of brilliant white marble. The air \n" +
+            "smells of citrus. A heavenly glow eminates from the coffee bar, like the open arms of an angel. \n" +
             "The Kuerig machine is running. A lone laptop is in the room.";
 
     private static final String playerBrewsCoffee = "You put a coffee pod in. The Kuerig machine purrs. " +
