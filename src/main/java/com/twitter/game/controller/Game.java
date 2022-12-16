@@ -213,7 +213,6 @@ public class Game {
                 System.out.println(gameOverLogoSubtitleEmp);
             }
         }
-
         Thread.sleep(4000);
         clip.stop();
     }
