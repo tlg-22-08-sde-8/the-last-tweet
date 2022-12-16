@@ -588,30 +588,30 @@ public class Game {
             String[] commands = command.split(" ");
             if (commands[0].equals("use")) {
                 if (command.equals("use jerky")) {
-                    if (player.getInventory().get("jerky") >= 1) {
+                    if (player.getInventory().get("Jerky") >= 1) {
                         System.out.println(ANSI_RED + "You used 1 jerky" + ANSI_RESET);
                         player.setHunger(player.getHunger() + 10);
-                        player.getInventory().put("jerky", player.getInventory().get("jerky") - 1);
+                        player.getInventory().put("Jerky", player.getInventory().get("Jerky") - 1);
                     } else {
                         System.out.println("You don't have enough");
                     }
                     break;
                 }
                 if (command.equals("use chips")) {
-                    if (player.getInventory().get("chips") >= 1) {
+                    if (player.getInventory().get("Chips") >= 1) {
                         System.out.println(ANSI_RED + "You used 1 chips" + ANSI_RESET);
                         player.setHunger(player.getHunger() + 10);
-                        player.getInventory().put("jerky", player.getInventory().get("chips") - 1);
+                        player.getInventory().put("Chips", player.getInventory().get("Chips") - 1);
                     } else {
                         System.out.println("You don't have enough");
                     }
                     break;
                 }
                 if (command.equals("use candy bar")) {
-                    if (player.getInventory().get("candy bar") >= 1) {
+                    if (player.getInventory().get("Candy Bar") >= 1) {
                         System.out.println(ANSI_RED + "You used 1 candy bar" + ANSI_RESET);
                         player.setHunger(player.getHunger() + 5);
-                        player.getInventory().put("jerky", player.getInventory().get("candy bar") - 1);
+                        player.getInventory().put("Candy Bar", player.getInventory().get("Candy Bar") - 1);
                     } else {
                         System.out.println("You don't have enough");
                     }
