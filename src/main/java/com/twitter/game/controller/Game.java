@@ -347,8 +347,9 @@ public class Game {
         int storeEnemyHealth = enemy.getHealth();
         Random rand2 = new Random();
         int determineAttackType = rand2.nextInt(10);
+        int cooldown = 0;
         battle:
-        while (enemy.getHealth() > 1 && player.getSanity() > 0) {
+        while (enemy.getHealth() > 1 && player.getSanity() > 0 && player.getCodeLines() > 0) {
             if (determineAttackType >= 7) {
                 player.setSanity(player.getSanity() - enemy.getSuperAttackDmg());
                 System.out.println(enemy.getTitle() + " hit you with " + enemy.getSuperAttack() + ANSI_RED + "\nyou lost " + enemy.getSuperAttackDmg() + " sanity\nyou have " + player.getSanity() + " sanity remaining" + ANSI_RESET);
@@ -363,15 +364,29 @@ public class Game {
                 }
                 System.out.println("Which attack would you like to use \n> normal > super ");
                 String attack = br1.readLine().toLowerCase();
-                if (attack.equals("normal")) {
-                    enemy.setHealth(enemy.getHealth() - player.normalAttack());
-                    System.out.println(ANSI_YELLOW + "you attacked with code block \n" + enemy.getTitle() + " lost  " + player.normalAttack() + " health \nthey have " + enemy.getHealth() + " remaining" + ANSI_RESET);
-                    break;
-                }
                 if (attack.equals("super")) {
-                    enemy.setHealth(enemy.getHealth() - player.superAttack());
-                    System.out.println(ANSI_YELLOW + "you attacked with a class generation \n" + enemy.getTitle() + " lost " + player.superAttack() + " health\nthey have " + enemy.getHealth() + " remaining" + ANSI_RESET);
-                    break;
+                    if (player.getCodeLines() - player.superAttack() > 0 && cooldown == 0) {
+                        cooldown = 3;
+                        enemy.setHealth(enemy.getHealth() - player.superAttack());
+                        System.out.println(ANSI_YELLOW + "you attacked with a class generation \n" + enemy.getTitle() + " lost " + player.superAttack() + " health\nthey have " + enemy.getHealth() + " remaining" + ANSI_RESET);
+                        player.setCodeLines(player.getCodeLines() - player.superAttack());
+                        break;
+                    } else {
+                        System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
+                        break;
+                    }
+                }
+                if (attack.equals("normal")) {
+                    if (player.getCodeLines() - player.normalAttack() > 0){
+                        cooldown--;
+                        enemy.setHealth(enemy.getHealth() - player.normalAttack());
+                        System.out.println(ANSI_YELLOW + "you attacked with code block \n" + enemy.getTitle() + " lost  " + player.normalAttack() + " health \nthey have " + enemy.getHealth() + " remaining" + ANSI_RESET);
+                        player.setCodeLines(player.getCodeLines() - player.normalAttack());
+                        break;
+                    } else {
+                        System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
+                        break;
+                    }
                 }
                 System.out.println("command not valid");
             }
@@ -389,7 +404,6 @@ public class Game {
     //  END REGION
 
     //    REGION SAVE AND LOAD
-
     public void save() throws IOException {
         //save game
         System.out.println("Saving game...");
@@ -437,11 +451,21 @@ public class Game {
                 " ▀▀▀▀▀▀▀▀▀▀▀ ▀         ▀ ▀         ▀ ▀▀▀▀▀▀▀▀▀▀▀       ▀▀▀▀▀▀▀▀▀▀▀         ▀         ▀▀▀▀▀▀▀▀▀▀▀ ▀         ▀ \n" +
                 "                                                                                                             "
                 + ANSI_RESET;
-        String gameOverLogoSubtitle = ANSI_RED + "\tYou lost your employability .....you were fired on the spot" + ANSI_RESET;
-
+        String gameOverLogoSubtitleEmp = ANSI_RED + "\tYou lost your employability .....you were fired on the spot" + ANSI_RESET;
+        String gameOverLogoSubtitleHunger = ANSI_RED + "\tYou starved to death.....after that you were fired on the spot" + ANSI_RESET;
+        String gameOverLogoSubtitleSanity = ANSI_RED + "\tYou went insane ..... after that you were fired on the spot" + ANSI_RESET;
         //display game over to user
         System.out.println(gameOverLogo);
-        System.out.println(gameOverLogoSubtitle);
+        if (player.getSanity() == 0){
+            System.out.println(gameOverLogoSubtitleSanity);
+        } else if (player.getHunger() == 0) {
+            System.out.println(gameOverLogoSubtitleHunger);
+        } else {
+            if (player.getEmployability() == 0) {
+                System.out.println(gameOverLogoSubtitleEmp);
+            }
+        }
+
         Thread.sleep(4000);
         clip.stop();
     }
