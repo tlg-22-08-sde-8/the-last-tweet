@@ -25,6 +25,7 @@ public class Game {
     private final String[] wordsForSouth = {"south", "s"};
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
+    private final String[] defaultCommands = {"Inventory", "More", "save", "load", "help"};
     private final String[] workstationCommands = {"Code", "Read Book", "go north", "go east", "go west"};
     private final String[] breakRoomCommands = {"access vending machine", "go south", "go west", "go east"};
     private final String[] coffeeBarCommands = {"go north", "go east"};
@@ -39,8 +40,14 @@ public class Game {
     private boolean music = true;
 
     public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+        /**
+         * Start background music
+         */
         backgroundMusic();
-        //load items in game
+
+        /**
+         * Loads in items and init player inventory to zero
+         */
         BufferedReader br2 = new BufferedReader(new FileReader("resources/items.json"));
         Gson gson2 = new Gson();
         Map<String, Integer> inventory = new HashMap<>();
@@ -52,7 +59,9 @@ public class Game {
         }
         player.setInventory(inventory);
 
-        //load rooms in game
+        /**
+         * Load in rooms
+         */
         BufferedReader br = new BufferedReader(new FileReader("resources/rooms.json"));
         Gson gson = new Gson();
         gameMap = gson.fromJson(br, new TypeToken<List<Room>>() {
@@ -64,11 +73,15 @@ public class Game {
         gameMap.get(4).setDescription(Script.getPlayerFindsAbandonedWorkstation());
         gameMap.get(5).setDescription(Script.getPlayerInMeetingRoom());
 
-        //set player room
+        /**
+         * assign player to starting location
+         */
         this.player = player;
         player.setRoom(gameMap.get(0));
 
-        //load enemies
+        /**
+         * Load enemies
+         */
         BufferedReader br3 = new BufferedReader(new FileReader("resources/enemies.json"));
         Gson gson3 = new Gson();
         enemyArray = gson3.fromJson(br3, new TypeToken<List<Enemy>>() {
@@ -76,7 +89,9 @@ public class Game {
         br3.close();
     }
 
-    //    REGION MUSIC
+    /**
+     * Generates background music
+     */
     public void backgroundMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         if (music) {
             File file = new File("resources/Minecraft.wav");
@@ -89,6 +104,9 @@ public class Game {
         }
     }
 
+    /**
+     * Generates battle music
+     */
     public void battleMusic() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         clip.stop();
         if (music) {
@@ -102,6 +120,9 @@ public class Game {
         }
     }
 
+    /**
+     * Generates Victory music
+     */
     public void victoryMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         if (music) {
             File file1 = new File("resources/win_pokemon.wav");
@@ -114,12 +135,17 @@ public class Game {
         }
     }
 
+    /**
+     * stops playing the current clip of music
+     */
     public void stopMusic() {
         clip.stop();
     }
-    // END REGION
 
-    //  REGION GAME INTRO
+
+    /**
+     * Generates title/splash screen
+     */
     public void gameIntro() throws InterruptedException {
         //create game intro logo and intro story lines
         String gameIntroLogo = ANSI_BLUE +
@@ -149,9 +175,55 @@ public class Game {
         System.out.println(storyIntro);
         System.out.println("There is a book on your desk");
     }
-    //    END REGION
 
-    //    REGION COMMAND PARSING
+    /**
+     * Generates game over screen
+     */
+    public void gameOver() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
+        //display game over logo
+        gameOver = true;
+        clip.stop();
+        File file = new File("resources/game-over.wav");
+        AudioInputStream audioStream1 = AudioSystem.getAudioInputStream(file);
+        clip = AudioSystem.getClip();
+        clip.open(audioStream1);
+        clip.start();
+        String gameOverLogo = "\n\n" + ANSI_RED +
+                " ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄       ▄▄ ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄▄ ▄               ▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ \n" +
+                "▐░░░░░░░░░░░▐░░░░░░░░░░░▐░░▌     ▐░░▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▐░▌             ▐░▐░░░░░░░░░░░▐░░░░░░░░░░░▌\n" +
+                "▐░█▀▀▀▀▀▀▀▀▀▐░█▀▀▀▀▀▀▀█░▐░▌░▌   ▐░▐░▐░█▀▀▀▀▀▀▀▀▀      ▐░█▀▀▀▀▀▀▀█░▌▐░▌           ▐░▌▐░█▀▀▀▀▀▀▀▀▀▐░█▀▀▀▀▀▀▀█░▌\n" +
+                "▐░▌         ▐░▌       ▐░▐░▌▐░▌ ▐░▌▐░▐░▌               ▐░▌       ▐░▌ ▐░▌         ▐░▌ ▐░▌         ▐░▌       ▐░▌\n" +
+                "▐░▌ ▄▄▄▄▄▄▄▄▐░█▄▄▄▄▄▄▄█░▐░▌ ▐░▐░▌ ▐░▐░█▄▄▄▄▄▄▄▄▄      ▐░▌       ▐░▌  ▐░▌       ▐░▌  ▐░█▄▄▄▄▄▄▄▄▄▐░█▄▄▄▄▄▄▄█░▌\n" +
+                "▐░▌▐░░░░░░░░▐░░░░░░░░░░░▐░▌  ▐░▌  ▐░▐░░░░░░░░░░░▌     ▐░▌       ▐░▌   ▐░▌     ▐░▌   ▐░░░░░░░░░░░▐░░░░░░░░░░░▌\n" +
+                "▐░▌ ▀▀▀▀▀▀█░▐░█▀▀▀▀▀▀▀█░▐░▌   ▀   ▐░▐░█▀▀▀▀▀▀▀▀▀      ▐░▌       ▐░▌    ▐░▌   ▐░▌    ▐░█▀▀▀▀▀▀▀▀▀▐░█▀▀▀▀█░█▀▀ \n" +
+                "▐░▌       ▐░▐░▌       ▐░▐░▌       ▐░▐░▌               ▐░▌       ▐░▌     ▐░▌ ▐░▌     ▐░▌         ▐░▌     ▐░▌  \n" +
+                "▐░█▄▄▄▄▄▄▄█░▐░▌       ▐░▐░▌       ▐░▐░█▄▄▄▄▄▄▄▄▄      ▐░█▄▄▄▄▄▄▄█░▌      ▐░▐░▌      ▐░█▄▄▄▄▄▄▄▄▄▐░▌      ▐░▌ \n" +
+                "▐░░░░░░░░░░░▐░▌       ▐░▐░▌       ▐░▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▌       ▐░▌       ▐░░░░░░░░░░░▐░▌       ▐░▌\n" +
+                " ▀▀▀▀▀▀▀▀▀▀▀ ▀         ▀ ▀         ▀ ▀▀▀▀▀▀▀▀▀▀▀       ▀▀▀▀▀▀▀▀▀▀▀         ▀         ▀▀▀▀▀▀▀▀▀▀▀ ▀         ▀ \n" +
+                "                                                                                                             "
+                + ANSI_RESET;
+        String gameOverLogoSubtitleEmp = ANSI_RED + "\tYou lost your employability .....you were fired on the spot" + ANSI_RESET;
+        String gameOverLogoSubtitleHunger = ANSI_RED + "\tYou starved to death.....after that you were fired on the spot" + ANSI_RESET;
+        String gameOverLogoSubtitleSanity = ANSI_RED + "\tYou went insane ..... after that you were fired on the spot" + ANSI_RESET;
+        //display game over to user
+        System.out.println(gameOverLogo);
+        if (player.getSanity() == 0){
+            System.out.println(gameOverLogoSubtitleSanity);
+        } else if (player.getHunger() == 0) {
+            System.out.println(gameOverLogoSubtitleHunger);
+        } else {
+            if (player.getEmployability() == 0) {
+                System.out.println(gameOverLogoSubtitleEmp);
+            }
+        }
+
+        Thread.sleep(4000);
+        clip.stop();
+    }
+
+    /**
+     * Generates main player interface
+     */
     public void commandInput() throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
         //get commands from player
         String command;
@@ -163,7 +235,9 @@ public class Game {
             for (String c : determineAvailableCommands) {
                 System.out.print("> " + c + "    ");
             }
-            System.out.print("> Inventory    > More    > save    > load    > help");
+            for (String c : defaultCommands) {
+                System.out.print("> " + c + "    ");
+            }
             System.out.print("\n> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             command = br.readLine().strip().toLowerCase();
@@ -175,6 +249,48 @@ public class Game {
         }
     }
 
+    /**
+     * display user status bar
+     */
+    public void renderUserInterface() {
+        //display user stats
+        String userStats =
+                "==============================================================================================================================\n" +
+                        "  Location = " + player.getRoom().getName() + "                      hunger = " + player.getHunger() + "   employability = " + player.getEmployability() + "  sanity = " + player.getSanity() + "                            SDE-1 \n" +
+                        "==============================================================================================================================";
+        System.out.println(userStats);
+    }
+
+    /**
+     * adds room specific commands to main player interface
+     */
+    private String[] determineAvailableCommands(String currentRoom) {
+        //check if command can be completed in room
+        String[] commands = new String[0];
+        if (currentRoom.equals("WorkStation")) {
+            commands = workstationCommands;
+        }
+        if (currentRoom.equals("Break Room")) {
+            commands = breakRoomCommands;
+        }
+        if (currentRoom.equals("Coffee Bar")) {
+            commands = coffeeBarCommands;
+        }
+        if (currentRoom.equals("Meeting Room-1")) {
+            commands = meetingRoom1Commands;
+        }
+        if (currentRoom.equals("Meeting Room-2")) {
+            commands = meetingRoom2Commands;
+        }
+        if (currentRoom.equals("Empty workstation")) {
+            commands = emptyWorkstationCommands;
+        }
+        return commands;
+    }
+
+    /**
+     * parse user commands
+     */
     public void parseCommand(String command) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
         String[] commands = command.split(" ");
         //travel
@@ -246,9 +362,10 @@ public class Game {
                 System.out.println("command not valid");
         }
     }
-    //    END REGION
 
-    //    REGION MOVE PLAYER
+    /**
+     * moves player to different rooms
+     */
     public void travel(String[] checkDirection) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
         //move player to a different room
         if (checkDirection.length == 2) {
@@ -282,32 +399,9 @@ public class Game {
         }
     }
 
-    private String[] determineAvailableCommands(String currentRoom) {
-        //check if command can be completed in room
-        String[] commands = new String[0];
-        if (currentRoom.equals("WorkStation")) {
-            commands = workstationCommands;
-        }
-        if (currentRoom.equals("Break Room")) {
-            commands = breakRoomCommands;
-        }
-        if (currentRoom.equals("Coffee Bar")) {
-            commands = coffeeBarCommands;
-        }
-        if (currentRoom.equals("Meeting Room-1")) {
-            commands = meetingRoom1Commands;
-        }
-        if (currentRoom.equals("Meeting Room-2")) {
-            commands = meetingRoom2Commands;
-        }
-        if (currentRoom.equals("Empty workstation")) {
-            commands = emptyWorkstationCommands;
-        }
-        return commands;
-    }
-    //    END REGION
-
-    //    REGION BATTLE
+    /**
+     * determines if player will battle during travel
+     */
     public void determineBattle() throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
         Random rand = new Random();
         int battleNum = rand.nextInt(10);
@@ -318,6 +412,9 @@ public class Game {
         }
     }
 
+    /**
+     * player battle interface
+     */
     public void battle(Enemy enemy) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
         battleMusic();
         System.out.println(ANSI_RED + "You are starting a battle" + ANSI_RESET);
@@ -349,7 +446,7 @@ public class Game {
         int determineAttackType = rand2.nextInt(10);
         int cooldown = 0;
         battle:
-        while (enemy.getHealth() > 1 && player.getSanity() > 0 && player.getCodeLines() > 0) {
+        while (enemy.getHealth() > 1 && player.getSanity() > 0) {
             if (determineAttackType >= 7) {
                 player.setSanity(player.getSanity() - enemy.getSuperAttackDmg());
                 System.out.println(enemy.getTitle() + " hit you with " + enemy.getSuperAttack() + ANSI_RED + "\nyou lost " + enemy.getSuperAttackDmg() + " sanity\nyou have " + player.getSanity() + " sanity remaining" + ANSI_RESET);
@@ -370,6 +467,9 @@ public class Game {
                         enemy.setHealth(enemy.getHealth() - player.superAttack());
                         System.out.println(ANSI_YELLOW + "you attacked with a class generation \n" + enemy.getTitle() + " lost " + player.superAttack() + " health\nthey have " + enemy.getHealth() + " remaining" + ANSI_RESET);
                         player.setCodeLines(player.getCodeLines() - player.superAttack());
+                        break;
+                    } else if (!(cooldown ==0)) {
+                        System.out.println(ANSI_RED + "super cool-down at " + cooldown + ANSI_RESET);
                         break;
                     } else {
                         System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
@@ -401,9 +501,10 @@ public class Game {
         }
         backgroundMusic();
     }
-    //  END REGION
 
-    //    REGION SAVE AND LOAD
+    /**
+     * saves game
+     */
     public void save() throws IOException {
         //save game
         System.out.println("Saving game...");
@@ -415,6 +516,9 @@ public class Game {
         System.out.println("Game saved!");
     }
 
+    /**
+     * loads game
+     */
     public void load() throws IOException {
         //load game
         System.out.println("Loading game...");
@@ -425,58 +529,18 @@ public class Game {
         br.close();
         System.out.println("Game loaded!");
     }
-    // END REGION
 
-    //    REGION GAME OVER
-    public void gameOver() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
-        //display game over logo
-        gameOver = true;
-        clip.stop();
-        File file = new File("resources/game-over.wav");
-        AudioInputStream audioStream1 = AudioSystem.getAudioInputStream(file);
-        clip = AudioSystem.getClip();
-        clip.open(audioStream1);
-        clip.start();
-        String gameOverLogo = "\n\n" + ANSI_RED +
-                " ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄       ▄▄ ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄▄ ▄               ▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ \n" +
-                "▐░░░░░░░░░░░▐░░░░░░░░░░░▐░░▌     ▐░░▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▐░▌             ▐░▐░░░░░░░░░░░▐░░░░░░░░░░░▌\n" +
-                "▐░█▀▀▀▀▀▀▀▀▀▐░█▀▀▀▀▀▀▀█░▐░▌░▌   ▐░▐░▐░█▀▀▀▀▀▀▀▀▀      ▐░█▀▀▀▀▀▀▀█░▌▐░▌           ▐░▌▐░█▀▀▀▀▀▀▀▀▀▐░█▀▀▀▀▀▀▀█░▌\n" +
-                "▐░▌         ▐░▌       ▐░▐░▌▐░▌ ▐░▌▐░▐░▌               ▐░▌       ▐░▌ ▐░▌         ▐░▌ ▐░▌         ▐░▌       ▐░▌\n" +
-                "▐░▌ ▄▄▄▄▄▄▄▄▐░█▄▄▄▄▄▄▄█░▐░▌ ▐░▐░▌ ▐░▐░█▄▄▄▄▄▄▄▄▄      ▐░▌       ▐░▌  ▐░▌       ▐░▌  ▐░█▄▄▄▄▄▄▄▄▄▐░█▄▄▄▄▄▄▄█░▌\n" +
-                "▐░▌▐░░░░░░░░▐░░░░░░░░░░░▐░▌  ▐░▌  ▐░▐░░░░░░░░░░░▌     ▐░▌       ▐░▌   ▐░▌     ▐░▌   ▐░░░░░░░░░░░▐░░░░░░░░░░░▌\n" +
-                "▐░▌ ▀▀▀▀▀▀█░▐░█▀▀▀▀▀▀▀█░▐░▌   ▀   ▐░▐░█▀▀▀▀▀▀▀▀▀      ▐░▌       ▐░▌    ▐░▌   ▐░▌    ▐░█▀▀▀▀▀▀▀▀▀▐░█▀▀▀▀█░█▀▀ \n" +
-                "▐░▌       ▐░▐░▌       ▐░▐░▌       ▐░▐░▌               ▐░▌       ▐░▌     ▐░▌ ▐░▌     ▐░▌         ▐░▌     ▐░▌  \n" +
-                "▐░█▄▄▄▄▄▄▄█░▐░▌       ▐░▐░▌       ▐░▐░█▄▄▄▄▄▄▄▄▄      ▐░█▄▄▄▄▄▄▄█░▌      ▐░▐░▌      ▐░█▄▄▄▄▄▄▄▄▄▐░▌      ▐░▌ \n" +
-                "▐░░░░░░░░░░░▐░▌       ▐░▐░▌       ▐░▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▌       ▐░▌       ▐░░░░░░░░░░░▐░▌       ▐░▌\n" +
-                " ▀▀▀▀▀▀▀▀▀▀▀ ▀         ▀ ▀         ▀ ▀▀▀▀▀▀▀▀▀▀▀       ▀▀▀▀▀▀▀▀▀▀▀         ▀         ▀▀▀▀▀▀▀▀▀▀▀ ▀         ▀ \n" +
-                "                                                                                                             "
-                + ANSI_RESET;
-        String gameOverLogoSubtitleEmp = ANSI_RED + "\tYou lost your employability .....you were fired on the spot" + ANSI_RESET;
-        String gameOverLogoSubtitleHunger = ANSI_RED + "\tYou starved to death.....after that you were fired on the spot" + ANSI_RESET;
-        String gameOverLogoSubtitleSanity = ANSI_RED + "\tYou went insane ..... after that you were fired on the spot" + ANSI_RESET;
-        //display game over to user
-        System.out.println(gameOverLogo);
-        if (player.getSanity() == 0){
-            System.out.println(gameOverLogoSubtitleSanity);
-        } else if (player.getHunger() == 0) {
-            System.out.println(gameOverLogoSubtitleHunger);
-        } else {
-            if (player.getEmployability() == 0) {
-                System.out.println(gameOverLogoSubtitleEmp);
-            }
-        }
-
-        Thread.sleep(4000);
-        clip.stop();
-    }
-    //    END REGION
-
-    //    REGION ADDITIONAL FEATURES
+    /**
+     * adds one code-line to player inventory
+     */
     public void code() {
         System.out.println(ANSI_RED + "you gained 1 code-line" + ANSI_RESET);
         player.setCodeLines(player.getCodeLines() + 1);
     }
 
+    /**
+     * display player stats
+     */
     public void more() {
         System.out.println("Player Stats: \n" +
                 "Hunger = " + player.getHunger() + "\n" +
@@ -488,6 +552,9 @@ public class Game {
         );
     }
 
+    /**
+     * display helpful commands
+     */
     public void help() {
         System.out.println("Game Description:\n" + Script.getBasicInfo() + "\n");
         System.out.println(
@@ -502,16 +569,10 @@ public class Game {
         );
     }
 
-    public void renderUserInterface() {
-        //display user stats
-        String userStats =
-                "==============================================================================================================================\n" +
-                        "  Location = " + player.getRoom().getName() + "                      hunger = " + player.getHunger() + "   employability = " + player.getEmployability() + "  sanity = " + player.getSanity() + "                            SDE-1 \n" +
-                        "==============================================================================================================================";
-        System.out.println(userStats);
-    }
 
-
+    /**
+     * display player inventory
+     */
     public void Inventory() throws IOException {
         System.out.println("ITEM:   QUANTITY");
         for (String m : player.getInventory().keySet()) {
@@ -564,7 +625,9 @@ public class Game {
         }
     }
 
-
+    /**
+     * vending machine interface
+     */
     public void accessVendingMachine() throws IOException {
         while (true) {
             System.out.println(Script.getPlayerAtVendingMachine());
@@ -607,5 +670,4 @@ public class Game {
             System.out.println("command not valid");
         }
     }
-    // END REGION
 }
