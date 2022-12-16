@@ -490,8 +490,8 @@ public class Game {
         for (String m : player.getInventory().keySet()) {
             System.out.printf("> use %s    ", m);
         }
+        System.out.print("> Exit");
         while (true) {
-            System.out.print("> Exit");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine().toLowerCase();
             String[] commands = command.split(" ");
