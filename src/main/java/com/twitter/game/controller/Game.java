@@ -488,10 +488,10 @@ public class Game {
             System.out.printf("|%s        | %d  | \n", m, player.getInventory().get(m));
         }
         for (String m : player.getInventory().keySet()) {
-            System.out.printf(">%s    ", m);
+            System.out.printf("> use %s    ", m);
         }
         while (true) {
-            System.out.println("> Use Item > Exit");
+            System.out.print("> Exit");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine().toLowerCase();
             String[] commands = command.split(" ");
