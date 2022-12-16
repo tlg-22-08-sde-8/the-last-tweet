@@ -2,10 +2,7 @@ package com.twitter.game.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.twitter.game.model.Enemy;
-import com.twitter.game.model.Player;
-import com.twitter.game.model.Room;
-import com.twitter.game.model.Script;
+import com.twitter.game.model.*;
 
 import javax.sound.sampled.*;
 import java.io.*;
@@ -25,7 +22,7 @@ public class Game {
     private final String[] wordsForSouth = {"south", "s"};
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
-    private final String[] defaultCommands = {"Inventory", "More", "save", "load", "help"};
+    private final String[] defaultCommands = {"Inventory", "View Map", "More", "save", "load", "help"};
     private final String[] workstationCommands = {"Code", "Read Book", "go north", "go east", "go west"};
     private final String[] breakRoomCommands = {"access vending machine", "go south", "go west", "go east"};
     private final String[] coffeeBarCommands = {"go north", "go east"};
@@ -330,6 +327,11 @@ public class Game {
             case "inventory":
                 Inventory();
                 break;
+            case "view":
+                if (command.equals("view map")){
+                    viewMap();
+                }
+                break;
             case "stop":
                 if (command.equals("stop music")) {
                     stopMusic();
@@ -362,6 +364,11 @@ public class Game {
                 System.out.println("command not valid");
         }
     }
+
+    public void viewMap(){
+        GameMaps.getGameMap();
+    }
+
 
     /**
      * moves player to different rooms
