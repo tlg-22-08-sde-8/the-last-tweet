@@ -1,5 +1,7 @@
 import static org.junit.Assert.*;
 
+import com.twitter.game.controller.Game;
+import com.twitter.game.model.Player;
 import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
