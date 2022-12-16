@@ -131,7 +131,9 @@ public class Game {
         System.out.print("\033[H\033[2J");
         System.out.flush();
         System.out.println(Script.getFirstScene());
+        System.out.println("You cant let this happen, You need to replace Elon as CEO");
         System.out.println(storyIntro);
+        System.out.println("There is a book on your desk");
     }
 
     public void travel(String[] checkDirection) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
@@ -255,7 +257,7 @@ public class Game {
             //display stats and instructions
             case "access":
                 if (player.getRoom().getName().equals("Break Room")) {
-                    accessStorage();
+                    accessVendingMachine();
                 } else {
                     System.out.println("command not valid");
                 }
@@ -309,7 +311,7 @@ public class Game {
         }
     }
 
-    public void accessStorage() throws IOException {
+    public void accessVendingMachine() throws IOException {
         while (true) {
             System.out.println(Script.getPlayerAtVendingMachine());
             System.out.println("> Buy Jerky    > Buy Chips    > Buy Candy Bar > quit");
@@ -319,6 +321,7 @@ public class Game {
                 if (player.getCodeLines() >= 650) {
                     player.getInventory().put("jerky", player.getInventory().get("jerky") + 1);
                     player.setCodeLines(player.getCodeLines() - 650);
+                    System.out.println(ANSI_RED + "You gained 1 jerky");
                 } else {
                     System.out.println("you do not have enough code-lines");
                 }
@@ -328,6 +331,7 @@ public class Game {
                 if (player.getCodeLines() >= 500) {
                     player.getInventory().put("Chips", player.getInventory().get("Chips") + 1);
                     player.setCodeLines(player.getCodeLines() - 500);
+                    System.out.println(ANSI_RED + "You gained 1 Chip");
                 } else {
                     System.out.println("you do not have enough code-lines");
                 }
@@ -337,6 +341,7 @@ public class Game {
                 if (player.getCodeLines() >= 200) {
                     player.getInventory().put("Candy Bar", player.getInventory().get("Candy Bar") + 1);
                     player.setCodeLines(player.getCodeLines() - 200);
+                    System.out.println(ANSI_RED + "You gained 1 Candy Bar");
                 } else {
                     System.out.println("you do not have enough code-lines");
                 }
