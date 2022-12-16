@@ -83,6 +83,8 @@ public class Game {
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
             clip = AudioSystem.getClip();
             clip.open(audioStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(20f * (float) Math.log10(1.2));
             clip.start();
         }
     }
@@ -94,6 +96,8 @@ public class Game {
             AudioInputStream audioStream1 = AudioSystem.getAudioInputStream(file);
             clip = AudioSystem.getClip();
             clip.open(audioStream1);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(20f * (float) Math.log10(.1));
             clip.start();
         }
     }
@@ -104,6 +108,8 @@ public class Game {
             AudioInputStream audioStream2 = AudioSystem.getAudioInputStream(file1);
             clip = AudioSystem.getClip();
             clip.open(audioStream2);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(20f * (float) Math.log10(.1));
             clip.start();
         }
     }
