@@ -111,7 +111,7 @@ public class Game {
     public void stopMusic() {
         clip.stop();
     }
-// END REGION
+    // END REGION
 
     //  REGION GAME INTRO
     public void gameIntro() throws InterruptedException {
@@ -143,7 +143,7 @@ public class Game {
         System.out.println(storyIntro);
         System.out.println("There is a book on your desk");
     }
-//    END REGION
+    //    END REGION
 
     //    REGION COMMAND PARSING
     public void commandInput() throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
@@ -240,7 +240,7 @@ public class Game {
                 System.out.println("command not valid");
         }
     }
-//    END REGION
+    //    END REGION
 
     //    REGION MOVE PLAYER
     public void travel(String[] checkDirection) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
@@ -299,7 +299,7 @@ public class Game {
         }
         return commands;
     }
-//    END REGION
+    //    END REGION
 
     //    REGION BATTLE
     public void determineBattle() throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
@@ -380,9 +380,9 @@ public class Game {
         }
         backgroundMusic();
     }
-//  END REGION
+    //  END REGION
 
-//    REGION SAVE AND LOAD
+    //    REGION SAVE AND LOAD
 
     public void save() throws IOException {
         //save game
@@ -405,7 +405,7 @@ public class Game {
         br.close();
         System.out.println("Game loaded!");
     }
-// END REGION
+    // END REGION
 
     //    REGION GAME OVER
     public void gameOver() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
@@ -439,7 +439,7 @@ public class Game {
         Thread.sleep(4000);
         clip.stop();
     }
-//    END REGION
+    //    END REGION
 
     //    REGION ADDITIONAL FEATURES
     public void code() {
@@ -577,5 +577,5 @@ public class Game {
             System.out.println("command not valid");
         }
     }
-// END REGION
+    // END REGION
 }
