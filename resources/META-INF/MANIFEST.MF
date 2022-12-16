@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-com.twitter.game.client.Main-Class: com.twitter.game.client.Main
+Main-Class: com.twitter.game.client.Main
 
