@@ -25,7 +25,7 @@ public class Game {
     private final String[] defaultCommands = {"Inventory", "View Map", "More", "save", "load", "help"};
     private final String[] workstationCommands = {"Code", "Read Book", "go north", "go east", "go west"};
     private final String[] breakRoomCommands = {"access vending machine", "go south", "go west", "go east"};
-    private final String[] coffeeBarCommands = {"go north", "go east"};
+    private final String[] coffeeBarCommands = {"Brew Coffee","go north", "go east"};
     private final String[] emptyWorkstationCommands = {"go north", "go west"};
     private final String[] meetingRoom1Commands = {"go south", "go east"};
     private final String[] meetingRoom2Commands = {"go south", "go west"};
@@ -35,6 +35,7 @@ public class Game {
     private Clip clip;
     private boolean gameOver = false;
     private boolean music = true;
+    private int coffeeCount = 0;
 
     public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
         /**
@@ -146,20 +147,18 @@ public class Game {
     public void gameIntro() throws InterruptedException {
         //create game intro logo and intro story lines
         String gameIntroLogo = ANSI_BLUE +
-                " ▄▄▄▄▄▄▄▄▄▄▄ ▄         ▄ ▄▄▄▄▄▄▄▄▄▄▄       ▄           ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄▄ ▄         ▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ \n" +
-                "▐░░░░░░░░░░░▐░▌       ▐░▐░░░░░░░░░░░▌     ▐░▌         ▐░░░░░░░░░░░▐░░░░░░░░░░░▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▐░▌       ▐░▐░░░░░░░░░░░▐░░░░░░░░░░░▐░░░░░░░░░░░▌\n" +
-                " ▀▀▀▀█░█▀▀▀▀▐░▌       ▐░▐░█▀▀▀▀▀▀▀▀▀      ▐░▌         ▐░█▀▀▀▀▀▀▀█░▐░█▀▀▀▀▀▀▀▀▀ ▀▀▀▀█░█▀▀▀▀       ▀▀▀▀█░█▀▀▀▀▐░▌       ▐░▐░█▀▀▀▀▀▀▀▀▀▐░█▀▀▀▀▀▀▀▀▀ ▀▀▀▀█░█▀▀▀▀ \n" +
-                "     ▐░▌    ▐░▌       ▐░▐░▌               ▐░▌         ▐░▌       ▐░▐░▌              ▐░▌               ▐░▌    ▐░▌       ▐░▐░▌         ▐░▌              ▐░▌     \n" +
-                "     ▐░▌    ▐░█▄▄▄▄▄▄▄█░▐░█▄▄▄▄▄▄▄▄▄      ▐░▌         ▐░█▄▄▄▄▄▄▄█░▐░█▄▄▄▄▄▄▄▄▄     ▐░▌               ▐░▌    ▐░▌   ▄   ▐░▐░█▄▄▄▄▄▄▄▄▄▐░█▄▄▄▄▄▄▄▄▄     ▐░▌     \n" +
-                "     ▐░▌    ▐░░░░░░░░░░░▐░░░░░░░░░░░▌     ▐░▌         ▐░░░░░░░░░░░▐░░░░░░░░░░░▌    ▐░▌               ▐░▌    ▐░▌  ▐░▌  ▐░▐░░░░░░░░░░░▐░░░░░░░░░░░▌    ▐░▌     \n" +
-                "     ▐░▌    ▐░█▀▀▀▀▀▀▀█░▐░█▀▀▀▀▀▀▀▀▀      ▐░▌         ▐░█▀▀▀▀▀▀▀█░▌▀▀▀▀▀▀▀▀▀█░▌    ▐░▌               ▐░▌    ▐░▌ ▐░▌░▌ ▐░▐░█▀▀▀▀▀▀▀▀▀▐░█▀▀▀▀▀▀▀▀▀     ▐░▌     \n" +
-                "     ▐░▌    ▐░▌       ▐░▐░▌               ▐░▌         ▐░▌       ▐░▌         ▐░▌    ▐░▌               ▐░▌    ▐░▌▐░▌ ▐░▌▐░▐░▌         ▐░▌              ▐░▌     \n" +
-                "     ▐░▌    ▐░▌       ▐░▐░█▄▄▄▄▄▄▄▄▄      ▐░█▄▄▄▄▄▄▄▄▄▐░▌       ▐░▌▄▄▄▄▄▄▄▄▄█░▌    ▐░▌               ▐░▌    ▐░▌░▌   ▐░▐░▐░█▄▄▄▄▄▄▄▄▄▐░█▄▄▄▄▄▄▄▄▄     ▐░▌     \n" +
-                "     ▐░▌    ▐░▌       ▐░▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▐░▌       ▐░▐░░░░░░░░░░░▌    ▐░▌               ▐░▌    ▐░░▌     ▐░░▐░░░░░░░░░░░▐░░░░░░░░░░░▌    ▐░▌     \n" +
-                "      ▀      ▀         ▀ ▀▀▀▀▀▀▀▀▀▀▀       ▀▀▀▀▀▀▀▀▀▀▀ ▀         ▀ ▀▀▀▀▀▀▀▀▀▀▀      ▀                 ▀      ▀▀       ▀▀ ▀▀▀▀▀▀▀▀▀▀▀ ▀▀▀▀▀▀▀▀▀▀▀      ▀      \n" +
-                "                                                                                                                                                             "
+                "▄▄▄█████▓ ██░ ██ ▓█████     ██▓     ▄▄▄        ██████ ▄▄▄█████▓   ▄▄▄█████▓ █     █░▓█████ ▓█████ ▄▄▄█████▓\n" +
+                "▓  ██▒ ▓▒▓██░ ██▒▓█   ▀    ▓██▒    ▒████▄    ▒██    ▒ ▓  ██▒ ▓▒   ▓  ██▒ ▓▒▓█░ █ ░█░▓█   ▀ ▓█   ▀ ▓  ██▒ ▓▒\n" +
+                "▒ ▓██░ ▒░▒██▀▀██░▒███      ▒██░    ▒██  ▀█▄  ░ ▓██▄   ▒ ▓██░ ▒░   ▒ ▓██░ ▒░▒█░ █ ░█ ▒███   ▒███   ▒ ▓██░ ▒░\n" +
+                "░ ▓██▓ ░ ░▓█ ░██ ▒▓█  ▄    ▒██░    ░██▄▄▄▄██   ▒   ██▒░ ▓██▓ ░    ░ ▓██▓ ░ ░█░ █ ░█ ▒▓█  ▄ ▒▓█  ▄ ░ ▓██▓ ░ \n" +
+                "  ▒██▒ ░ ░▓█▒░██▓░▒████▒   ░██████▒ ▓█   ▓██▒▒██████▒▒  ▒██▒ ░      ▒██▒ ░ ░░██▒██▓ ░▒████▒░▒████▒  ▒██▒ ░ \n" +
+                "  ▒ ░░    ▒ ░░▒░▒░░ ▒░ ░   ░ ▒░▓  ░ ▒▒   ▓▒█░▒ ▒▓▒ ▒ ░  ▒ ░░        ▒ ░░   ░ ▓░▒ ▒  ░░ ▒░ ░░░ ▒░ ░  ▒ ░░   \n" +
+                "    ░     ▒ ░▒░ ░ ░ ░  ░   ░ ░ ▒  ░  ▒   ▒▒ ░░ ░▒  ░ ░    ░           ░      ▒ ░ ░   ░ ░  ░ ░ ░  ░    ░    \n" +
+                "  ░       ░  ░░ ░   ░        ░ ░     ░   ▒   ░  ░  ░    ░           ░        ░   ░     ░      ░     ░      \n" +
+                "          ░  ░  ░   ░  ░       ░  ░      ░  ░      ░                           ░       ░  ░   ░  ░         \n" +
+                "                                                                                                           "
                 + ANSI_RESET;
-        String logoSubTitle = ANSI_BLUE + "\t\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
+        String logoSubTitle = ANSI_BLUE + "\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
         String storyIntro = "You look at your desk. On your laptop, you have X lines of code.";
         //display intro to user
         System.out.println(gameIntroLogo);
@@ -186,18 +185,16 @@ public class Game {
         clip.open(audioStream1);
         clip.start();
         String gameOverLogo = "\n\n" + ANSI_RED +
-                " ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄       ▄▄ ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄▄ ▄               ▄ ▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄ \n" +
-                "▐░░░░░░░░░░░▐░░░░░░░░░░░▐░░▌     ▐░░▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▐░▌             ▐░▐░░░░░░░░░░░▐░░░░░░░░░░░▌\n" +
-                "▐░█▀▀▀▀▀▀▀▀▀▐░█▀▀▀▀▀▀▀█░▐░▌░▌   ▐░▐░▐░█▀▀▀▀▀▀▀▀▀      ▐░█▀▀▀▀▀▀▀█░▌▐░▌           ▐░▌▐░█▀▀▀▀▀▀▀▀▀▐░█▀▀▀▀▀▀▀█░▌\n" +
-                "▐░▌         ▐░▌       ▐░▐░▌▐░▌ ▐░▌▐░▐░▌               ▐░▌       ▐░▌ ▐░▌         ▐░▌ ▐░▌         ▐░▌       ▐░▌\n" +
-                "▐░▌ ▄▄▄▄▄▄▄▄▐░█▄▄▄▄▄▄▄█░▐░▌ ▐░▐░▌ ▐░▐░█▄▄▄▄▄▄▄▄▄      ▐░▌       ▐░▌  ▐░▌       ▐░▌  ▐░█▄▄▄▄▄▄▄▄▄▐░█▄▄▄▄▄▄▄█░▌\n" +
-                "▐░▌▐░░░░░░░░▐░░░░░░░░░░░▐░▌  ▐░▌  ▐░▐░░░░░░░░░░░▌     ▐░▌       ▐░▌   ▐░▌     ▐░▌   ▐░░░░░░░░░░░▐░░░░░░░░░░░▌\n" +
-                "▐░▌ ▀▀▀▀▀▀█░▐░█▀▀▀▀▀▀▀█░▐░▌   ▀   ▐░▐░█▀▀▀▀▀▀▀▀▀      ▐░▌       ▐░▌    ▐░▌   ▐░▌    ▐░█▀▀▀▀▀▀▀▀▀▐░█▀▀▀▀█░█▀▀ \n" +
-                "▐░▌       ▐░▐░▌       ▐░▐░▌       ▐░▐░▌               ▐░▌       ▐░▌     ▐░▌ ▐░▌     ▐░▌         ▐░▌     ▐░▌  \n" +
-                "▐░█▄▄▄▄▄▄▄█░▐░▌       ▐░▐░▌       ▐░▐░█▄▄▄▄▄▄▄▄▄      ▐░█▄▄▄▄▄▄▄█░▌      ▐░▐░▌      ▐░█▄▄▄▄▄▄▄▄▄▐░▌      ▐░▌ \n" +
-                "▐░░░░░░░░░░░▐░▌       ▐░▐░▌       ▐░▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▌       ▐░▌       ▐░░░░░░░░░░░▐░▌       ▐░▌\n" +
-                " ▀▀▀▀▀▀▀▀▀▀▀ ▀         ▀ ▀         ▀ ▀▀▀▀▀▀▀▀▀▀▀       ▀▀▀▀▀▀▀▀▀▀▀         ▀         ▀▀▀▀▀▀▀▀▀▀▀ ▀         ▀ \n" +
-                "                                                                                                             "
+                "  ▄████  ▄▄▄       ███▄ ▄███▓▓█████     ▒█████   ██▒   █▓▓█████  ██▀███  \n" +
+                " ██▒ ▀█▒▒████▄    ▓██▒▀█▀ ██▒▓█   ▀    ▒██▒  ██▒▓██░   █▒▓█   ▀ ▓██ ▒ ██▒\n" +
+                "▒██░▄▄▄░▒██  ▀█▄  ▓██    ▓██░▒███      ▒██░  ██▒ ▓██  █▒░▒███   ▓██ ░▄█ ▒\n" +
+                "░▓█  ██▓░██▄▄▄▄██ ▒██    ▒██ ▒▓█  ▄    ▒██   ██░  ▒██ █░░▒▓█  ▄ ▒██▀▀█▄  \n" +
+                "░▒▓███▀▒ ▓█   ▓██▒▒██▒   ░██▒░▒████▒   ░ ████▓▒░   ▒▀█░  ░▒████▒░██▓ ▒██▒\n" +
+                " ░▒   ▒  ▒▒   ▓▒█░░ ▒░   ░  ░░░ ▒░ ░   ░ ▒░▒░▒░    ░ ▐░  ░░ ▒░ ░░ ▒▓ ░▒▓░\n" +
+                "  ░   ░   ▒   ▒▒ ░░  ░      ░ ░ ░  ░     ░ ▒ ▒░    ░ ░░   ░ ░  ░  ░▒ ░ ▒░\n" +
+                "░ ░   ░   ░   ▒   ░      ░      ░      ░ ░ ░ ▒       ░░     ░     ░░   ░ \n" +
+                "      ░       ░  ░       ░      ░  ░       ░ ░        ░     ░  ░   ░     \n" +
+                "                                                     ░                   "
                 + ANSI_RESET;
         String gameOverLogoSubtitleEmp = ANSI_RED + "\tYou lost your employability .....you were fired on the spot" + ANSI_RESET;
         String gameOverLogoSubtitleHunger = ANSI_RED + "\tYou starved to death.....after that you were fired on the spot" + ANSI_RESET;
@@ -209,9 +206,7 @@ public class Game {
         } else if (player.getHunger() == 0) {
             System.out.println(gameOverLogoSubtitleHunger);
         } else {
-            if (player.getEmployability() == 0) {
                 System.out.println(gameOverLogoSubtitleEmp);
-            }
         }
         Thread.sleep(4000);
         clip.stop();
@@ -310,6 +305,15 @@ public class Game {
                     System.out.println("command not valid");
                 }
                 break;
+            case "brew":
+                if (command.equals("brew coffee")){
+                    if (player.getRoom().getName().equals("Coffee Bar")) {
+                        brewCoffee();
+                    }
+                } else {
+                    System.out.println("command not valid");
+                }
+                break;
             case "more":
                 more();
                 break;
@@ -399,6 +403,7 @@ public class Game {
                     System.out.println(ANSI_RED + "You traveled " + direction + ANSI_RESET + "\n" + gameMap.get(go).getName() + "\n" + gameMap.get(go).getDescription());
                     player.setHunger(player.getHunger() - 5);
                 }
+                coffeeCount = 0;
             } else {
                 System.out.println("looks like this way is blocked");
             }
@@ -674,6 +679,35 @@ public class Game {
                 break;
             }
             System.out.println("command not valid");
+        }
+    }
+
+    /**
+     * brew coffee in coffee room
+     */
+    public void brewCoffee() throws IOException {
+        player.getInventory().put("Coffee", player.getInventory().get("Coffee") + 1);
+        System.out.println(ANSI_RED + "you gained 1 coffee" + ANSI_RESET);
+        coffeeCount++;
+         while (true) {
+            System.out.println("What would you like to do? \n> Brew Again    > Quit \n>");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String choice = br.readLine().toLowerCase();
+            if (choice.equals("brew again")){
+                if (coffeeCount < 3) {
+                    player.getInventory().put("Coffee", player.getInventory().get("Coffee") + 1);
+                    System.out.println(ANSI_RED + "you gained 1 coffee" + ANSI_RESET);
+                    coffeeCount++;
+                    continue;
+                } else {
+                    System.out.println( ANSI_RED +"coffee machine needs to cool down" + ANSI_RESET);
+                    continue;
+                }
+            }
+            if (choice.equals("quit")){
+                break;
+            }
+            System.out.println("Command not valid");
         }
     }
 }
