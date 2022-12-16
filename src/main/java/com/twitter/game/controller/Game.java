@@ -12,7 +12,7 @@ import java.io.*;
 import java.util.*;
 
 public class Game {
-    //    private static final String ANSI_PURPLE = "\u001B[35m";
+//    private static final String ANSI_PURPLE = "\u001B[35m";
 //    private static final String ANSI_CYAN = "\u001B[36m";
 //    private static final String ANSI_WHITE = "\u001B[37m";
 //    private static final String ANSI_BLACK = "\u001B[30m";
