@@ -16,7 +16,7 @@ Since Git tracks only files and their paths relative to the repository root, but
 
 # JAR artifact
 
-A build specification for a JAR file is included in this starter. The intent is to build an executable JAR file from the root module. However, it will need to be modified in at least one respect (and probably more): The value of the `Main-Class` attribute in the `resources/META-INF/MANIFEST.MF` file must be set to the fully qualified name of the main class in the root module. This can be done directly in that file (there's no standard format for comments&mdash;let alone `TODO` comments&mdash;in JAR manifest files, so there isn't such a comment in this case), or under **Project Settings/Artifacts** in the **Project Structure** dialog.
+A build specification for a JAR file is included in this starter. The intent is to build an executable JAR file from the root module. However, it will need to be modified in at least one respect (and probably more): The value of the `com.twitter.game.client.Main-Class` attribute in the `resources/META-INF/MANIFEST.MF` file must be set to the fully qualified name of the main class in the root module. This can be done directly in that file (there's no standard format for comments&mdash;let alone `TODO` comments&mdash;in JAR manifest files, so there isn't such a comment in this case), or under **Project Settings/Artifacts** in the **Project Structure** dialog.
 
 In addition to setting the main class of the JAR, you will almost certainly want to modify the name of the JAR file that is created; this is done in **Project Settings/Artifacts** in the **Project Structure** dialog.
 

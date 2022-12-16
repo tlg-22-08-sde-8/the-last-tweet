@@ -1,5 +1,6 @@
 import static org.junit.Assert.*;
 
+import com.twitter.game.model.Enemy;
 import org.junit.Before;
 import org.junit.Test;
 
