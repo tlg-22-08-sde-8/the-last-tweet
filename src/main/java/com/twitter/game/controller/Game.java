@@ -232,10 +232,55 @@ public class Game {
        }
     }
 
-    public void Inventory() {
+    public void Inventory() throws IOException {
         System.out.println("|ITEM         | QUANTITY |");
         for (String m : player.getInventory().keySet()) {
             System.out.printf("|%s        | %d  | \n", m, player.getInventory().get(m));
+        }
+        for (String m : player.getInventory().keySet()) {
+            System.out.printf(">%s    ", m);
+        }
+        while (true) {
+            System.out.println("> Use Item > Exit");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String command = br.readLine().toLowerCase();
+            String[] commands = command.split(" ");
+            if (commands[0].equals("use")){
+                if (command.equals("use jerky")){
+                    if (player.getInventory().get("jerky") > 0){
+                        System.out.println(ANSI_RED + "You used 1 jerky" + ANSI_RESET);
+                        player.setHunger(player.getHunger() + 10);
+                        player.getInventory().put("jerky", player.getInventory().get("jerky") - 1);
+                    }else {
+                        System.out.println("You don't have enough");
+                    }
+                    break;
+                }
+                if (command.equals("use chips")){
+                    if (player.getInventory().get("chips") > 0){
+                        System.out.println(ANSI_RED + "You used 1 chips" + ANSI_RESET);
+                        player.setHunger(player.getHunger() + 10);
+                        player.getInventory().put("jerky", player.getInventory().get("chips") - 1);
+                    }else {
+                        System.out.println("You don't have enough");
+                    }
+                    break;
+                }
+                if (command.equals("use candy bar")){
+                    if (player.getInventory().get("candy bar") > 0){
+                        System.out.println(ANSI_RED + "You used 1 candy bar" + ANSI_RESET);
+                        player.setHunger(player.getHunger() + 5);
+                        player.getInventory().put("jerky", player.getInventory().get("candy bar") - 1);
+                    }else {
+                        System.out.println("You don't have enough");
+                    }
+                    break;
+                }
+            }
+            if (command.equals("exit")){
+                break;
+            }
+            System.out.println("command not valid");
         }
     }
 
@@ -321,7 +366,7 @@ public class Game {
                 if (player.getCodeLines() >= 650) {
                     player.getInventory().put("jerky", player.getInventory().get("jerky") + 1);
                     player.setCodeLines(player.getCodeLines() - 650);
-                    System.out.println(ANSI_RED + "You gained 1 jerky");
+                    System.out.println(ANSI_RED + "You gained 1 jerky" + ANSI_RESET);
                 } else {
                     System.out.println("you do not have enough code-lines");
                 }
@@ -331,7 +376,7 @@ public class Game {
                 if (player.getCodeLines() >= 500) {
                     player.getInventory().put("Chips", player.getInventory().get("Chips") + 1);
                     player.setCodeLines(player.getCodeLines() - 500);
-                    System.out.println(ANSI_RED + "You gained 1 Chip");
+                    System.out.println(ANSI_RED + "You gained 1 Chip" + ANSI_RESET);
                 } else {
                     System.out.println("you do not have enough code-lines");
                 }
@@ -341,7 +386,7 @@ public class Game {
                 if (player.getCodeLines() >= 200) {
                     player.getInventory().put("Candy Bar", player.getInventory().get("Candy Bar") + 1);
                     player.setCodeLines(player.getCodeLines() - 200);
-                    System.out.println(ANSI_RED + "You gained 1 Candy Bar");
+                    System.out.println(ANSI_RED + "You gained 1 Candy Bar" + ANSI_RESET);
                 } else {
                     System.out.println("you do not have enough code-lines");
                 }
