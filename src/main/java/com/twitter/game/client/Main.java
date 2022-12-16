@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException, UnsupportedAudioFileException, LineUnavailableException {
-        Clip clip;
         //create new game
         while (true) {
             final Player player = new Player(25, 25, 25);

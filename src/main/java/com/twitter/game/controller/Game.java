@@ -74,6 +74,9 @@ public class Game {
         enemyArray = gson3.fromJson(br3, new TypeToken<List<Enemy>>() {
         }.getType());
         br3.close();
+        for (Enemy e: enemyArray){
+            System.out.println(e.getTitle());
+        }
     }
 
     //    REGION MUSIC
@@ -311,7 +314,7 @@ public class Game {
     public void determineBattle() throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
         Random rand = new Random();
         int battleNum = rand.nextInt(10);
-        if (!(battleNum >= 7)) {
+        if (battleNum >= 7) {
             Random rand1 = new Random();
             int enemyIndex = rand1.nextInt(enemyArray.size() - 1);
             battle(enemyArray.get(enemyIndex));
