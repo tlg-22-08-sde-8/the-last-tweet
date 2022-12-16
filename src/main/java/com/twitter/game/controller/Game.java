@@ -489,14 +489,14 @@ public class Game {
 
 
     public void Inventory() throws IOException {
-        System.out.println("|ITEM         | QUANTITY |");
+        System.out.println("ITEM:   QUANTITY");
         for (String m : player.getInventory().keySet()) {
-            System.out.printf("|%s        | %d  | \n", m, player.getInventory().get(m));
+            System.out.printf("%s:   %d \n", m, player.getInventory().get(m));
         }
         for (String m : player.getInventory().keySet()) {
             System.out.printf("> use %s    ", m);
         }
-        System.out.print("> Exit");
+        System.out.print("> Exit \n");
         while (true) {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine().toLowerCase();
