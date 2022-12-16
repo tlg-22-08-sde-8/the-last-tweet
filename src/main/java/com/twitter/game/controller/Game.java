@@ -74,9 +74,6 @@ public class Game {
         enemyArray = gson3.fromJson(br3, new TypeToken<List<Enemy>>() {
         }.getType());
         br3.close();
-        for (Enemy e: enemyArray){
-            System.out.println(e.getTitle());
-        }
     }
 
     //    REGION MUSIC
@@ -506,7 +503,7 @@ public class Game {
             String[] commands = command.split(" ");
             if (commands[0].equals("use")) {
                 if (command.equals("use jerky")) {
-                    if (player.getInventory().get("jerky") > 0) {
+                    if (player.getInventory().get("jerky") >= 1) {
                         System.out.println(ANSI_RED + "You used 1 jerky" + ANSI_RESET);
                         player.setHunger(player.getHunger() + 10);
                         player.getInventory().put("jerky", player.getInventory().get("jerky") - 1);
@@ -516,7 +513,7 @@ public class Game {
                     break;
                 }
                 if (command.equals("use chips")) {
-                    if (player.getInventory().get("chips") > 0) {
+                    if (player.getInventory().get("chips") >= 1) {
                         System.out.println(ANSI_RED + "You used 1 chips" + ANSI_RESET);
                         player.setHunger(player.getHunger() + 10);
                         player.getInventory().put("jerky", player.getInventory().get("chips") - 1);
@@ -526,7 +523,7 @@ public class Game {
                     break;
                 }
                 if (command.equals("use candy bar")) {
-                    if (player.getInventory().get("candy bar") > 0) {
+                    if (player.getInventory().get("candy bar") >= 1) {
                         System.out.println(ANSI_RED + "You used 1 candy bar" + ANSI_RESET);
                         player.setHunger(player.getHunger() + 5);
                         player.getInventory().put("jerky", player.getInventory().get("candy bar") - 1);
