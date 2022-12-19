@@ -68,10 +68,10 @@ public class Game {
         }.getType());
         br.close();
         gameMap.get(1).setDescription(Script.getPlayerInBreakRoom());
-        gameMap.get(2).setDescription(Script.getPlayerInMeetingRoom());
+        gameMap.get(2).setDescription(Script.getPlayerFindsAbandonedWorkstation());
         gameMap.get(3).setDescription(Script.getPlayerInCoffeeBar());
         gameMap.get(4).setDescription(Script.getPlayerFindsAbandonedWorkstation());
-        gameMap.get(5).setDescription(Script.getPlayerInMeetingRoom());
+        gameMap.get(5).setDescription(Script.getPlayerInCEORoom());
 
         this.player = player;
         player.setRoom(gameMap.get(0));
@@ -170,9 +170,7 @@ public class Game {
         System.out.print("\033[H\033[2J");
         System.out.flush();
         System.out.println(Script.getFirstScene());
-        System.out.println("You cant let this happen, You need to replace Elon as CEO");
-        System.out.println(storyIntro);
-        System.out.println("There is a book on your desk");
+        System.out.println(Script.getPlayerRequest());
     }
 
     /**
@@ -201,9 +199,13 @@ public class Game {
                 "      ░       ░  ░       ░      ░  ░       ░ ░        ░     ░  ░   ░     \n" +
                 "                                                     ░                   "
                 + ANSI_RESET;
-        String gameOverLogoSubtitleEmp = ANSI_RED + "\tYou lost your employability .....you were fired on the spot" + ANSI_RESET;
-        String gameOverLogoSubtitleHunger = ANSI_RED + "\tYou starved to death.....after that you were fired on the spot" + ANSI_RESET;
-        String gameOverLogoSubtitleSanity = ANSI_RED + "\tYou went insane ..... after that you were fired on the spot" + ANSI_RESET;
+        String gameOverLogoSubtitleEmp = ANSI_RED + "\tYou lost all of your employability ..." +
+                "you were fired on the spot" + ANSI_RESET;
+        String gameOverLogoSubtitleHunger = ANSI_RED + "\tYou starved to death ..." +
+                "upon your dead body a pink slip was placed ceremoniously by a shadowy figure, whom proceeded to " +
+                "fired you on the spot" + ANSI_RESET;
+        String gameOverLogoSubtitleSanity = ANSI_RED + "\tYou went insane ..." +
+                "after that you were fired on the spot" + ANSI_RESET;
         //display game over to user
         System.out.println(gameOverLogo);
         if (player.getSanity() == 0){
@@ -220,12 +222,13 @@ public class Game {
     /**
      * Generates main player interface
      */
-    public void commandInput() throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
+    public void commandInput() throws IOException, UnsupportedAudioFileException, LineUnavailableException,
+            InterruptedException {
         //get commands from player
         String command;
         while (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0 && !gameOver) {
             renderUserInterface();
-            System.out.println("\nWhat would you like to do?");
+            System.out.println(Script.getPlayerRequest());
 
             String[] determineAvailableCommands = determineAvailableCommands(player.getRoom().getName());
             for (String c : determineAvailableCommands) {
