@@ -295,7 +295,7 @@ public class Game {
                 if (player.getRoom().getName().equals("WorkStation")) {
                     code();
                 } else {
-                    System.out.println("command not valid");
+                    System.out.println("command not valid pick from the list of options");
                 }
                 break;
             //display stats and instructions
@@ -303,7 +303,7 @@ public class Game {
                 if (player.getRoom().getName().equals("Break Room")) {
                     accessVendingMachine();
                 } else {
-                    System.out.println("command not valid");
+                    System.out.println("command not valid pick from the list of options");
                 }
                 break;
             case "brew":
@@ -312,7 +312,7 @@ public class Game {
                         brewCoffee();
                     }
                 } else {
-                    System.out.println("command not valid");
+                    System.out.println("command not valid pick from the list of options");
                 }
                 break;
             case "more":
@@ -341,7 +341,7 @@ public class Game {
                     stopMusic();
                     music = false;
                 } else {
-                    System.out.println("command not valid");
+                    System.out.println("command not valid pick from the list of options");
                 }
                 break;
             case "start":
@@ -350,7 +350,7 @@ public class Game {
                     backgroundMusic();
 
                 } else {
-                    System.out.println("command not valid");
+                    System.out.println("command not valid pick from the list of options");
                 }
                 break;
             //quit game
@@ -358,14 +358,14 @@ public class Game {
                 if (player.getRoom().getName().equals("WorkStation") && command.equals("read book")) {
                     System.out.println(Script.getSurvivalGuide());
                 } else {
-                    System.out.println("command not valid");
+                    System.out.println("command not valid pick from the list of options");
                 }
                 break;
             case "quit":
                 gameOver();
                 break;
             default:
-                System.out.println("command not valid");
+                System.out.println("command not valid pick from the list of options");
         }
     }
 
@@ -457,7 +457,7 @@ public class Game {
             if (command.equals("attack")) {
                 break;
             }
-            System.out.println("command not valid");
+            System.out.println("command not valid pick from the list of options");
         }
 
         //fight logic
@@ -508,7 +508,7 @@ public class Game {
                         break;
                     }
                 }
-                System.out.println("command not valid");
+                System.out.println("command not valid pick from the list of options");
             }
         }
         stopMusic();
@@ -642,7 +642,7 @@ public class Game {
             if (command.equals("exit")) {
                 break;
             }
-            System.out.println("command not valid");
+            System.out.println("command not valid pick from the list of options");
         }
     }
 
@@ -688,7 +688,7 @@ public class Game {
             if ("q".equals(choice) || "quit".equals(choice)) {
                 break;
             }
-            System.out.println("command not valid");
+            System.out.println("command not valid pick from the list of options");
         }
     }
 
@@ -717,7 +717,7 @@ public class Game {
             if (choice.equals("quit")){
                 break;
             }
-            System.out.println("Command not valid");
+            System.out.println("command not valid pick from the list of options");
         }
     }
 }
