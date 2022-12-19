@@ -4,6 +4,7 @@
     <root id="archive" name="project.jar">
       <element id="module-output" name="project" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.8.9/gson-2.8.9.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/mongodb/mongo-java-driver/3.12.11/mongo-java-driver-3.12.11.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

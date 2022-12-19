@@ -2,10 +2,16 @@ package com.twitter.game.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.twitter.game.model.*;
+import org.bson.Document;
 
 import javax.sound.sampled.*;
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 
 public class Game {
@@ -38,15 +44,10 @@ public class Game {
     private int coffeeCount = 0;
 
     public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
-        /**
-         * Start background music
-         */
         backgroundMusic();
 
-        /**
-         * Loads in items and init player inventory to zero
-         */
-        BufferedReader br2 = new BufferedReader(new FileReader("resources/items.json"));
+        InputStream in = getClass().getResourceAsStream("/items.json");
+        BufferedReader br2 = new BufferedReader(new InputStreamReader(in));
         Gson gson2 = new Gson();
         Map<String, Integer> inventory = new HashMap<>();
         List<String> gameItems = gson2.fromJson(br2, new TypeToken<List<String>>() {
@@ -57,10 +58,8 @@ public class Game {
         }
         player.setInventory(inventory);
 
-        /**
-         * Load in rooms
-         */
-        BufferedReader br = new BufferedReader(new FileReader("resources/rooms.json"));
+        InputStream in2 = getClass().getResourceAsStream("/rooms.json");
+        BufferedReader br = new BufferedReader(new InputStreamReader(in2));
         Gson gson = new Gson();
         gameMap = gson.fromJson(br, new TypeToken<List<Room>>() {
         }.getType());
@@ -71,16 +70,11 @@ public class Game {
         gameMap.get(4).setDescription(Script.getPlayerFindsAbandonedWorkstation());
         gameMap.get(5).setDescription(Script.getPlayerInMeetingRoom());
 
-        /**
-         * assign player to starting location
-         */
         this.player = player;
         player.setRoom(gameMap.get(0));
 
-        /**
-         * Load enemies
-         */
-        BufferedReader br3 = new BufferedReader(new FileReader("resources/enemies.json"));
+        InputStream in3 = getClass().getResourceAsStream("/enemies.json");
+        BufferedReader br3 = new BufferedReader(new InputStreamReader(in3));
         Gson gson3 = new Gson();
         enemyArray = gson3.fromJson(br3, new TypeToken<List<Enemy>>() {
         }.getType());
@@ -92,8 +86,10 @@ public class Game {
      */
     public void backgroundMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         if (music) {
-            File file = new File("resources/Minecraft.wav");
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+            URL resource = getClass().getClassLoader().getResource("Minecraft.wav");
+            if (resource == null)
+                throw new IllegalArgumentException("file not found!");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -108,10 +104,12 @@ public class Game {
     public void battleMusic() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         clip.stop();
         if (music) {
-            File file = new File("resources/Pokemon.wav");
-            AudioInputStream audioStream1 = AudioSystem.getAudioInputStream(file);
+            URL resource = getClass().getClassLoader().getResource("Pokemon.wav");
+            if (resource == null)
+                throw new IllegalArgumentException("file not found!");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
             clip = AudioSystem.getClip();
-            clip.open(audioStream1);
+            clip.open(audioStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             gainControl.setValue(20f * (float) Math.log10(.1));
             clip.start();
@@ -123,10 +121,12 @@ public class Game {
      */
     public void victoryMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         if (music) {
-            File file1 = new File("resources/win_pokemon.wav");
-            AudioInputStream audioStream2 = AudioSystem.getAudioInputStream(file1);
+            URL resource = getClass().getClassLoader().getResource("win-pokemon.wav");
+            if (resource == null)
+                throw new IllegalArgumentException("file not found!");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
             clip = AudioSystem.getClip();
-            clip.open(audioStream2);
+            clip.open(audioStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             gainControl.setValue(20f * (float) Math.log10(.1));
             clip.start();
@@ -179,10 +179,12 @@ public class Game {
         //display game over logo
         gameOver = true;
         clip.stop();
-        File file = new File("resources/game-over.wav");
-        AudioInputStream audioStream1 = AudioSystem.getAudioInputStream(file);
+        URL resource = getClass().getClassLoader().getResource("game-over.wav");
+        if (resource == null)
+            throw new IllegalArgumentException("file not found!");
+        AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
         clip = AudioSystem.getClip();
-        clip.open(audioStream1);
+        clip.open(audioStream);
         clip.start();
         String gameOverLogo = "\n\n" + ANSI_RED +
                 "  ▄████  ▄▄▄       ███▄ ▄███▓▓█████     ▒█████   ██▒   █▓▓█████  ██▀███  \n" +
@@ -518,13 +520,21 @@ public class Game {
      */
     public void save() throws IOException {
         //save game
-        System.out.println("Saving game...");
-        String saveFile = "resources/save.json";
-        BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile));
+//        System.out.println("Saving game...");
+////        String saveFile = "resources/save.json";
+////        BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile));
+//        Gson gson = new Gson();
+////        bw.write(gson.toJson(player));
+////        bw.close();
+////        System.out.println("Game saved!");
+        MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
+        MongoDatabase database = mongoClient.getDatabase("Users");
+        MongoCollection<Document> collection = database.getCollection("GameStats");
+        Document user = new Document();
         Gson gson = new Gson();
-        bw.write(gson.toJson(player));
-        bw.close();
-        System.out.println("Game saved!");
+        user.append("stats", gson.toJson(player));
+        collection.insertOne(user);
+        mongoClient.close();
     }
 
     /**
@@ -532,13 +542,20 @@ public class Game {
      */
     public void load() throws IOException {
         //load game
-        System.out.println("Loading game...");
-        String saveFile = "resources/save.json";
-        BufferedReader br = new BufferedReader(new FileReader(saveFile));
+//        System.out.println("Loading game...");
+//        String saveFile = "resources/save.json";
+//        BufferedReader br = new BufferedReader(new FileReader(saveFile));
+//        Gson gson = new Gson();
+//        player = gson.fromJson(br, Player.class);
+//        br.close();
+//        System.out.println("Game loaded!");
+        MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
+        MongoDatabase database = mongoClient.getDatabase("Users");
+        MongoCollection<Document> collection = database.getCollection("GameStats");
+        String s = (String) collection.find().first().get("stats");
+        mongoClient.close();
         Gson gson = new Gson();
-        player = gson.fromJson(br, Player.class);
-        br.close();
-        System.out.println("Game loaded!");
+        player = gson.fromJson(s, Player.class);
     }
 
     /**
