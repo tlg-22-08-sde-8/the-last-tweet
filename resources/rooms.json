@@ -1,7 +1,7 @@
 [{"north":1,"south":-1,"west":3,"east":4,"name":"WorkStation","description":"You are standing in a bleak, cold room that smells like feet and despair. You are exhausted, but alive. You sit back down at your work computer, pondering your next steps. "},
   {"north":-1,"south":0,"west":2,"east":5,"name":"Break Room","description":"You are standing in a bleak, cold room that smells like feet and despair. You are exhausted, but alive. You sit back down at your work computer, pondering your next steps. "},
-  {"north":-1,"south":3,"west":-1,"east":1,"name":"Meeting Room-1","description":"The room is composed of brilliant white marble. The air smells of citrus. A heavenly glow eliminates from the coffee bar, like the open arms of an angel. The Kuerig machine is running. A lone laptop is in the room. "},
+  {"north":-1,"south":3,"west":-1,"east":1,"name":"Empty Workstation-1","description":"The room is composed of brilliant white marble. The air smells of citrus. A heavenly glow eliminates from the coffee bar, like the open arms of an angel. The Kuerig machine is running. A lone laptop is in the room. "},
   {"north":2,"south":-1,"west":-1,"east":0,"name":"Coffee Bar","description":"A nasty, dark cell"},
-  {"north":5,"south":-1,"west":0,"east":-1,"name":"Empty workstation","description":"This workstation still has pictures of a recently fired employee and their family"},
-  {"north":-1,"south":4,"west":1,"east":-1,"name":"Meeting Room-2","description":"The room is composed of brilliant white marble. The air smells of citrus. A heavenly glow eliminates from the coffee bar, like the open arms of an angel. The Kuerig machine is running. A lone laptop is in the room."}
+  {"north":5,"south":-1,"west":0,"east":-1,"name":"Empty Workstation-2","description":"This workstation still has pictures of a recently fired employee and their family"},
+  {"north":-1,"south":4,"west":1,"east":-1,"name":"CEO","description":"The room is composed of brilliant white marble. The air smells of citrus. A heavenly glow eliminates from the coffee bar, like the open arms of an angel. The Kuerig machine is running. A lone laptop is in the room."}
 ]
