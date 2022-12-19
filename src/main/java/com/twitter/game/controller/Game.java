@@ -1,11 +1,18 @@
 package com.twitter.game.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.twitter.game.model.*;
+import org.bson.Document;
 
 import javax.sound.sampled.*;
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 
 public class Game {
@@ -32,23 +39,20 @@ public class Game {
     private Player player;
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
+    private final Map<String, Integer> inventory;
     private Clip clip;
     private boolean gameOver = false;
     private boolean music = true;
     private int coffeeCount = 0;
+    private String dataBaseUserName;
 
     public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
-        /**
-         * Start background music
-         */
         backgroundMusic();
 
-        /**
-         * Loads in items and init player inventory to zero
-         */
-        BufferedReader br2 = new BufferedReader(new FileReader("resources/items.json"));
+        InputStream in = getClass().getResourceAsStream("/items.json");
+        BufferedReader br2 = new BufferedReader(new InputStreamReader(in));
         Gson gson2 = new Gson();
-        Map<String, Integer> inventory = new HashMap<>();
+        inventory = new HashMap<>();
         List<String> gameItems = gson2.fromJson(br2, new TypeToken<List<String>>() {
         }.getType());
         br2.close();
@@ -57,10 +61,8 @@ public class Game {
         }
         player.setInventory(inventory);
 
-        /**
-         * Load in rooms
-         */
-        BufferedReader br = new BufferedReader(new FileReader("resources/rooms.json"));
+        InputStream in2 = getClass().getResourceAsStream("/rooms.json");
+        BufferedReader br = new BufferedReader(new InputStreamReader(in2));
         Gson gson = new Gson();
         gameMap = gson.fromJson(br, new TypeToken<List<Room>>() {
         }.getType());
@@ -71,16 +73,11 @@ public class Game {
         gameMap.get(4).setDescription(Script.getPlayerFindsAbandonedWorkstation());
         gameMap.get(5).setDescription(Script.getPlayerInCEORoom());
 
-        /**
-         * assign player to starting location
-         */
         this.player = player;
         player.setRoom(gameMap.get(0));
 
-        /**
-         * Load enemies
-         */
-        BufferedReader br3 = new BufferedReader(new FileReader("resources/enemies.json"));
+        InputStream in3 = getClass().getResourceAsStream("/enemies.json");
+        BufferedReader br3 = new BufferedReader(new InputStreamReader(in3));
         Gson gson3 = new Gson();
         enemyArray = gson3.fromJson(br3, new TypeToken<List<Enemy>>() {
         }.getType());
@@ -92,8 +89,10 @@ public class Game {
      */
     public void backgroundMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         if (music) {
-            File file = new File("resources/Minecraft.wav");
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+            URL resource = getClass().getClassLoader().getResource("Minecraft.wav");
+            if (resource == null)
+                throw new IllegalArgumentException("file not found!");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -108,10 +107,12 @@ public class Game {
     public void battleMusic() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         clip.stop();
         if (music) {
-            File file = new File("resources/Pokemon.wav");
-            AudioInputStream audioStream1 = AudioSystem.getAudioInputStream(file);
+            URL resource = getClass().getClassLoader().getResource("Pokemon.wav");
+            if (resource == null)
+                throw new IllegalArgumentException("file not found!");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
             clip = AudioSystem.getClip();
-            clip.open(audioStream1);
+            clip.open(audioStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             gainControl.setValue(20f * (float) Math.log10(.1));
             clip.start();
@@ -123,10 +124,12 @@ public class Game {
      */
     public void victoryMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         if (music) {
-            File file1 = new File("resources/win_pokemon.wav");
-            AudioInputStream audioStream2 = AudioSystem.getAudioInputStream(file1);
+            URL resource = getClass().getClassLoader().getResource("win_pokemon.wav");
+            if (resource == null)
+                throw new IllegalArgumentException("file not found!");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
             clip = AudioSystem.getClip();
-            clip.open(audioStream2);
+            clip.open(audioStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             gainControl.setValue(20f * (float) Math.log10(.1));
             clip.start();
@@ -177,10 +180,12 @@ public class Game {
         //display game over logo
         gameOver = true;
         clip.stop();
-        File file = new File("resources/game-over.wav");
-        AudioInputStream audioStream1 = AudioSystem.getAudioInputStream(file);
+        URL resource = getClass().getClassLoader().getResource("game-over.wav");
+        if (resource == null)
+            throw new IllegalArgumentException("file not found!");
+        AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
         clip = AudioSystem.getClip();
-        clip.open(audioStream1);
+        clip.open(audioStream);
         clip.start();
         String gameOverLogo = "\n\n" + ANSI_RED +
                 "  ▄████  ▄▄▄       ███▄ ▄███▓▓█████     ▒█████   ██▒   █▓▓█████  ██▀███  \n" +
@@ -270,13 +275,13 @@ public class Game {
         if (currentRoom.equals("Coffee Bar")) {
             commands = coffeeBarCommands;
         }
-        if (currentRoom.equals("Meeting Room-1")) {
+        if (currentRoom.equals("Meeting Room")) {
             commands = meetingRoom1Commands;
         }
-        if (currentRoom.equals("Meeting Room-2")) {
-            commands = meetingRoom2Commands;
+        if (currentRoom.equals("Empty workstation-1")) {
+            commands = emptyWorkstationCommands;
         }
-        if (currentRoom.equals("Empty workstation")) {
+        if (currentRoom.equals("Empty workstation-2")) {
             commands = emptyWorkstationCommands;
         }
         return commands;
@@ -422,14 +427,14 @@ public class Game {
         if (battleNum >= 7) {
             Random rand1 = new Random();
             int enemyIndex = rand1.nextInt(enemyArray.size() - 1);
-            battle(enemyArray.get(enemyIndex));
+            attackOrFlee(enemyArray.get(enemyIndex));
         }
     }
 
     /**
-     * player battle interface
+     * determine if player wants to run or fight
      */
-    public void battle(Enemy enemy) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
+    public void attackOrFlee(Enemy enemy) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
         battleMusic();
         System.out.println(ANSI_RED + "You are starting a battle" + ANSI_RESET);
         while (true) {
@@ -442,28 +447,49 @@ public class Game {
                 int determineSuccessfulRun = rand1.nextInt(10);
                 if (determineSuccessfulRun >= 7) {
                     System.out.println("You got away successfully");
+                    stopMusic();
+                    backgroundMusic();
                     return;
                 } else {
                     System.out.println("runaway unsuccessful");
+                    fight(enemy);
                     break;
                 }
             }
             if (command.equals("attack")) {
+                fight(enemy);
                 break;
             }
             System.out.println("command not valid");
         }
+    }
 
-        //fight logic
+    /**
+     * give player a random reward
+     */
+    public void randomReward(){
+        List<String> items = new ArrayList<>(inventory.keySet());
+        Random rand2 = new Random();
+        String randomItem = items.get(rand2.nextInt(items.size()));
+        player.getInventory().put(randomItem, player.getInventory().get(randomItem) + 1);
+        System.out.println(ANSI_RED + "Congratulation you gained one " + randomItem + ANSI_RESET);
+    }
+
+    /**
+     * player battle interface
+     */
+    public void fight(Enemy enemy) throws UnsupportedAudioFileException, LineUnavailableException, IOException, InterruptedException {
         int storeEnemyHealth = enemy.getHealth();
         Random rand2 = new Random();
-        int determineAttackType = rand2.nextInt(10);
         int cooldown = 0;
         battle:
-        while (enemy.getHealth() > 1 && player.getSanity() > 0) {
+        while (enemy.getHealth() >= 1 && player.getSanity() >= 1) {
+            int determineAttackType = rand2.nextInt(10);
             if (determineAttackType >= 7) {
                 player.setSanity(player.getSanity() - enemy.getSuperAttackDmg());
                 System.out.println(enemy.getTitle() + " hit you with " + enemy.getSuperAttack() + ANSI_RED + "\nyou lost " + enemy.getSuperAttackDmg() + " sanity\nyou have " + player.getSanity() + " sanity remaining" + ANSI_RESET);
+            } else if (determineAttackType == 0) {
+                System.out.println(enemy.getTitle() + " missed an attack. you took no damage!");
             } else {
                 System.out.println(enemy.getTitle() + " hit you with " + enemy.getNormalAttack() + ANSI_RED + "\nyou lost " + enemy.getNormalAttackDmg() + " sanity\nyou have " + player.getSanity() + " remaining" + ANSI_RESET);
                 player.setSanity(player.getSanity() - enemy.getNormalAttackDmg());
@@ -509,6 +535,7 @@ public class Game {
         if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
             victoryMusic();
             System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
+            randomReward();
             Thread.sleep(5000);
             stopMusic();
             enemy.setHealth(storeEnemyHealth);
@@ -516,32 +543,128 @@ public class Game {
         backgroundMusic();
     }
 
+
     /**
-     * saves game
+     * saves game if db connection is good
      */
     public void save() throws IOException {
         //save game
-        System.out.println("Saving game...");
-        String saveFile = "resources/save.json";
-        BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile));
-        Gson gson = new Gson();
-        bw.write(gson.toJson(player));
-        bw.close();
-        System.out.println("Game saved!");
+//        System.out.println("Saving game...");
+////        String saveFile = "resources/save.json";
+////        BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile));
+//        Gson gson = new Gson();
+////        bw.write(gson.toJson(player));
+////        bw.close();
+////        System.out.println("Game saved!");
+        try {
+            System.out.println("do you have an account?");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String command = br.readLine().toLowerCase();
+            if (command.equals("yes")){
+                dataBaseUserName = loginUser();
+            }
+            if (dataBaseUserName == null || dataBaseUserName.equals("") || dataBaseUserName.equals("login unsuccessful")){
+                dataBaseUserName = getUserName();
+            }
+            MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
+            MongoDatabase database = mongoClient.getDatabase("Users");
+            MongoCollection<Document> collection = database.getCollection("GameStats");
+            Document user = new Document();
+            Gson gson = new Gson();
+            user.append("username", dataBaseUserName.toLowerCase());
+            user.append("stats", gson.toJson(player));
+            collection.insertOne(user);
+            mongoClient.close();
+            System.out.println("save successful");
+        } catch (Exception e){
+            System.out.println("cannot connect to database");
+        }
+    }
+
+    String loginUser() throws IOException {
+        BufferedReader br1 = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("enter username");
+        String loginUserName = br1.readLine();
+        List<Object> results = checkIfUserNameExists(loginUserName);
+        if (results.size() > 0){
+            String[] userInfo = results.get(0).toString().split(",");
+            if (Objects.equals(userInfo[1].replace("}", ""), " username=" + loginUserName)){
+                System.out.println("login Successful");
+                return loginUserName;
+            }
+        }
+        return "login unsuccessful";
     }
 
     /**
-     * loads game
+     * grab username
+     */
+    private String getUserName() throws IOException {
+        while (true) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Please enter desired Username (must be greater than 4 characters and less than 15 characters)");
+            String username = br.readLine();
+            if (username.length() > 4 && username.length() < 15) {
+                List<Object> userNameArray = checkIfUserNameExists(username);
+                if (userNameArray.size() == 0) {
+                    return username;
+                } else {
+                    System.out.println("username is taken");
+
+                }
+            }
+            else {
+                System.out.println("UserName length is invalid");
+            }
+        }
+    }
+
+    /**
+     * check if username is in db
+     */
+    private List<Object> checkIfUserNameExists(String searchingUsername){
+        MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
+        MongoDatabase database = mongoClient.getDatabase("Users");
+        MongoCollection<Document> collection = database.getCollection("GameStats");
+        Document query = new Document("username", searchingUsername.toLowerCase());
+        List<Object> results = new ArrayList<>();
+        collection.find(query).into(results);
+        mongoClient.close();
+        return results;
+    }
+
+    /**
+     * loads game if db connection is good
      */
     public void load() throws IOException {
         //load game
-        System.out.println("Loading game...");
-        String saveFile = "resources/save.json";
-        BufferedReader br = new BufferedReader(new FileReader(saveFile));
-        Gson gson = new Gson();
-        player = gson.fromJson(br, Player.class);
-        br.close();
-        System.out.println("Game loaded!");
+//        System.out.println("Loading game...");
+//        String saveFile = "resources/save.json";
+//        BufferedReader br = new BufferedReader(new FileReader(saveFile));
+//        Gson gson = new Gson();
+//        player = gson.fromJson(br, Player.class);
+//        br.close();
+//        System.out.println("Game loaded!");
+        try {
+            if (dataBaseUserName == null || dataBaseUserName.equals("")){
+                dataBaseUserName = loginUser();
+            }
+            List<Object> checkIfUserExists = checkIfUserNameExists(dataBaseUserName);
+            if (checkIfUserExists.size() > 0){
+                MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
+                MongoDatabase database = mongoClient.getDatabase("Users");
+                MongoCollection<Document> collection = database.getCollection("GameStats");
+                Document query = new Document("username", dataBaseUserName.toLowerCase());
+                String s = (String) collection.find(query).first().get("stats");
+                mongoClient.close();
+                Gson gson = new Gson();
+                player = gson.fromJson(s, Player.class);
+            } else {
+                System.out.println("account not found");
+            }
+        } catch (Exception e) {
+            System.out.println("cannot connect to database");
+        }
     }
 
     /**

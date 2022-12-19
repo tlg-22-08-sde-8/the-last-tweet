@@ -13,6 +13,7 @@ public class Player {
     private int score;
     private int codeLines = 0;
     private int level;
+
     private Map<String, Integer> inventory;
 
     //player room field allows the game class to move character around the map
