@@ -23,7 +23,9 @@ public final class Script {
             "Elon Musk. \n" +
             "Before you is your desk. On it, you find your work computer with 10 lines of code already generated" +
             "and a book. \n" +
-            "Your code line inventory increased by 10. \n";
+            "Your code line inventory increased by 10. \n" +
+            "Your stomach growls ferociously. You search your bag but find nothing. You should probably generate some" +
+            "code lines then take a trip to the break room first to buy some food to stave off your hunger. \n";
 
     private static final String playerRequest = "What do you do?";
 
@@ -93,7 +95,8 @@ public final class Script {
             "Jerky (cost: 650 lines of code) - refill hunger to 15\n" +
             "The purchased item will be added to your inventory. press the corresponding number or “q” to go back.";
 
-    private static final String playerInMeetingRoom = "This room looks like it belongs to a manager. \n" +
+    private static final String playerInCEORoom = "You peek inside. You see Elon Musk furiously typing away" +
+            "at his phone. Your palms are sweaty. Is it time to take him on? \n" +
             "(recommended codelines: " +  /*com.twitter.game.model.Enemy.bossRecommended() + */ "/current codelines: " +
             /*com.twitter.game.model.Player.getCodeLines() +*/ "\n";
 
@@ -231,8 +234,8 @@ public final class Script {
         return playerAtVendingMachine;
     }
 
-    public static String getPlayerInMeetingRoom() {
-        return playerInMeetingRoom;
+    public static String getPlayerInCEORoom() {
+        return playerInCEORoom;
     }
 
     public static String getPlayerFindsAbandonedWorkstation() {

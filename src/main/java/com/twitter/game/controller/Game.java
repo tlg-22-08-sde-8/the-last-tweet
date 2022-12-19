@@ -66,10 +66,10 @@ public class Game {
         }.getType());
         br.close();
         gameMap.get(1).setDescription(Script.getPlayerInBreakRoom());
-        gameMap.get(2).setDescription(Script.getPlayerInMeetingRoom());
+        gameMap.get(2).setDescription(Script.getPlayerFindsAbandonedWorkstation());
         gameMap.get(3).setDescription(Script.getPlayerInCoffeeBar());
         gameMap.get(4).setDescription(Script.getPlayerFindsAbandonedWorkstation());
-        gameMap.get(5).setDescription(Script.getPlayerInMeetingRoom());
+        gameMap.get(5).setDescription(Script.getPlayerInCEORoom());
 
         /**
          * assign player to starting location
