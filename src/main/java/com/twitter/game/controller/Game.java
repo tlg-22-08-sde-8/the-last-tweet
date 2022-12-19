@@ -16,7 +16,7 @@ import java.net.URL;
 import java.util.*;
 
 public class Game {
-//    private static final String ANSI_PURPLE = "\u001B[35m";
+    private static final String ANSI_PURPLE = "\u001B[35m";
 //    private static final String ANSI_CYAN = "\u001B[36m";
 //    private static final String ANSI_WHITE = "\u001B[37m";
 //    private static final String ANSI_BLACK = "\u001B[30m";
@@ -29,13 +29,12 @@ public class Game {
     private final String[] wordsForSouth = {"south", "s"};
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
-    private final String[] defaultCommands = {"Inventory", "View Map", "More", "save", "load", "help"};
-    private final String[] workstationCommands = {"Code", "Read Book", "go north", "go east", "go west"};
-    private final String[] breakRoomCommands = {"access vending machine", "go south", "go west", "go east"};
-    private final String[] coffeeBarCommands = {"Brew Coffee","go north", "go east"};
-    private final String[] emptyWorkstationCommands = {"go north", "go west"};
-    private final String[] meetingRoom1Commands = {"go south", "go east"};
-    private final String[] meetingRoom2Commands = {"go south", "go west"};
+    private final String[] defaultCommands = {"Inventory", "View Map", "More", "Save", "Load", "Help"};
+    private final String[] workstationCommands = {"Code", "Read Book", "Go North", "Go East", "Go West"};
+    private final String[] breakRoomCommands = {"Access Vending Machine", "Go South", "Go West", "Go East"};
+    private final String[] coffeeBarCommands = {"Brew Coffee","Go North", "Go East"};
+    private final String[] emptyWorkstationCommands = {"Search Desk", "Go North", "Go West"};
+    private final String[] CEOCommands = {"Go South", "Go East"};
     private Player player;
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
@@ -275,13 +274,13 @@ public class Game {
         if (currentRoom.equals("Coffee Bar")) {
             commands = coffeeBarCommands;
         }
-        if (currentRoom.equals("Meeting Room")) {
-            commands = meetingRoom1Commands;
+        if (currentRoom.equals("CEO")) {
+            commands = CEOCommands;
         }
-        if (currentRoom.equals("Empty workstation-1")) {
+        if (currentRoom.equals("Empty Workstation-1")) {
             commands = emptyWorkstationCommands;
         }
-        if (currentRoom.equals("Empty workstation-2")) {
+        if (currentRoom.equals("Empty Workstation-2")) {
             commands = emptyWorkstationCommands;
         }
         return commands;
@@ -324,6 +323,15 @@ public class Game {
                 break;
             case "more":
                 more();
+                break;
+            case "search":
+                if (command.equals("search desk")) {
+                    if (player.getRoom().getName().equals("Empty Workstation-1") || player.getRoom().getName().equals("Empty Workstation-2")){
+                        searchDesk();
+                    }
+                } else {
+                    System.out.println("command not valid");
+                }
                 break;
             //help
             case "help":
@@ -372,7 +380,7 @@ public class Game {
                 gameOver();
                 break;
             default:
-                System.out.println("command not valid");
+                System.out.println(ANSI_PURPLE + "command not valid" + ANSI_RESET);
         }
     }
 
@@ -836,4 +844,17 @@ public class Game {
             System.out.println("Command not valid");
         }
     }
+
+    public void searchDesk(){
+        Random rand = new Random();
+        int successfulSearch = rand.nextInt(10);
+        if (successfulSearch >= 7){
+            randomReward();
+        } else {
+            System.out.println(ANSI_RED + "You tried to search and desk and were caught" + ANSI_RESET);
+            player.setEmployability(player.getEmployability() - 20);
+            System.out.println(ANSI_RED + "You lost 20 Employability" + ANSI_RESET);
+        }
+    }
+
 }
