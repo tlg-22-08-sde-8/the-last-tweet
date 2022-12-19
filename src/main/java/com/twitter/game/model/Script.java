@@ -4,7 +4,7 @@ public final class Script {
 
 
     // Contains the basic information script about the game
-    private static final String basicInfo = "A Text-Based Parody Survival Horror Adventure com.twitter.game.controller.Game about the Great " +
+    private static final String basicInfo = "A Text-Based Parody Survival Horror Adventure about the Great " +
             "Twitter Purge of 2022! You navigate and interact with the game by typing in the commands to the " +
             "console below." +
             "Type 'help' for a list of commands. \n" +
@@ -13,8 +13,17 @@ public final class Script {
     private static final String firstScene = "\n\nIt is October 27th. \n" +
             "You wake up at your desk, groggy from an attack. You look around you. There are pink slips everywhere. " +
             "Fires raging. Employees crying. \n" +
+            "Your memory clears, and you remember what happened. \n" +
             "Elon Musk has acquired Twitter. Half of the Twitter workforce has been laid off. \n" +
-            "You are one of the survivors. \n";
+            "You are one of the survivors. \n" +
+            "You know what you must do. You must keep your job by providing code, but you must also stay employed " +
+            "by going out into the wasteland of the Twitter office to find food and supplies. You need to keep your" +
+            "employability up as much as your need to keep up your sanity and keep your hunger in check.\n" +
+            "Keep these systems in check. Generate enough code lines to take down the system and ultimately " +
+            "Elon Musk. \n" +
+            "Before you is your desk. On it, you find your work computer with 10 lines of code already generated" +
+            "and a book. \n" +
+            "Your code line inventory increased by 10. \n";
 
     private static final String playerRequest = "What do you do?";
 
@@ -40,13 +49,16 @@ public final class Script {
     private static final String playerChoosesMore = "What would you like to know?";
 
     private static final String playerChecksStatus = "Status: \n" +
-            "\tEmployment: " + /*com.twitter.game.model.Player.getCurrentEmployment() + */ "/" + /*com.twitter.game.model.Player.getMaxEmployment() + */ "\n" +
+            "\tEmployment: " + /*com.twitter.game.model.Player.getCurrentEmployment() + */ "/" +
+            /*com.twitter.game.model.Player.getMaxEmployment() + */ "\n" +
             "\t\tDon't let this reach 0 or it's game over!\n" +
             "\n" +
-            "\tSanity: " + /*com.twitter.game.model.Player.getCurrentSanity() + */ "/" + /*com.twitter.game.model.Player.getMaxSanity() + */ "\n" +
+            "\tSanity: " + /*com.twitter.game.model.Player.getCurrentSanity() + */ "/" +
+            /*com.twitter.game.model.Player.getMaxSanity() + */ "\n" +
             "\t\tIf 0, Employment will start depleting instead!\n" +
             "\n" +
-            "\tHunger: " + /*com.twitter.game.model.Player.getCurrentHunger() + */ "/" + /*com.twitter.game.model.Player.getHunger() + */ "\n" +
+            "\tHunger: " + /*com.twitter.game.model.Player.getCurrentHunger() + */ "/" +
+            /*com.twitter.game.model.Player.getHunger() + */ "\n" +
             "\t\tIf 0, Sanity will start depleting instead!\n";
 
     private static final String playerChecksInventory = " Inventory: \n" +
@@ -87,7 +99,8 @@ public final class Script {
 
     private static final String playerSearchesDeskSuccessfully = "You stick your hand into the drawer of the desk." +
             "You feel something push back. \n" +
-            "You gained " + /*com.twitter.game.model.Player.gainFood() +*/ "foods, and " + /*com.twitter.game.model.Player.getCoffee() +*/ " coffee.";
+            "You gained " + /*com.twitter.game.model.Player.gainFood() +*/ "foods, and " +
+            /*com.twitter.game.model.Player.getCoffee() +*/ " coffee.";
 
     private static final String playerSearchesDeskCaught = "You feel a presence behind you as you try to search the " +
             "desk. \n" + "" +
@@ -119,10 +132,13 @@ public final class Script {
                     "╱╱┃┃╰╮╭╮╭┫┃╰╮┃╰┫┃━┫┃╱┃╰━╯┃╰╯┃┃╰╮╭┫┣╮╭┫╭╮┃╰╮┃╰┻━┃╰╯┃┃╰╯┃┃━┫\n" +
                     "╱╱╰╯╱╰╯╰╯╰┻━╯╰━┻━━┻╯╱╰━━━┻━━┻╯╱╰╯╰╯╰╯╰╯╰┻━╯╰━━━┻━━┻┻━━┻━━╯\n" +
 
-            "Hi I don't know who is reading this but I was recently promoted to Principal Engineer by Elon Musk himself \n" +
+            "Hi I don't know who is reading this but I was recently promoted to Principal Engineer by " +
+                            "Elon Musk himself \n" +
              "In order to survive and thrive at Twitter I have a couple recommendations: \n" +
-                            "1. Before you travel anywhere in the office have at least 50 lines of code ready. The office is scattered with people who want to outperform/embarrass you \n" +
-                            "2. If you start feeling like your going insane, grab a cup of coffee. It has always helped me \n" +
+                            "1. Before you travel anywhere in the office have at least 50 lines of code ready. " +
+                            "The office is scattered with people who want to outperform/embarrass you \n" +
+                            "2. If you start feeling like your going insane, grab a cup of coffee. It has always " +
+                            "helped me \n" +
                             "3. Remember to get some food when your hungry. There is a break room for a reason"
 
             ;
