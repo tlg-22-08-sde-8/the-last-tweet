@@ -1,7 +1,6 @@
 package com.twitter.game.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -39,15 +38,16 @@ public class Game {
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
     private final Map<String, Integer> inventory;
-    private Clip clip;
     private boolean gameOver = false;
-    private boolean music = true;
     private int coffeeCount = 0;
     private String dataBaseUserName;
+    private Music music;
 
     public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+        //start background music
         backgroundMusic();
 
+        //load in items
         InputStream in = getClass().getResourceAsStream("/items.json");
         BufferedReader br2 = new BufferedReader(new InputStreamReader(in));
         Gson gson2 = new Gson();
@@ -60,6 +60,7 @@ public class Game {
         }
         player.setInventory(inventory);
 
+        //load in rooms
         InputStream in2 = getClass().getResourceAsStream("/rooms.json");
         BufferedReader br = new BufferedReader(new InputStreamReader(in2));
         Gson gson = new Gson();
@@ -75,6 +76,7 @@ public class Game {
         this.player = player;
         player.setRoom(gameMap.get(0));
 
+        //load in enimies
         InputStream in3 = getClass().getResourceAsStream("/enemies.json");
         BufferedReader br3 = new BufferedReader(new InputStreamReader(in3));
         Gson gson3 = new Gson();
@@ -87,59 +89,34 @@ public class Game {
      * Generates background music
      */
     public void backgroundMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
-        if (music) {
-            URL resource = getClass().getClassLoader().getResource("Minecraft.wav");
-            if (resource == null)
-                throw new IllegalArgumentException("file not found!");
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(20f * (float) Math.log10(.7));
-            clip.start();
-        }
+        music = new Music();
+        music.backgroundMusic();
     }
 
     /**
      * Generates battle music
      */
     public void battleMusic() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
-        clip.stop();
-        if (music) {
-            URL resource = getClass().getClassLoader().getResource("Pokemon.wav");
-            if (resource == null)
-                throw new IllegalArgumentException("file not found!");
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(20f * (float) Math.log10(.1));
-            clip.start();
-        }
+        stopMusic();
+        music.battleMusic();
     }
 
     /**
      * Generates Victory music
      */
     public void victoryMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        if (music) {
-            URL resource = getClass().getClassLoader().getResource("win_pokemon.wav");
-            if (resource == null)
-                throw new IllegalArgumentException("file not found!");
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(20f * (float) Math.log10(.1));
-            clip.start();
-        }
+        music.victoryMusic();
     }
 
     /**
      * stops playing the current clip of music
      */
     public void stopMusic() {
-        clip.stop();
+        music.stopMusic();
+    }
+
+    public void gameOverMusic() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+        music.gameOverMusic();
     }
 
 
@@ -161,8 +138,6 @@ public class Game {
                 "                                                                                                           "
                 + ANSI_RESET;
         String logoSubTitle = ANSI_BLUE + "\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
-        String storyIntro = "You look at your desk. On your laptop, you have X lines of code.";
-        //display intro to user
         System.out.println(gameIntroLogo);
         System.out.println(logoSubTitle);
         Thread.sleep(7000);
@@ -178,14 +153,8 @@ public class Game {
     public void gameOver() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
         //display game over logo
         gameOver = true;
-        clip.stop();
-        URL resource = getClass().getClassLoader().getResource("game-over.wav");
-        if (resource == null)
-            throw new IllegalArgumentException("file not found!");
-        AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
-        clip = AudioSystem.getClip();
-        clip.open(audioStream);
-        clip.start();
+        stopMusic();
+        gameOverMusic();
         String gameOverLogo = "\n\n" + ANSI_RED +
                 "  ▄████  ▄▄▄       ███▄ ▄███▓▓█████     ▒█████   ██▒   █▓▓█████  ██▀███  \n" +
                 " ██▒ ▀█▒▒████▄    ▓██▒▀█▀ ██▒▓█   ▀    ▒██▒  ██▒▓██░   █▒▓█   ▀ ▓██ ▒ ██▒\n" +
@@ -215,7 +184,7 @@ public class Game {
                 System.out.println(gameOverLogoSubtitleEmp);
         }
         Thread.sleep(4000);
-        clip.stop();
+        stopMusic();
     }
 
     /**
@@ -354,14 +323,14 @@ public class Game {
             case "stop":
                 if (command.equals("stop music")) {
                     stopMusic();
-                    music = false;
+                    music.setMusic(false);
                 } else {
                     System.out.println("command not valid");
                 }
                 break;
             case "start":
                 if (command.equals("start music")) {
-                    music = true;
+                    music.setMusic(true);
                     backgroundMusic();
 
                 } else {
@@ -556,14 +525,6 @@ public class Game {
      * saves game if db connection is good
      */
     public void save() throws IOException {
-        //save game
-//        System.out.println("Saving game...");
-////        String saveFile = "resources/save.json";
-////        BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile));
-//        Gson gson = new Gson();
-////        bw.write(gson.toJson(player));
-////        bw.close();
-////        System.out.println("Game saved!");
         try {
             System.out.println("do you have an account?");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -645,14 +606,6 @@ public class Game {
      * loads game if db connection is good
      */
     public void load() throws IOException {
-        //load game
-//        System.out.println("Loading game...");
-//        String saveFile = "resources/save.json";
-//        BufferedReader br = new BufferedReader(new FileReader(saveFile));
-//        Gson gson = new Gson();
-//        player = gson.fromJson(br, Player.class);
-//        br.close();
-//        System.out.println("Game loaded!");
         try {
             if (dataBaseUserName == null || dataBaseUserName.equals("")){
                 dataBaseUserName = loginUser();
