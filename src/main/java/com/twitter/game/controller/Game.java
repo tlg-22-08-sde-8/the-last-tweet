@@ -36,6 +36,7 @@ public class Game {
     private boolean gameOver = false;
     private boolean music = true;
     private int coffeeCount = 0;
+    private Map <String, Integer> inventory;
 
     public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
         /**
@@ -48,7 +49,7 @@ public class Game {
          */
         BufferedReader br2 = new BufferedReader(new FileReader("resources/items.json"));
         Gson gson2 = new Gson();
-        Map<String, Integer> inventory = new HashMap<>();
+        inventory = new HashMap<>();
         List<String> gameItems = gson2.fromJson(br2, new TypeToken<List<String>>() {
         }.getType());
         br2.close();
@@ -423,6 +424,14 @@ public class Game {
         }
     }
 
+    public void battleReward(){
+        List<String> items = new ArrayList<>(inventory.keySet());
+        Random rand2 = new Random();
+        String randomItem = items.get(rand2.nextInt(items.size()));
+        player.getInventory().put(randomItem, player.getInventory().get(randomItem) + 1);
+        System.out.println(ANSI_RED + "Congratulation you gained one " + randomItem + ANSI_RESET);
+    }
+
     /**
      * player battle interface
      */
@@ -506,6 +515,7 @@ public class Game {
         if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
             victoryMusic();
             System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
+            battleReward();
             Thread.sleep(5000);
             stopMusic();
             enemy.setHealth(storeEnemyHealth);
