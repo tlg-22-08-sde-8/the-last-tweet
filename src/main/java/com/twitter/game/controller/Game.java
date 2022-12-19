@@ -272,13 +272,13 @@ public class Game {
         if (currentRoom.equals("Coffee Bar")) {
             commands = coffeeBarCommands;
         }
-        if (currentRoom.equals("Meeting Room-1")) {
+        if (currentRoom.equals("Meeting Room")) {
             commands = meetingRoom1Commands;
         }
-        if (currentRoom.equals("Meeting Room-2")) {
-            commands = meetingRoom2Commands;
+        if (currentRoom.equals("Empty workstation-1")) {
+            commands = emptyWorkstationCommands;
         }
-        if (currentRoom.equals("Empty workstation")) {
+        if (currentRoom.equals("Empty workstation-2")) {
             commands = emptyWorkstationCommands;
         }
         return commands;
@@ -462,6 +462,17 @@ public class Game {
     }
 
     /**
+     * give player a random reward
+     */
+    public void randomReward(){
+        List<String> items = new ArrayList<>(inventory.keySet());
+        Random rand2 = new Random();
+        String randomItem = items.get(rand2.nextInt(items.size()));
+        player.getInventory().put(randomItem, player.getInventory().get(randomItem) + 1);
+        System.out.println(ANSI_RED + "Congratulation you gained one " + randomItem + ANSI_RESET);
+    }
+
+    /**
      * player battle interface
      */
     public void fight(Enemy enemy) throws UnsupportedAudioFileException, LineUnavailableException, IOException, InterruptedException {
@@ -521,6 +532,7 @@ public class Game {
         if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
             victoryMusic();
             System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
+            randomReward();
             Thread.sleep(5000);
             stopMusic();
             enemy.setHealth(storeEnemyHealth);
