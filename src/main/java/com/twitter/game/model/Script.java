@@ -32,12 +32,17 @@ public final class Script {
             "You’ve gained " /*+ com.twitter.game.model.Player.getCodeLines() */ + "lines of code. \n" +
             "You’ve lost 1 hunger. You have X hunger left. ";
 
-    private static final String playerPrograms = "The follow programs are available for building: \n" +
-            "\tMagic Keyboard (cost: 1000 lines of code) - Increases Attack in battle by +10 lines per code.  \n" +
-            "\tMagic mouse (cost: 500 lines of code) - Increases Attack in battle by +5 lines of code. \n" +
-            "\tDigital Assistant (cost: 10,000 lines of code) - auto generates code by +10 per action while you " +
-            "are away from your workstation. \n" +
-            "\n" +
+    private static final String playerPrograms = "The follow program are available for building: \n" +
+            "\tBug Fix Suite (cost: 500 lines of code) - Creating this will promote you to SDE II (Level 2 \n" +
+            "\tTwo Factor Authentication System (cost: 1,000 lines of code) - Creating this will promote you to " +
+            "SDE III (Level 3)\n" +
+            "\t\t NOTE: Must have completed Bug Fix Suite to unlock ability to build this program \n" +
+            "\tDigital Assistant (cost: 2,500 lines of code) - Creating this will promote you to Product Manager " +
+            "(Level 4). \n" +
+            "\t\t NOTE: Must have completed Two Factor Authentication System to unlock \n" +
+            "\t Content Moderation System (cost: 5,000 lines of code) - Creating this will promote you to " +
+            "Engineering Manager (Level 5). \n" +
+            "\t\t NOTE: Must have completed Digital Assistant to unlock \n" +
             "To “program” an item into your inventory, press the corresponding number or “q” to go back to " +
             "your workstation.";
 
