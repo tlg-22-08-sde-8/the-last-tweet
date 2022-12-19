@@ -20,23 +20,19 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException, UnsupportedAudioFileException, LineUnavailableException {
         Logger logger = Logger.getLogger("org.mongodb.driver");
         logger.setLevel(Level.OFF);
-//        while (true) {
-//            //start game
-//            final Player player = new Player(25, 25, 25);
-//            Game game = new Game(player);
-//            game.gameIntro();
-//            game.commandInput();
-//            //new game logic
-//            System.out.println("want to play again? (enter 'yes' for new game)");
-//            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//            String newGame = br.readLine().toLowerCase();
-//            if (!newGame.equals("yes")){
-//                break;
-//            }
-//        }
-        final Player player = new Player(25, 25, 25);
-        Game game = new Game(player);
-
-
+        while (true) {
+            //start game
+            final Player player = new Player(25, 25, 25);
+            Game game = new Game(player);
+            game.gameIntro();
+            game.commandInput();
+            //new game logic
+            System.out.println("want to play again? (enter 'yes' for new game)");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String newGame = br.readLine().toLowerCase();
+            if (!newGame.equals("yes")){
+                break;
+            }
+        }
     }
 }
