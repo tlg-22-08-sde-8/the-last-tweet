@@ -1,6 +1,7 @@
 package com.twitter.game.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -38,10 +39,12 @@ public class Game {
     private Player player;
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
+    private final Map<String, Integer> inventory;
     private Clip clip;
     private boolean gameOver = false;
     private boolean music = true;
     private int coffeeCount = 0;
+    private String dataBaseUserName;
 
     public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
         backgroundMusic();
@@ -49,7 +52,7 @@ public class Game {
         InputStream in = getClass().getResourceAsStream("/items.json");
         BufferedReader br2 = new BufferedReader(new InputStreamReader(in));
         Gson gson2 = new Gson();
-        Map<String, Integer> inventory = new HashMap<>();
+        inventory = new HashMap<>();
         List<String> gameItems = gson2.fromJson(br2, new TypeToken<List<String>>() {
         }.getType());
         br2.close();
@@ -121,7 +124,7 @@ public class Game {
      */
     public void victoryMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         if (music) {
-            URL resource = getClass().getClassLoader().getResource("win-pokemon.wav");
+            URL resource = getClass().getClassLoader().getResource("win_pokemon.wav");
             if (resource == null)
                 throw new IllegalArgumentException("file not found!");
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
@@ -421,14 +424,14 @@ public class Game {
         if (battleNum >= 7) {
             Random rand1 = new Random();
             int enemyIndex = rand1.nextInt(enemyArray.size() - 1);
-            battle(enemyArray.get(enemyIndex));
+            attackOrFlee(enemyArray.get(enemyIndex));
         }
     }
 
     /**
-     * player battle interface
+     * determine if player wants to run or fight
      */
-    public void battle(Enemy enemy) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
+    public void attackOrFlee(Enemy enemy) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
         battleMusic();
         System.out.println(ANSI_RED + "You are starting a battle" + ANSI_RESET);
         while (true) {
@@ -441,28 +444,38 @@ public class Game {
                 int determineSuccessfulRun = rand1.nextInt(10);
                 if (determineSuccessfulRun >= 7) {
                     System.out.println("You got away successfully");
+                    stopMusic();
+                    backgroundMusic();
                     return;
                 } else {
                     System.out.println("runaway unsuccessful");
+                    fight(enemy);
                     break;
                 }
             }
             if (command.equals("attack")) {
+                fight(enemy);
                 break;
             }
             System.out.println("command not valid");
         }
+    }
 
-        //fight logic
+    /**
+     * player battle interface
+     */
+    public void fight(Enemy enemy) throws UnsupportedAudioFileException, LineUnavailableException, IOException, InterruptedException {
         int storeEnemyHealth = enemy.getHealth();
         Random rand2 = new Random();
-        int determineAttackType = rand2.nextInt(10);
         int cooldown = 0;
         battle:
-        while (enemy.getHealth() > 1 && player.getSanity() > 0) {
+        while (enemy.getHealth() >= 1 && player.getSanity() >= 1) {
+            int determineAttackType = rand2.nextInt(10);
             if (determineAttackType >= 7) {
                 player.setSanity(player.getSanity() - enemy.getSuperAttackDmg());
                 System.out.println(enemy.getTitle() + " hit you with " + enemy.getSuperAttack() + ANSI_RED + "\nyou lost " + enemy.getSuperAttackDmg() + " sanity\nyou have " + player.getSanity() + " sanity remaining" + ANSI_RESET);
+            } else if (determineAttackType == 0) {
+                System.out.println(enemy.getTitle() + " missed an attack. you took no damage!");
             } else {
                 System.out.println(enemy.getTitle() + " hit you with " + enemy.getNormalAttack() + ANSI_RED + "\nyou lost " + enemy.getNormalAttackDmg() + " sanity\nyou have " + player.getSanity() + " remaining" + ANSI_RESET);
                 player.setSanity(player.getSanity() - enemy.getNormalAttackDmg());
@@ -515,8 +528,9 @@ public class Game {
         backgroundMusic();
     }
 
+
     /**
-     * saves game
+     * saves game if db connection is good
      */
     public void save() throws IOException {
         //save game
@@ -527,18 +541,85 @@ public class Game {
 ////        bw.write(gson.toJson(player));
 ////        bw.close();
 ////        System.out.println("Game saved!");
-        MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
-        MongoDatabase database = mongoClient.getDatabase("Users");
-        MongoCollection<Document> collection = database.getCollection("GameStats");
-        Document user = new Document();
-        Gson gson = new Gson();
-        user.append("stats", gson.toJson(player));
-        collection.insertOne(user);
-        mongoClient.close();
+        try {
+            System.out.println("do you have an account?");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String command = br.readLine().toLowerCase();
+            if (command.equals("yes")){
+                dataBaseUserName = loginUser();
+            }
+            if (dataBaseUserName == null || dataBaseUserName.equals("") || dataBaseUserName.equals("login unsuccessful")){
+                dataBaseUserName = getUserName();
+            }
+            MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
+            MongoDatabase database = mongoClient.getDatabase("Users");
+            MongoCollection<Document> collection = database.getCollection("GameStats");
+            Document user = new Document();
+            Gson gson = new Gson();
+            user.append("username", dataBaseUserName.toLowerCase());
+            user.append("stats", gson.toJson(player));
+            collection.insertOne(user);
+            mongoClient.close();
+            System.out.println("save successful");
+        } catch (Exception e){
+            System.out.println("cannot connect to database");
+        }
+    }
+
+    String loginUser() throws IOException {
+        BufferedReader br1 = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("enter username");
+        String loginUserName = br1.readLine();
+        List<Object> results = checkIfUserNameExists(loginUserName);
+        if (results.size() > 0){
+            String[] userInfo = results.get(0).toString().split(",");
+            if (Objects.equals(userInfo[1].replace("}", ""), " username=" + loginUserName)){
+                System.out.println("login Successful");
+                return loginUserName;
+            }
+        }
+        return "login unsuccessful";
     }
 
     /**
-     * loads game
+     * grab username
+     */
+    private String getUserName() throws IOException {
+        while (true) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Please enter desired Username (must be greater than 4 characters and less than 15 characters)");
+            String username = br.readLine();
+            if (username.length() > 4 && username.length() < 15) {
+                List<Object> userNameArray = checkIfUserNameExists(username);
+                if (userNameArray.size() == 0) {
+                    return username;
+                } else {
+                    System.out.println("username is taken");
+
+                }
+            }
+            else {
+                System.out.println("UserName length is invalid");
+            }
+        }
+    }
+
+    /**
+     * check if username is in db
+     */
+    private List<Object> checkIfUserNameExists(String searchingUsername){
+        MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
+        MongoDatabase database = mongoClient.getDatabase("Users");
+        MongoCollection<Document> collection = database.getCollection("GameStats");
+        Document query = new Document("username", searchingUsername.toLowerCase());
+        List<Object> results = new ArrayList<>();
+        collection.find(query).into(results);
+        mongoClient.close();
+        return results;
+    }
+
+    /**
+     * loads game if db connection is good
      */
     public void load() throws IOException {
         //load game
@@ -549,13 +630,26 @@ public class Game {
 //        player = gson.fromJson(br, Player.class);
 //        br.close();
 //        System.out.println("Game loaded!");
-        MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
-        MongoDatabase database = mongoClient.getDatabase("Users");
-        MongoCollection<Document> collection = database.getCollection("GameStats");
-        String s = (String) collection.find().first().get("stats");
-        mongoClient.close();
-        Gson gson = new Gson();
-        player = gson.fromJson(s, Player.class);
+        try {
+            if (dataBaseUserName == null || dataBaseUserName.equals("")){
+                dataBaseUserName = loginUser();
+            }
+            List<Object> checkIfUserExists = checkIfUserNameExists(dataBaseUserName);
+            if (checkIfUserExists.size() > 0){
+                MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
+                MongoDatabase database = mongoClient.getDatabase("Users");
+                MongoCollection<Document> collection = database.getCollection("GameStats");
+                Document query = new Document("username", dataBaseUserName.toLowerCase());
+                String s = (String) collection.find(query).first().get("stats");
+                mongoClient.close();
+                Gson gson = new Gson();
+                player = gson.fromJson(s, Player.class);
+            } else {
+                System.out.println("account not found");
+            }
+        } catch (Exception e) {
+            System.out.println("cannot connect to database");
+        }
     }
 
     /**

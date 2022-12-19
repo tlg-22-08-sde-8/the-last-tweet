@@ -10,7 +10,7 @@ public class Player {
     private int employability;
     private int sanity;
     private int score;
-    private int codeLines = 0;
+    private int codeLines = 100;
     private Map<String, Integer> inventory;
 
     //player room field allows the game class to move character around the map
