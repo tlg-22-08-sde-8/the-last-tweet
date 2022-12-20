@@ -18,6 +18,20 @@ public class Music {
     /**
      * Generates background music
      */
+    public void bossMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        clip.stop();
+        if (music) {
+            URL resource = getClass().getClassLoader().getResource("finalboss.wav");
+            if (resource == null)
+                throw new IllegalArgumentException("file not found!");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
+            clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(20f * (float) Math.log10(battleVolume));
+            clip.start();
+        }
+    }
 
     //business
     public void backgroundMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
