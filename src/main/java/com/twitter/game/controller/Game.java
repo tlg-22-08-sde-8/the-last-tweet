@@ -210,7 +210,7 @@ public class Game {
 
     public void gameWin() throws UnsupportedAudioFileException, LineUnavailableException, IOException, InterruptedException {
         stopMusic();
-        victoryMusic();
+        endingMusic();
         playerWon = true;
         String youWinLogo = ANSI_BLUE + "\n" +
                 "▓██   ██▓ ▒█████   █    ██     █     █░ ██▓ ███▄    █ \n" +
