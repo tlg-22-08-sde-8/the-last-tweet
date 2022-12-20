@@ -77,7 +77,7 @@ public class Music {
         Clip clip = AudioSystem.getClip();
         clip.open(audioStream);
         FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-        gainControl.setValue(20f * (float) Math.log10(backgroundVolume));
+        gainControl.setValue(20f * (float) Math.log10(backgroundVolume - .2));
         clip.start();
     }
 
