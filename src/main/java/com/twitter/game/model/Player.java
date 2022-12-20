@@ -12,13 +12,11 @@ public class Player {
     private int sanity;
     private int score;
     private int codeLines = 0;
-    private int level;
-
+    private int level = 1;
     private Map<String, Integer> inventory;
 
     //player room field allows the game class to move character around the map
     public Player(int hunger, int employability, int sanity) {
-        this.level = 1;
         this.hunger = hunger;
         this.sanity = sanity;
         this.employability = employability;
@@ -26,11 +24,11 @@ public class Player {
     }
 
     public int normalAttack(){
-        return 4;
+        return (int) Math.pow(10, level);
     }
 
     public int superAttack(){
-        return 7;
+        return normalAttack() * 2;
     }
 
     // accessor methods

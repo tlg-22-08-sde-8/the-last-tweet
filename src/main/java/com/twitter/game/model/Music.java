@@ -18,11 +18,24 @@ public class Music {
     /**
      * Generates background music
      */
-
     //business
     public void backgroundMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         if (music) {
             URL resource = getClass().getClassLoader().getResource("Minecraft.wav");
+            if (resource == null)
+                throw new IllegalArgumentException("file not found!");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
+            clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(20f * (float) Math.log10(backgroundVolume));
+            clip.start();
+        }
+    }
+
+    public void endingMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        if (music) {
+            URL resource = getClass().getClassLoader().getResource("ending.wav");
             if (resource == null)
                 throw new IllegalArgumentException("file not found!");
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
@@ -80,8 +93,6 @@ public class Music {
         gainControl.setValue(20f * (float) Math.log10(backgroundVolume - .2));
         clip.start();
     }
-
-
 
 
     /**

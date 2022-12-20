@@ -111,6 +111,9 @@ public class Game {
         music.victoryMusic();
     }
 
+    public void endingMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        music.endingMusic();
+    }
     /**
      * stops playing the current clip of music
      */
@@ -727,7 +730,7 @@ public class Game {
      */
     public void code() {
         System.out.println(ANSI_RED + "you gained 1 code-line" + ANSI_RESET);
-        player.setCodeLines(player.getCodeLines() + 1);
+        player.setCodeLines(player.getCodeLines() + 20);
     }
 
     /**
@@ -769,6 +772,7 @@ public class Game {
      */
     public void Inventory() throws IOException {
         System.out.println("ITEM:   QUANTITY");
+        System.out.println("code-lines:" + player.getCodeLines() + "\n");
         for (String m : player.getInventory().keySet()) {
             System.out.printf("%s:   %d \n", m, player.getInventory().get(m));
         }
