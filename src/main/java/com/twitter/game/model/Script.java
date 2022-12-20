@@ -35,7 +35,9 @@ public final class Script {
             "You’ve lost 1 hunger. You have X hunger left. ";
 
     private static final String playerPrograms = "The follow program are available for building: \n" +
-            "\tBug Fix Suite (cost: 500 lines of code) - Creating this will promote you to SDE II (Level 2 \n" +
+            //  TODO: This entire String needs to be overhauled
+            "\tBug Fix Suite (cost: 500 lines of code) \n" +
+            "\t\t\tPromotes you to SDE II\n" +
             "\tTwo Factor Authentication System (cost: 1,000 lines of code) - Creating this will promote you to " +
             "SDE III (Level 3)\n" +
             "\t\t NOTE: Must have completed Bug Fix Suite to unlock ability to build this program \n" +
@@ -151,6 +153,21 @@ public final class Script {
 
             ;
 
+    public static final String youDefeatedTheFinalBoss =
+            "Elon Musk, exasperated from expended energy and struggling to stay on the one knee he is on, \n" +
+                    "looks up at you and says, “\"Don't think I have any intention of caressing your cheek \n" +
+                    "and saying I was wrong. I will not weep and wonder what might have been. \n" +
+                    "I'm sure you understand. \n" +
+                    "Still... I'm proud of you in a way. \n" +
+                    "You have shown great conviction. Strength. Courage. All mankind-shaping qualities.";
+
+    public static final String finalWordsOfElon = "\n\n...I should have fired you long ago.\"\n\n";
+
+    public static String postElon =
+            "And with those final last words, Elon Musk collapses - a symbolic stepping down of his reign.\n" +
+            "You walk towards his body and pick up his CEO badge. You place it upon your breast pocket. \n" +
+            "You are now the CEO of Twitter. With a sigh of relief, you look forward to try and salvage Twitter.\n";
+    //TODO: add either YOU WIN or THE END in ASCII.
 
     //access methods
     public static String getSurvivalGuide(){
@@ -264,6 +281,14 @@ public final class Script {
 
     public static String getPlayerBrewsCoffee3x() {
         return playerBrewsCoffee3x;
+    }
+
+    public static void getPostFinalBossDialogue() throws InterruptedException {
+        System.out.println(youDefeatedTheFinalBoss);
+        Thread.sleep(5000);
+        System.out.println(finalWordsOfElon);
+        Thread.sleep(3000);
+        System.out.println(postElon);
     }
 
 

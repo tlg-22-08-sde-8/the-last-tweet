@@ -24,14 +24,15 @@ public class Game {
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
     private final String[] defaultCommands = {"Inventory", "View Map", "More", "Save", "Load", "Help"};
-    private final String[] workstationCommands = {"Code", "Read Book", "Go North", "Go East", "Go West"};
+    private final String[] workstationCommands = {"Code", "Level Up", "Read Book", "Go North", "Go East", "Go West"};
     private final String[] breakRoomCommands = {"Access Vending Machine", "Go South", "Go West", "Go East"};
     private final String[] coffeeBarCommands = {"Brew Coffee","Go North", "Go East"};
     private final String[] emptyWorkstationCommands = {"Search Desk", "Go North", "Go West"};
-    private final String[] CEOCommands = {"Go South", "Go East"};
+    private final String[] CEOCommands = {"Negotiate Boss", "Go South", "Go East"};
     private Player player;
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
+    private final ArrayList<Enemy> bossArray;
     private final Map<String, Integer> inventory;
     private boolean gameOver = false;
     private int coffeeCount = 0;
@@ -79,6 +80,13 @@ public class Game {
         enemyArray = gson3.fromJson(br3, new TypeToken<List<Enemy>>() {
         }.getType());
         br3.close();
+
+        InputStream in4 = getClass().getResourceAsStream("/bosses.json");
+        BufferedReader br4 = new BufferedReader(new InputStreamReader(in4));
+        Gson gson4 = new Gson();
+        bossArray = gson4.fromJson(br4, new TypeToken<List<Enemy>>() {
+        }.getType());
+        br4.close();
     }
 
     /**
@@ -318,6 +326,16 @@ public class Game {
                     System.out.println("Command not valid pick from the list of options");
                 }
                 break;
+                //  displays options for leveling up
+            case "level":
+                if (command.equals("level up")) {
+                    if (player.getRoom().getName().equals("WorkStation")) {
+                        build();
+                    }
+                }else {
+                    System.out.println("command not valid");
+                }
+                break;
             //display stats and instructions
             case "access":
                 if (player.getRoom().getName().equals("Break Room")) {
@@ -335,6 +353,13 @@ public class Game {
                     System.out.println("Command not valid pick from the list of options or type help");
                 }
                 break;
+            case "read":
+                if (player.getRoom().getName().equals("WorkStation") && command.equals("read book")) {
+                    System.out.println(Script.getSurvivalGuide());
+                } else {
+                    System.out.println("command not valid");
+                }
+                break;
             case "more":
                 more();
                 break;
@@ -342,6 +367,16 @@ public class Game {
                 if (command.equals("search desk")) {
                     if (player.getRoom().getName().equals("Empty Workstation-1") || player.getRoom().getName().equals("Empty Workstation-2")){
                         searchDesk();
+                    }
+                } else {
+                    System.out.println("command not valid");
+                }
+                break;
+            //Engage the final boss
+            case "negotiate":
+                if (command.equals("negotiate boss")) {
+                    if (player.getRoom().getName().equals("CEO")) {
+                        attackOrFlee(bossArray.get(0));
                     }
                 } else {
                     System.out.println("command not valid");
@@ -390,7 +425,7 @@ public class Game {
                     System.out.println("Command not valid pick from the list of options");
                 }
                 break;
-            //quit game
+            
             case "read":
                 if (player.getRoom().getName().equals("WorkStation") && command.equals("read book")) {
                     System.out.println(Script.getSurvivalGuide());
@@ -398,12 +433,17 @@ public class Game {
                     System.out.println("Command not valid pick from the list of options");
                 }
                 break;
+            //quit game
             case "quit":
                 gameOver();
                 break;
             default:
                 System.out.println("Command not valid pick from the list of options");
         }
+    }
+
+    private static void build() {
+        //TODO: Finish implementing the build method
     }
 
     public void viewMap(){
@@ -473,6 +513,10 @@ public class Game {
      * determine if player wants to run or fight
      */
     public void attackOrFlee(Enemy enemy) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
+        if (enemy.getTitle().equals("Elon Musk"))    {
+            //TODO: Insert final boss music
+            //finalBossMusic();
+        }
         battleMusic();
         System.out.println(ANSI_RED + "You are starting a battle" + ANSI_RESET);
         while (true) {
@@ -571,6 +615,10 @@ public class Game {
         }
         stopMusic();
         if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
+            if (enemy.getTitle().equals("Elon Musk")) {
+                Script.getPostFinalBossDialogue();
+                System.exit(0);
+            }
             victoryMusic();
             System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
             player.setScore(player.getScore() + 1);
