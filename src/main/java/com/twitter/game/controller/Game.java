@@ -71,7 +71,7 @@ public class Game {
         this.player = player;
         player.setRoom(gameMap.get(0));
 
-        //load in enimies
+        //load in enemies
         InputStream in3 = getClass().getResourceAsStream("/enemies.json");
         BufferedReader br3 = new BufferedReader(new InputStreamReader(in3));
         Gson gson3 = new Gson();
@@ -110,10 +110,59 @@ public class Game {
         music.stopMusic();
     }
 
+
+    /**
+     * starts playing game over music
+     */
     public void gameOverMusic() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         music.gameOverMusic();
     }
 
+    /**
+     * change background music volume
+     */
+    public void setBackgroundVolume() throws IOException {
+        while (true){
+            System.out.println("enter a number between 1 - 100");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String setVolume = br.readLine();
+            try {
+                float volume = Integer.parseInt(setVolume);
+                if (volume <= 100 && volume >= 1){
+                    music.setBackgroundVolume(volume/50);
+                    stopMusic();
+                    backgroundMusic();
+                    break;
+                } else {
+                    System.out.println("number is not in range");
+                }
+            } catch (Exception e){
+                System.out.println("please enter a valid number");
+            }
+        }
+    }
+
+    /**
+     * change battle music volume
+     */
+    public void setBattleVolume() throws IOException {
+        while (true){
+            System.out.println("enter a number between 1 - 100");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String setVolume = br.readLine();
+            try {
+                float volume = Integer.parseInt(setVolume);
+                if (volume <= 100 && volume >= 1){
+                    music.setBattleVolume(volume/50);
+                    break;
+                } else {
+                    System.out.println("number is not in range");
+                }
+            } catch (Exception e){
+                System.out.println("please enter a valid number");
+            }
+        }
+    }
 
     /**
      * Generates title/splash screen
@@ -132,7 +181,7 @@ public class Game {
                 "          ░  ░  ░   ░  ░       ░  ░      ░  ░      ░                           ░       ░  ░   ░  ░         \n" +
                 "                                                                                                           "
                 + ANSI_RESET;
-        String logoSubTitle = ANSI_BLUE + "\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
+        String logoSubTitle = ANSI_BLUE + "\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
         System.out.println(gameIntroLogo);
         System.out.println(logoSubTitle);
         Thread.sleep(7000);
@@ -327,7 +376,15 @@ public class Game {
                 if (command.equals("start music")) {
                     music.setMusic(true);
                     backgroundMusic();
-
+                } else {
+                    System.out.println("command not valid");
+                }
+                break;
+            case "set":
+                if (command.equals("set background music volume")){
+                    setBackgroundVolume();
+                } else if (command.equals("set battle music volume")){
+                    setBattleVolume();
                 } else {
                     System.out.println("command not valid");
                 }
@@ -507,6 +564,7 @@ public class Game {
         if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
             victoryMusic();
             System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
+            player.setScore(player.getScore() + 1);
             randomReward();
             Thread.sleep(5000);
             stopMusic();
@@ -651,14 +709,16 @@ public class Game {
     public void help() {
         System.out.println("Game Description:\n" + Script.getBasicInfo() + "\n");
         System.out.println(
-                "|ACTION       | TYPE             | \n" +
-                        "|Travel       | go N or go North | \n" +
-                        "|Quit         | quit             | \n" +
-                        "|Player Stats | More             | \n" +
-                        "|Save Game    | save             | \n" +
-                        "|Load Game    | load             | \n" +
-                        "|Stop Music   | stop music       | \n" +
-                        "|Start Music  | start music      | \n"
+                        "|ACTION                         | Example                    | \n" +
+                        "|Travel                         | go N or go North           | \n" +
+                        "|Quit                           | quit                       | \n" +
+                        "|Player Stats                   | More                       | \n" +
+                        "|Save Game                      | save                       | \n" +
+                        "|Load Game                      | load                       | \n" +
+                        "|Stop Music                     | stop music                 | \n" +
+                        "|Start Music                    | start music                | \n" +
+                        "|Change Background Music Volume | set background music volume| \n" +
+                        "|Change Battle Music Volume     | set battle music volume    | \n"
         );
     }
 
