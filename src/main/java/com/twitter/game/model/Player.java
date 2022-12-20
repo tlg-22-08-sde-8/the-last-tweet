@@ -13,6 +13,10 @@ public class Player {
     private int score;
     private int codeLines = 0;
     private int level = 1;
+    private boolean bugfix = false;
+    private boolean twoFactor = false;
+    private boolean digitalAss = false;
+    private boolean contentModeration = false;
     private Map<String, Integer> inventory;
 
     //player room field allows the game class to move character around the map
@@ -32,6 +36,38 @@ public class Player {
     }
 
     // accessor methods
+    public boolean isBugfix() {
+        return bugfix;
+    }
+
+    public void setBugfix(boolean bugfix) {
+        this.bugfix = bugfix;
+    }
+
+    public boolean isTwoFactor() {
+        return twoFactor;
+    }
+
+    public void setTwoFactor(boolean twoFactor) {
+        this.twoFactor = twoFactor;
+    }
+
+    public boolean isDigitalAss() {
+        return digitalAss;
+    }
+
+    public void setDigitalAss(boolean digitalAss) {
+        this.digitalAss = digitalAss;
+    }
+
+    public boolean isContentModeration() {
+        return contentModeration;
+    }
+
+    public void setContentModeration(boolean contentModeration) {
+        this.contentModeration = contentModeration;
+    }
+
     public Map<String, Integer> getInventory() {
         return inventory;
     }
