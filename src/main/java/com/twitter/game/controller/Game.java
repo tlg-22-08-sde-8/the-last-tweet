@@ -38,7 +38,6 @@ public class Game {
     private int coffeeCount = 0;
     private String dataBaseUserName;
     private Music music;
-    private Map <String, Integer> inventory;
 
     public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
         //start background music
@@ -353,13 +352,6 @@ public class Game {
                     System.out.println("Command not valid pick from the list of options or type help");
                 }
                 break;
-            case "read":
-                if (player.getRoom().getName().equals("WorkStation") && command.equals("read book")) {
-                    System.out.println(Script.getSurvivalGuide());
-                } else {
-                    System.out.println("command not valid");
-                }
-                break;
             case "more":
                 more();
                 break;
@@ -499,14 +491,6 @@ public class Game {
             int enemyIndex = rand1.nextInt(enemyArray.size() - 1);
             attackOrFlee(enemyArray.get(enemyIndex));
         }
-    }
-
-    public void battleReward(){
-        List<String> items = new ArrayList<>(inventory.keySet());
-        Random rand2 = new Random();
-        String randomItem = items.get(rand2.nextInt(items.size()));
-        player.getInventory().put(randomItem, player.getInventory().get(randomItem) + 1);
-        System.out.println(ANSI_RED + "Congratulation you gained one " + randomItem + ANSI_RESET);
     }
 
     /**
