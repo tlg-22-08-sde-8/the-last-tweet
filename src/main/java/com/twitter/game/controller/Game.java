@@ -35,6 +35,7 @@ public class Game {
     private final ArrayList<Enemy> bossArray;
     private final Map<String, Integer> inventory;
     private boolean gameOver = false;
+    private boolean playerWon = false;
     private int coffeeCount = 0;
     private String dataBaseUserName;
     private Music music;
@@ -100,7 +101,6 @@ public class Game {
      * Generates battle music
      */
     public void battleMusic() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
-        stopMusic();
         music.battleMusic();
     }
 
@@ -121,6 +121,12 @@ public class Game {
         music.stopMusic();
     }
 
+    /**
+     * starts boss fight music
+     */
+    public void finalBossMusic() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+        music.bossMusic();
+    }
 
     /**
      * starts playing game over music
@@ -202,6 +208,26 @@ public class Game {
         System.out.println(Script.getPlayerRequest());
     }
 
+    public void gameWin() throws UnsupportedAudioFileException, LineUnavailableException, IOException, InterruptedException {
+        stopMusic();
+        victoryMusic();
+        playerWon = true;
+        String youWinLogo = ANSI_BLUE + "\n" +
+                "▓██   ██▓ ▒█████   █    ██     █     █░ ██▓ ███▄    █ \n" +
+                " ▒██  ██▒▒██▒  ██▒ ██  ▓██▒   ▓█░ █ ░█░▓██▒ ██ ▀█   █ \n" +
+                "  ▒██ ██░▒██░  ██▒▓██  ▒██░   ▒█░ █ ░█ ▒██▒▓██  ▀█ ██▒\n" +
+                "  ░ ▐██▓░▒██   ██░▓▓█  ░██░   ░█░ █ ░█ ░██░▓██▒  ▐▌██▒\n" +
+                "  ░ ██▒▓░░ ████▓▒░▒▒█████▓    ░░██▒██▓ ░██░▒██░   ▓██░\n" +
+                "   ██▒▒▒ ░ ▒░▒░▒░ ░▒▓▒ ▒ ▒    ░ ▓░▒ ▒  ░▓  ░ ▒░   ▒ ▒ \n" +
+                " ▓██ ░▒░   ░ ▒ ▒░ ░░▒░ ░ ░      ▒ ░ ░   ▒ ░░ ░░   ░ ▒░\n" +
+                " ▒ ▒ ░░  ░ ░ ░ ▒   ░░░ ░ ░      ░   ░   ▒ ░   ░   ░ ░ \n" +
+                " ░ ░         ░ ░     ░            ░     ░           ░ \n" +
+                " ░ ░                                                  " + ANSI_RESET;
+        System.out.println(youWinLogo);
+        Thread.sleep(4000);
+        stopMusic();
+    }
+
     /**
      * Generates game over screen
      */
@@ -249,7 +275,7 @@ public class Game {
             InterruptedException {
         //get commands from player
         String command;
-        while (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0 && !gameOver) {
+        while (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0 && !gameOver && !playerWon) {
             renderUserInterface();
             System.out.println(Script.getPlayerRequest());
 
@@ -371,7 +397,7 @@ public class Game {
             case "negotiate":
                 if (command.equals("negotiate boss")) {
                     if (player.getRoom().getName().equals("CEO")) {
-                        attackOrFlee(bossArray.get(0));
+                        bossFightInit();
                     }
                 } else {
                     System.out.println("command not valid");
@@ -483,6 +509,12 @@ public class Game {
         }
     }
 
+    public void bossFightInit() throws UnsupportedAudioFileException, LineUnavailableException, IOException, InterruptedException {
+        stopMusic();
+        finalBossMusic();
+        fight(bossArray.get(0));
+    }
+
     /**
      * determines if player will battle during travel
      */
@@ -500,10 +532,7 @@ public class Game {
      * determine if player wants to run or fight
      */
     public void attackOrFlee(Enemy enemy) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
-        if (enemy.getTitle().equals("Elon Musk"))    {
-            //TODO: Insert final boss music
-            //finalBossMusic();
-        }
+        stopMusic();
         battleMusic();
         System.out.println(ANSI_RED + "You are starting a battle" + ANSI_RESET);
         while (true) {
@@ -604,17 +633,21 @@ public class Game {
         if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
             if (enemy.getTitle().equals("Elon Musk")) {
                 Script.getPostFinalBossDialogue();
-                System.exit(0);
+                gameWin();
+                gameOver = true;
+            } else {
+                victoryMusic();
+                System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
+                player.setScore(player.getScore() + 1);
+                randomReward();
+                Thread.sleep(5000);
+                stopMusic();
+                enemy.setHealth(storeEnemyHealth);
             }
-            victoryMusic();
-            System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
-            player.setScore(player.getScore() + 1);
-            randomReward();
-            Thread.sleep(5000);
-            stopMusic();
-            enemy.setHealth(storeEnemyHealth);
         }
-        backgroundMusic();
+        if (!gameOver && !playerWon){
+            backgroundMusic();
+        }
     }
 
 
