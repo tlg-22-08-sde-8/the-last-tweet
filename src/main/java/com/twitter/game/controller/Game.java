@@ -415,6 +415,10 @@ public class Game {
         }
     }
 
+    private static void build() {
+        //TODO: Finish implementing the build method
+    }
+
     public void viewMap(){
         GameMaps.getGameMap();
     }

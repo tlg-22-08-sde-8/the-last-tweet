@@ -35,6 +35,7 @@ public final class Script {
             "You’ve lost 1 hunger. You have X hunger left. ";
 
     private static final String playerPrograms = "The follow program are available for building: \n" +
+            //  TODO: This entire String needs to be overhauled
             "\tBug Fix Suite (cost: 500 lines of code) \n" +
             "\t\t\tPromotes you to SDE II\n" +
             "\tTwo Factor Authentication System (cost: 1,000 lines of code) - Creating this will promote you to " +
