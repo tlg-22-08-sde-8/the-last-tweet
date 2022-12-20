@@ -28,7 +28,7 @@ public class Player {
     }
 
     public int normalAttack(){
-        return (int) Math.pow(10, level);
+        return 10 * level;
     }
 
     public int superAttack(){
