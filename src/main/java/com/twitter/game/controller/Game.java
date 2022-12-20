@@ -24,7 +24,7 @@ public class Game {
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
     private final String[] defaultCommands = {"Inventory", "View Map", "More", "Save", "Load", "Help"};
-    private final String[] workstationCommands = {"Code", "Read Book", "Go North", "Go East", "Go West"};
+    private final String[] workstationCommands = {"Code", "Level Up", "Read Book", "Go North", "Go East", "Go West"};
     private final String[] breakRoomCommands = {"Access Vending Machine", "Go South", "Go West", "Go East"};
     private final String[] coffeeBarCommands = {"Brew Coffee","Go North", "Go East"};
     private final String[] emptyWorkstationCommands = {"Search Desk", "Go North", "Go West"};
@@ -314,6 +314,16 @@ public class Game {
                 if (player.getRoom().getName().equals("WorkStation")) {
                     code();
                 } else {
+                    System.out.println("command not valid");
+                }
+                break;
+                //  displays options for leveling up
+            case "level":
+                if (command.equals("level up")) {
+                    if (player.getRoom().getName().equals("WorkStation")) {
+                        build();
+                    }
+                }else {
                     System.out.println("command not valid");
                 }
                 break;

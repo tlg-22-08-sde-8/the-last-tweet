@@ -35,7 +35,8 @@ public final class Script {
             "You’ve lost 1 hunger. You have X hunger left. ";
 
     private static final String playerPrograms = "The follow program are available for building: \n" +
-            "\tBug Fix Suite (cost: 500 lines of code) - Creating this will promote you to SDE II (Level 2 \n" +
+            "\tBug Fix Suite (cost: 500 lines of code) \n" +
+            "\t\t\tPromotes you to SDE II\n" +
             "\tTwo Factor Authentication System (cost: 1,000 lines of code) - Creating this will promote you to " +
             "SDE III (Level 3)\n" +
             "\t\t NOTE: Must have completed Bug Fix Suite to unlock ability to build this program \n" +
