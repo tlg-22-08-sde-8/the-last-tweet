@@ -418,6 +418,7 @@ public class Game {
             case "negotiate":
                 if (player.getRoom().getName().equals("CEORoom") && command.equals("negotiate boss")) {
                     //  TODO: Implement code that makes player engage in a fight with the final boss
+                    // please!
                 } else {
                     System.out.println("command not valid");
                 }
