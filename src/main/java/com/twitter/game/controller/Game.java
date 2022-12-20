@@ -38,6 +38,7 @@ public class Game {
     private int coffeeCount = 0;
     private String dataBaseUserName;
     private Music music;
+    private Map <String, Integer> inventory;
 
     public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
         //start background music
@@ -322,7 +323,7 @@ public class Game {
                 if (player.getRoom().getName().equals("WorkStation")) {
                     code();
                 } else {
-                    System.out.println("command not valid");
+                    System.out.println("Command not valid pick from the list of options");
                 }
                 break;
                 //  displays options for leveling up
@@ -340,7 +341,7 @@ public class Game {
                 if (player.getRoom().getName().equals("Break Room")) {
                     accessVendingMachine();
                 } else {
-                    System.out.println("command not valid");
+                    System.out.println("Command not valid pick from the list of options");
                 }
                 break;
             case "brew":
@@ -349,7 +350,7 @@ public class Game {
                         brewCoffee();
                     }
                 } else {
-                    System.out.println("command not valid");
+                    System.out.println("Command not valid pick from the list of options or type help");
                 }
                 break;
             case "read":
@@ -404,7 +405,7 @@ public class Game {
                     stopMusic();
                     music.setMusic(false);
                 } else {
-                    System.out.println("command not valid");
+                    System.out.println("Command not valid pick from the list of options");
                 }
                 break;
             case "start":
@@ -421,7 +422,15 @@ public class Game {
                 } else if (command.equals("set battle music volume")){
                     setBattleVolume();
                 } else {
-                    System.out.println("command not valid");
+                    System.out.println("Command not valid pick from the list of options");
+                }
+                break;
+            
+            case "read":
+                if (player.getRoom().getName().equals("WorkStation") && command.equals("read book")) {
+                    System.out.println(Script.getSurvivalGuide());
+                } else {
+                    System.out.println("Command not valid pick from the list of options");
                 }
                 break;
             //quit game
@@ -429,7 +438,7 @@ public class Game {
                 gameOver();
                 break;
             default:
-                System.out.println(ANSI_PURPLE + "command not valid" + ANSI_RESET);
+                System.out.println("Command not valid pick from the list of options");
         }
     }
 
@@ -492,6 +501,14 @@ public class Game {
         }
     }
 
+    public void battleReward(){
+        List<String> items = new ArrayList<>(inventory.keySet());
+        Random rand2 = new Random();
+        String randomItem = items.get(rand2.nextInt(items.size()));
+        player.getInventory().put(randomItem, player.getInventory().get(randomItem) + 1);
+        System.out.println(ANSI_RED + "Congratulation you gained one " + randomItem + ANSI_RESET);
+    }
+
     /**
      * determine if player wants to run or fight
      */
@@ -525,7 +542,7 @@ public class Game {
                 fight(enemy);
                 break;
             }
-            System.out.println("command not valid");
+            System.out.println("Command not valid pick from the list of options");
         }
     }
 
@@ -593,7 +610,7 @@ public class Game {
                         break;
                     }
                 }
-                System.out.println("command not valid");
+                System.out.println("Command not valid pick from the list of options");
             }
         }
         stopMusic();
@@ -814,7 +831,7 @@ public class Game {
             if (command.equals("exit")) {
                 break;
             }
-            System.out.println("command not valid");
+            System.out.println("Command not valid pick from the list of options");
         }
     }
 
@@ -860,7 +877,7 @@ public class Game {
             if ("q".equals(choice) || "quit".equals(choice)) {
                 break;
             }
-            System.out.println("command not valid");
+            System.out.println("Command not valid pick from the list of options");
         }
     }
 
@@ -889,7 +906,7 @@ public class Game {
             if (choice.equals("quit")){
                 break;
             }
-            System.out.println("Command not valid");
+            System.out.println("Command not valid pick from the list of options");
         }
     }
 
