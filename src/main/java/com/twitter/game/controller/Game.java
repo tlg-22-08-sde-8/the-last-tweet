@@ -29,7 +29,7 @@ public class Game {
     private final String[] coffeeBarCommands = {"Brew Coffee","Go North", "Go East"};
     private final String[] emptyWorkstationCommands = {"Search Desk", "Go North", "Go West"};
     private final String[] CEOCommands = {"Negotiate Boss", "Go South", "Go East"};
-    private Player player;
+    private static Player player;
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
     private final ArrayList<Enemy> bossArray;
@@ -463,8 +463,74 @@ public class Game {
         }
     }
 
-    private static void build() {
-        //TODO: Finish implementing the build method
+    public static void build() throws IOException {
+        System.out.println(Script.getPlayerLevels());
+        menu:
+        while (true) {
+            System.out.println("> Buy Bug Fix Suite    > Buy Two Factor Authentication System    > Buy Digital Assistant    > Buy Content Moderation System     > Quit");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String command = br.readLine().toLowerCase().strip();
+            switch (command){
+                case "buy bug fix suite":
+                    if (player.getLevel() == 1 && !player.isBugfix()){
+                        if (player.getCodeLines() >= 500){
+                            player.setCodeLines(player.getCodeLines() - 500);
+                            player.setLevel(2);
+                            System.out.println(ANSI_RED + "you are now level 2" + ANSI_RESET);
+                        }else {
+                            System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
+                        }
+                    } else {
+                        System.out.println(ANSI_RED + "player level not high enough" + ANSI_RESET);
+                    }
+                    break;
+                case "buy two factor authentication system":
+                    if (player.getLevel() == 2 && !player.isTwoFactor()){
+                        if (player.getCodeLines() >= 1000){
+                            player.setCodeLines(player.getCodeLines() - 1000);
+                            player.setLevel(3);
+                            System.out.println(ANSI_RED + "you are now level 3" + ANSI_RESET);
+                        }else {
+                            System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
+                        }
+                    } else {
+                        System.out.println("player level not high enough");
+                    }
+                    break;
+                case "buy digital assistant":
+                    if (player.getLevel() == 3 && !player.isDigitalAss()){
+                        if (player.getCodeLines() >= 2500){
+                            player.setCodeLines(player.getCodeLines() - 2500);
+                            player.setLevel(4);
+                            System.out.println(ANSI_RED + "you are now level 4" + ANSI_RESET);
+                        }else {
+                            System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
+                        }
+                    } else {
+                        System.out.println("player level not high enough");
+                    }
+                    break;
+                case "buy content moderation system":
+                    if (player.getLevel() == 4 && !player.isContentModeration()){
+                        if (player.getCodeLines() >= 5000){
+                            player.setCodeLines(player.getCodeLines() - 5000);
+                            player.setLevel(5);
+                            System.out.println(ANSI_RED + "you are now level 5" + ANSI_RESET);
+                        }else {
+                            System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
+                        }
+                    }
+                    else {
+                        System.out.println("player level not high enough");
+                    }
+                    break;
+                case "quit":
+                    break menu;
+                case "q":
+                    break menu;
+                default:
+                    System.out.println("Command not valid");
+            }
     }
 
     public void viewMap(){
