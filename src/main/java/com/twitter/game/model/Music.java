@@ -8,6 +8,8 @@ public class Music {
     //fields
     private boolean music = true;
     private Clip clip;
+    private float backgroundVolume = .7f;
+    private float battleVolume = .7f;
 
     //ctor
     public Music() {
@@ -27,7 +29,7 @@ public class Music {
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(20f * (float) Math.log10(.7));
+            gainControl.setValue(20f * (float) Math.log10(backgroundVolume));
             clip.start();
         }
     }
@@ -45,7 +47,7 @@ public class Music {
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(20f * (float) Math.log10(.1));
+            gainControl.setValue(20f * (float) Math.log10(battleVolume));
             clip.start();
         }
     }
@@ -62,7 +64,7 @@ public class Music {
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(20f * (float) Math.log10(.1));
+            gainControl.setValue(20f * (float) Math.log10(battleVolume));
             clip.start();
         }
     }
@@ -74,8 +76,12 @@ public class Music {
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
         Clip clip = AudioSystem.getClip();
         clip.open(audioStream);
+        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(backgroundVolume));
         clip.start();
     }
+
+
 
 
     /**
@@ -86,6 +92,22 @@ public class Music {
     }
 
     //get and set
+    public float getBackgroundVolume() {
+        return backgroundVolume;
+    }
+
+    public void setBackgroundVolume(float backgroundVolume) {
+        this.backgroundVolume = backgroundVolume;
+    }
+
+    public float getBattleVolume() {
+        return battleVolume;
+    }
+
+    public void setBattleVolume(float battleVolume) {
+        this.battleVolume = battleVolume;
+    }
+
     public boolean isMusic() {
         return music;
     }
