@@ -28,10 +28,11 @@ public class Game {
     private final String[] breakRoomCommands = {"Access Vending Machine", "Go South", "Go West", "Go East"};
     private final String[] coffeeBarCommands = {"Brew Coffee","Go North", "Go East"};
     private final String[] emptyWorkstationCommands = {"Search Desk", "Go North", "Go West"};
-    private final String[] CEOCommands = {"Go South", "Go East"};
+    private final String[] CEOCommands = {"Negotiate Boss", "Go South", "Go East"};
     private Player player;
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
+    private final ArrayList<Enemy> bossArray;
     private final Map<String, Integer> inventory;
     private boolean gameOver = false;
     private int coffeeCount = 0;
@@ -78,6 +79,13 @@ public class Game {
         enemyArray = gson3.fromJson(br3, new TypeToken<List<Enemy>>() {
         }.getType());
         br3.close();
+
+        InputStream in4 = getClass().getResourceAsStream("/bosses.json");
+        BufferedReader br4 = new BufferedReader(new InputStreamReader(in4));
+        Gson gson4 = new Gson();
+        bossArray = gson4.fromJson(br4, new TypeToken<List<Enemy>>() {
+        }.getType());
+        br4.close();
     }
 
     /**
@@ -344,6 +352,13 @@ public class Game {
                     System.out.println("command not valid");
                 }
                 break;
+            case "read":
+                if (player.getRoom().getName().equals("WorkStation") && command.equals("read book")) {
+                    System.out.println(Script.getSurvivalGuide());
+                } else {
+                    System.out.println("command not valid");
+                }
+                break;
             case "more":
                 more();
                 break;
@@ -400,9 +415,9 @@ public class Game {
                 }
                 break;
             //quit game
-            case "read":
-                if (player.getRoom().getName().equals("WorkStation") && command.equals("read book")) {
-                    System.out.println(Script.getSurvivalGuide());
+            case "negotiate":
+                if (player.getRoom().getName().equals("CEORoom") && command.equals("negotiate boss")) {
+                    //  TODO: Implement code that makes player engage in a fight with the final boss
                 } else {
                     System.out.println("command not valid");
                 }
@@ -478,6 +493,10 @@ public class Game {
      * determine if player wants to run or fight
      */
     public void attackOrFlee(Enemy enemy) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
+        if (enemy.getTitle() == "Elon Musk")    {
+            //TODO: Insert final boss music
+            //finalBossMusic();
+        }
         battleMusic();
         System.out.println(ANSI_RED + "You are starting a battle" + ANSI_RESET);
         while (true) {
