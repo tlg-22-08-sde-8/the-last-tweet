@@ -598,7 +598,10 @@ public class Game {
         }
         stopMusic();
         if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
-            //TODO: Add additional condition if you defeat Elon Musk
+            if (enemy.getTitle().equals("Elon Musk")) {
+                Script.getPostFinalBossDialogue();
+                System.exit(0);
+            }
             victoryMusic();
             System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
             player.setScore(player.getScore() + 1);

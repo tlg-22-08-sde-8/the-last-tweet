@@ -154,9 +154,20 @@ public final class Script {
             ;
 
     public static final String youDefeatedTheFinalBoss =
-            //  TODO: Add script for when you defeat Elon Musk
-            "";
+            "Elon Musk, exasperated from expended energy and struggling to stay on the one knee he is on, \n" +
+                    "looks up at you and says, “\"Don't think I have any intention of caressing your cheek \n" +
+                    "and saying I was wrong. I will not weep and wonder what might have been. \n" +
+                    "I'm sure you understand. \n" +
+                    "Still... I'm proud of you in a way. \n" +
+                    "You have shown great conviction. Strength. Courage. All mankind-shaping qualities.";
 
+    public static final String finalWordsOfElon = "\n\n...I should have fired you long ago.\"\n\n";
+
+    public static String postElon =
+            "And with those final last words, Elon Musk collapses - a symbolic stepping down of his reign.\n" +
+            "You walk towards his body and pick up his CEO badge. You place it upon your breast pocket. \n" +
+            "You are now the CEO of Twitter. With a sigh of relief, you look forward to try and salvage Twitter.\n";
+    //TODO: add either YOU WIN or THE END in ASCII.
 
     //access methods
     public static String getSurvivalGuide(){
@@ -270,6 +281,14 @@ public final class Script {
 
     public static String getPlayerBrewsCoffee3x() {
         return playerBrewsCoffee3x;
+    }
+
+    public static void getPostFinalBossDialogue() throws InterruptedException {
+        System.out.println(youDefeatedTheFinalBoss);
+        Thread.sleep(5000);
+        System.out.println(finalWordsOfElon);
+        Thread.sleep(3000);
+        System.out.println(postElon);
     }
 
 
