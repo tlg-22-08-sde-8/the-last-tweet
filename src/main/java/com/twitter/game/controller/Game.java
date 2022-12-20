@@ -14,7 +14,6 @@ import java.io.*;
 import java.util.*;
 
 public class Game {
-    private static final String ANSI_PURPLE = "\u001B[35m";
     private static final String ANSI_YELLOW = "\u001B[33m";
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_RESET = "\u001B[0m";
@@ -29,7 +28,7 @@ public class Game {
     private final String[] coffeeBarCommands = {"Brew Coffee","Go North", "Go East"};
     private final String[] emptyWorkstationCommands = {"Search Desk", "Go North", "Go West"};
     private final String[] CEOCommands = {"Negotiate Boss", "Go South", "Go East"};
-    private Player player;
+    private static Player player = new Player(25, 25, 25);
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
     private final ArrayList<Enemy> bossArray;
@@ -40,7 +39,7 @@ public class Game {
     private String dataBaseUserName;
     private Music music;
 
-    public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+    public Game() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
         //start background music
         backgroundMusic();
 
@@ -70,7 +69,7 @@ public class Game {
         gameMap.get(4).setDescription(Script.getPlayerFindsAbandonedWorkstation());
         gameMap.get(5).setDescription(Script.getPlayerInCEORoom());
 
-        this.player = player;
+
         player.setRoom(gameMap.get(0));
 
         //load in enemies
@@ -111,6 +110,9 @@ public class Game {
         music.victoryMusic();
     }
 
+    public void endingMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        music.endingMusic();
+    }
     /**
      * stops playing the current clip of music
      */
@@ -207,7 +209,7 @@ public class Game {
 
     public void gameWin() throws UnsupportedAudioFileException, LineUnavailableException, IOException, InterruptedException {
         stopMusic();
-        victoryMusic();
+        endingMusic();
         playerWon = true;
         String youWinLogo = ANSI_BLUE + "\n" +
                 "▓██   ██▓ ▒█████   █    ██     █     █░ ██▓ ███▄    █ \n" +
@@ -301,7 +303,7 @@ public class Game {
         //display user stats
         String userStats =
                 "==============================================================================================================================\n" +
-                        "  Location = " + player.getRoom().getName() + "                      hunger = " + player.getHunger() + "   employability = " + player.getEmployability() + "  sanity = " + player.getSanity() + "                            SDE-1 \n" +
+                        "  Location = " + player.getRoom().getName() + "                      hunger = " + player.getHunger() + "   employability = " + player.getEmployability() + "  sanity = " + player.getSanity() + "                            SDE-" + player.getLevel() + "\n" +
                         "==============================================================================================================================";
         System.out.println(userStats);
     }
@@ -460,8 +462,74 @@ public class Game {
         }
     }
 
-    private static void build() {
-        //TODO: Finish implementing the build method
+    public static void build() throws IOException {
+        System.out.println(Script.getPlayerLevels());
+        menu:
+        while (true) {
+            System.out.println("> Buy Bug Fix Suite    > Buy Two Factor Authentication System    > Buy Digital Assistant    > Buy Content Moderation System     > Quit");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String command = br.readLine().toLowerCase().strip();
+            switch (command) {
+                case "buy bug fix suite":
+                    if (player.getLevel() == 1 && !player.isBugfix()) {
+                        if (player.getCodeLines() >= 500) {
+                            player.setCodeLines(player.getCodeLines() - 500);
+                            player.setLevel(2);
+                            System.out.println(ANSI_RED + "you are now level 2" + ANSI_RESET);
+                        } else {
+                            System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
+                        }
+                    } else {
+                        System.out.println(ANSI_RED + "player level not high enough" + ANSI_RESET);
+                    }
+                    break;
+                case "buy two factor authentication system":
+                    if (player.getLevel() == 2 && !player.isTwoFactor()) {
+                        if (player.getCodeLines() >= 1000) {
+                            player.setCodeLines(player.getCodeLines() - 1000);
+                            player.setLevel(3);
+                            System.out.println(ANSI_RED + "you are now level 3" + ANSI_RESET);
+                        } else {
+                            System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
+                        }
+                    } else {
+                        System.out.println("player level not high enough");
+                    }
+                    break;
+                case "buy digital assistant":
+                    if (player.getLevel() == 3 && !player.isDigitalAss()) {
+                        if (player.getCodeLines() >= 2500) {
+                            player.setCodeLines(player.getCodeLines() - 2500);
+                            player.setLevel(4);
+                            System.out.println(ANSI_RED + "you are now level 4" + ANSI_RESET);
+                        } else {
+                            System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
+                        }
+                    } else {
+                        System.out.println("player level not high enough");
+                    }
+                    break;
+                case "buy content moderation system":
+                    if (player.getLevel() == 4 && !player.isContentModeration()) {
+                        if (player.getCodeLines() >= 5000) {
+                            player.setCodeLines(player.getCodeLines() - 5000);
+                            player.setLevel(5);
+                            System.out.println(ANSI_RED + "you are now level 5" + ANSI_RESET);
+                        } else {
+                            System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
+                        }
+                    } else {
+                        System.out.println("player level not high enough");
+                    }
+                    break;
+                case "quit":
+                    break menu;
+                case "q":
+                    break menu;
+                default:
+                    System.out.println("Command not valid");
+            }
+        }
     }
 
     public void viewMap(){
@@ -617,11 +685,10 @@ public class Game {
                         enemy.setHealth(enemy.getHealth() - player.normalAttack());
                         System.out.println(ANSI_YELLOW + "you attacked with code block \n" + enemy.getTitle() + " lost  " + player.normalAttack() + " health \nthey have " + enemy.getHealth() + " remaining" + ANSI_RESET);
                         player.setCodeLines(player.getCodeLines() - player.normalAttack());
-                        break;
                     } else {
                         System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
-                        break;
                     }
+                    break;
                 }
                 System.out.println("Command not valid pick from the list of options");
             }
@@ -651,27 +718,38 @@ public class Game {
     /**
      * saves game if db connection is good
      */
-    public void save() throws IOException {
+    public void save() {
         try {
             System.out.println("do you have an account?");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine().toLowerCase();
             if (command.equals("yes")){
                 dataBaseUserName = loginUser();
+                MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
+                MongoDatabase database = mongoClient.getDatabase("Users");
+                MongoCollection<Document> collection = database.getCollection("GameStats");
+                Document query = new Document();
+                Document user = new Document();
+                Gson gson = new Gson();
+                query.append("username", dataBaseUserName.toLowerCase());
+                user.append("username", dataBaseUserName.toLowerCase());
+                user.append("stats", gson.toJson(player));
+                collection.replaceOne(query, user);
+                mongoClient.close();
             }
             if (dataBaseUserName == null || dataBaseUserName.equals("") || dataBaseUserName.equals("login unsuccessful")){
                 dataBaseUserName = getUserName();
+                MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
+                MongoDatabase database = mongoClient.getDatabase("Users");
+                MongoCollection<Document> collection = database.getCollection("GameStats");
+                Document user = new Document();
+                Gson gson = new Gson();
+                user.append("username", dataBaseUserName.toLowerCase());
+                user.append("stats", gson.toJson(player));
+                collection.insertOne(user);
+                mongoClient.close();
+                System.out.println("save successful");
             }
-            MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
-            MongoDatabase database = mongoClient.getDatabase("Users");
-            MongoCollection<Document> collection = database.getCollection("GameStats");
-            Document user = new Document();
-            Gson gson = new Gson();
-            user.append("username", dataBaseUserName.toLowerCase());
-            user.append("stats", gson.toJson(player));
-            collection.insertOne(user);
-            mongoClient.close();
-            System.out.println("save successful");
         } catch (Exception e){
             System.out.println("cannot connect to database");
         }
@@ -732,7 +810,7 @@ public class Game {
     /**
      * loads game if db connection is good
      */
-    public void load() throws IOException {
+    public void load() {
         try {
             if (dataBaseUserName == null || dataBaseUserName.equals("")){
                 dataBaseUserName = loginUser();
@@ -760,7 +838,7 @@ public class Game {
      */
     public void code() {
         System.out.println(ANSI_RED + "you gained 1 code-line" + ANSI_RESET);
-        player.setCodeLines(player.getCodeLines() + 1);
+        player.setCodeLines(player.getCodeLines() + 20);
     }
 
     /**
@@ -802,6 +880,7 @@ public class Game {
      */
     public void Inventory() throws IOException {
         System.out.println("ITEM:   QUANTITY");
+        System.out.println("code-lines:" + player.getCodeLines() + "\n");
         for (String m : player.getInventory().keySet()) {
             System.out.printf("%s:   %d \n", m, player.getInventory().get(m));
         }
@@ -863,7 +942,7 @@ public class Game {
             String choice = br.readLine().toLowerCase();
             if ("buy jerky".equals(choice)) {
                 if (player.getCodeLines() >= 650) {
-                    player.getInventory().put("jerky", player.getInventory().get("jerky") + 1);
+                    player.getInventory().put("Jerky", player.getInventory().get("Jerky") + 1);
                     player.setCodeLines(player.getCodeLines() - 650);
                     System.out.println(ANSI_RED + "You gained 1 jerky" + ANSI_RESET);
                 } else {
@@ -914,11 +993,10 @@ public class Game {
                     player.getInventory().put("Coffee", player.getInventory().get("Coffee") + 1);
                     System.out.println(ANSI_RED + "you gained 1 coffee" + ANSI_RESET);
                     coffeeCount++;
-                    continue;
                 } else {
                     System.out.println( ANSI_RED +"coffee machine needs to cool down" + ANSI_RESET);
-                    continue;
                 }
+                continue;
             }
             if (choice.equals("quit")){
                 break;

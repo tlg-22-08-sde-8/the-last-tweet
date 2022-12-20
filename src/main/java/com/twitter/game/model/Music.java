@@ -18,20 +18,6 @@ public class Music {
     /**
      * Generates background music
      */
-    public void bossMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        if (music) {
-            URL resource = getClass().getClassLoader().getResource("finalboss.wav");
-            if (resource == null)
-                throw new IllegalArgumentException("file not found!");
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(20f * (float) Math.log10(battleVolume));
-            clip.start();
-        }
-    }
-
     //business
     public void backgroundMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         if (music) {
@@ -47,10 +33,39 @@ public class Music {
         }
     }
 
+    public void bossMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        if (music) {
+            URL resource = getClass().getClassLoader().getResource("finalboss.wav");
+            if (resource == null)
+                throw new IllegalArgumentException("file not found!");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
+            clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(20f * (float) Math.log10(battleVolume));
+            clip.start();
+        }
+    }
+
+    public void endingMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        if (music) {
+            URL resource = getClass().getClassLoader().getResource("ending.wav");
+            if (resource == null)
+                throw new IllegalArgumentException("file not found!");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
+            clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(20f * (float) Math.log10(backgroundVolume));
+            clip.start();
+        }
+    }
+
     /**
      * Generates battle music
      */
     public void battleMusic() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+        clip.stop();
         if (music) {
             URL resource = getClass().getClassLoader().getResource("Pokemon.wav");
             if (resource == null)
@@ -94,13 +109,11 @@ public class Music {
     }
 
 
-
-
     /**
      * stops playing the current clip of music
      */
     public void stopMusic() {
-            clip.stop();
+        clip.stop();
     }
 
     //get and set

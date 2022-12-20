@@ -12,13 +12,15 @@ public class Player {
     private int sanity;
     private int score;
     private int codeLines = 0;
-    private int level;
-
+    private int level = 1;
+    private boolean bugfix = false;
+    private boolean twoFactor = false;
+    private boolean digitalAss = false;
+    private boolean contentModeration = false;
     private Map<String, Integer> inventory;
 
     //player room field allows the game class to move character around the map
     public Player(int hunger, int employability, int sanity) {
-        this.level = 1;
         this.hunger = hunger;
         this.sanity = sanity;
         this.employability = employability;
@@ -26,14 +28,46 @@ public class Player {
     }
 
     public int normalAttack(){
-        return 4;
+        return 10 * level;
     }
 
     public int superAttack(){
-        return 7;
+        return normalAttack() * 2;
     }
 
     // accessor methods
+    public boolean isBugfix() {
+        return bugfix;
+    }
+
+    public void setBugfix(boolean bugfix) {
+        this.bugfix = bugfix;
+    }
+
+    public boolean isTwoFactor() {
+        return twoFactor;
+    }
+
+    public void setTwoFactor(boolean twoFactor) {
+        this.twoFactor = twoFactor;
+    }
+
+    public boolean isDigitalAss() {
+        return digitalAss;
+    }
+
+    public void setDigitalAss(boolean digitalAss) {
+        this.digitalAss = digitalAss;
+    }
+
+    public boolean isContentModeration() {
+        return contentModeration;
+    }
+
+    public void setContentModeration(boolean contentModeration) {
+        this.contentModeration = contentModeration;
+    }
+
     public Map<String, Integer> getInventory() {
         return inventory;
     }
@@ -90,11 +124,11 @@ public class Player {
         this.room = room;
     }
 
-    private int getLevel() {
+    public int getLevel() {
         return level;
     }
 
-    private void setLevel(int level) {
+    public void setLevel(int level) {
         this.level = level;
     }
 
