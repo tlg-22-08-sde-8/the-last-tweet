@@ -153,6 +153,10 @@ public final class Script {
 
             ;
 
+    public static final String youDefeatedTheFinalBoss =
+            //  TODO: Add script for when you defeat Elon Musk
+            "";
+
 
     //access methods
     public static String getSurvivalGuide(){

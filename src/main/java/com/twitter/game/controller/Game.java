@@ -371,6 +371,16 @@ public class Game {
                     System.out.println("command not valid");
                 }
                 break;
+            //Engage the final boss
+            case "negotiate":
+                if (command.equals("negotiate boss")) {
+                    if (player.getRoom().getName().equals("CEO")) {
+                        attackOrFlee(bossArray.get(0));
+                    }
+                } else {
+                    System.out.println("command not valid");
+                }
+                break;
             //help
             case "help":
                 help();
@@ -415,14 +425,6 @@ public class Game {
                 }
                 break;
             //quit game
-            case "negotiate":
-                if (player.getRoom().getName().equals("CEORoom") && command.equals("negotiate boss")) {
-                    //  TODO: Implement code that makes player engage in a fight with the final boss
-                    // please!
-                } else {
-                    System.out.println("command not valid");
-                }
-                break;
             case "quit":
                 gameOver();
                 break;
@@ -494,7 +496,7 @@ public class Game {
      * determine if player wants to run or fight
      */
     public void attackOrFlee(Enemy enemy) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
-        if (enemy.getTitle() == "Elon Musk")    {
+        if (enemy.getTitle().equals("Elon Musk"))    {
             //TODO: Insert final boss music
             //finalBossMusic();
         }
@@ -596,6 +598,7 @@ public class Game {
         }
         stopMusic();
         if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
+            //TODO: Add additional condition if you defeat Elon Musk
             victoryMusic();
             System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
             player.setScore(player.getScore() + 1);
