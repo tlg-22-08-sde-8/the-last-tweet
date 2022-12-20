@@ -312,7 +312,7 @@ public class Game {
                         brewCoffee();
                     }
                 } else {
-                    System.out.println("Command not valid pick from the list of options");
+                    System.out.println("Command not valid pick from the list of options or type help");
                 }
                 break;
             case "more":
