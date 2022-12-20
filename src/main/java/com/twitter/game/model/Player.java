@@ -5,16 +5,20 @@ import com.twitter.game.model.Room;
 import java.util.Map;
 
 public class Player {
+
     private Room room;
     private int hunger;
     private int employability;
     private int sanity;
     private int score;
     private int codeLines = 0;
+    private int level;
+
     private Map<String, Integer> inventory;
 
     //player room field allows the game class to move character around the map
     public Player(int hunger, int employability, int sanity) {
+        this.level = 1;
         this.hunger = hunger;
         this.sanity = sanity;
         this.employability = employability;
@@ -85,4 +89,14 @@ public class Player {
     public void setRoom(Room room) {
         this.room = room;
     }
+
+    private int getLevel() {
+        return level;
+    }
+
+    private void setLevel(int level) {
+        this.level = level;
+    }
+
+
 }

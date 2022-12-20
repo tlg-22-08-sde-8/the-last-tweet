@@ -2,18 +2,19 @@ package com.twitter.game.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.twitter.game.model.*;
+import org.bson.Document;
 
 import javax.sound.sampled.*;
 import java.io.*;
 import java.util.*;
 
 public class Game {
-//    private static final String ANSI_PURPLE = "\u001B[35m";
-//    private static final String ANSI_CYAN = "\u001B[36m";
-//    private static final String ANSI_WHITE = "\u001B[37m";
-//    private static final String ANSI_BLACK = "\u001B[30m";
-//    private static final String ANSI_GREEN = "\u001B[32m";
+    private static final String ANSI_PURPLE = "\u001B[35m";
     private static final String ANSI_YELLOW = "\u001B[33m";
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_RESET = "\u001B[0m";
@@ -22,32 +23,29 @@ public class Game {
     private final String[] wordsForSouth = {"south", "s"};
     private final String[] wordsForWest = {"west", "w"};
     private final String[] wordsForEast = {"east", "e"};
-    private final String[] defaultCommands = {"Inventory", "View Map", "More", "save", "load", "help"};
-    private final String[] workstationCommands = {"Code", "Read Book", "go north", "go east", "go west"};
-    private final String[] breakRoomCommands = {"access vending machine", "go south", "go west", "go east"};
-    private final String[] coffeeBarCommands = {"Brew Coffee","go north", "go east"};
-    private final String[] emptyWorkstationCommands = {"go north", "go west"};
-    private final String[] meetingRoom1Commands = {"go south", "go east"};
-    private final String[] meetingRoom2Commands = {"go south", "go west"};
+    private final String[] defaultCommands = {"Inventory", "View Map", "More", "Save", "Load", "Help"};
+    private final String[] workstationCommands = {"Code", "Read Book", "Go North", "Go East", "Go West"};
+    private final String[] breakRoomCommands = {"Access Vending Machine", "Go South", "Go West", "Go East"};
+    private final String[] coffeeBarCommands = {"Brew Coffee","Go North", "Go East"};
+    private final String[] emptyWorkstationCommands = {"Search Desk", "Go North", "Go West"};
+    private final String[] CEOCommands = {"Go South", "Go East"};
     private Player player;
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
-    private Clip clip;
+    private final Map<String, Integer> inventory;
     private boolean gameOver = false;
-    private boolean music = true;
     private int coffeeCount = 0;
+    private String dataBaseUserName;
+    private Music music;
     private Map <String, Integer> inventory;
 
     public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
-        /**
-         * Start background music
-         */
+        //start background music
         backgroundMusic();
 
-        /**
-         * Loads in items and init player inventory to zero
-         */
-        BufferedReader br2 = new BufferedReader(new FileReader("resources/items.json"));
+        //load in items
+        InputStream in = getClass().getResourceAsStream("/items.json");
+        BufferedReader br2 = new BufferedReader(new InputStreamReader(in));
         Gson gson2 = new Gson();
         inventory = new HashMap<>();
         List<String> gameItems = gson2.fromJson(br2, new TypeToken<List<String>>() {
@@ -58,30 +56,25 @@ public class Game {
         }
         player.setInventory(inventory);
 
-        /**
-         * Load in rooms
-         */
-        BufferedReader br = new BufferedReader(new FileReader("resources/rooms.json"));
+        //load in rooms
+        InputStream in2 = getClass().getResourceAsStream("/rooms.json");
+        BufferedReader br = new BufferedReader(new InputStreamReader(in2));
         Gson gson = new Gson();
         gameMap = gson.fromJson(br, new TypeToken<List<Room>>() {
         }.getType());
         br.close();
         gameMap.get(1).setDescription(Script.getPlayerInBreakRoom());
-        gameMap.get(2).setDescription(Script.getPlayerInMeetingRoom());
+        gameMap.get(2).setDescription(Script.getPlayerFindsAbandonedWorkstation());
         gameMap.get(3).setDescription(Script.getPlayerInCoffeeBar());
         gameMap.get(4).setDescription(Script.getPlayerFindsAbandonedWorkstation());
-        gameMap.get(5).setDescription(Script.getPlayerInMeetingRoom());
+        gameMap.get(5).setDescription(Script.getPlayerInCEORoom());
 
-        /**
-         * assign player to starting location
-         */
         this.player = player;
         player.setRoom(gameMap.get(0));
 
-        /**
-         * Load enemies
-         */
-        BufferedReader br3 = new BufferedReader(new FileReader("resources/enemies.json"));
+        //load in enemies
+        InputStream in3 = getClass().getResourceAsStream("/enemies.json");
+        BufferedReader br3 = new BufferedReader(new InputStreamReader(in3));
         Gson gson3 = new Gson();
         enemyArray = gson3.fromJson(br3, new TypeToken<List<Enemy>>() {
         }.getType());
@@ -92,55 +85,85 @@ public class Game {
      * Generates background music
      */
     public void backgroundMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
-        if (music) {
-            File file = new File("resources/Minecraft.wav");
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(20f * (float) Math.log10(.7));
-            clip.start();
-        }
+        music = new Music();
+        music.backgroundMusic();
     }
 
     /**
      * Generates battle music
      */
     public void battleMusic() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
-        clip.stop();
-        if (music) {
-            File file = new File("resources/Pokemon.wav");
-            AudioInputStream audioStream1 = AudioSystem.getAudioInputStream(file);
-            clip = AudioSystem.getClip();
-            clip.open(audioStream1);
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(20f * (float) Math.log10(.1));
-            clip.start();
-        }
+        stopMusic();
+        music.battleMusic();
     }
 
     /**
      * Generates Victory music
      */
     public void victoryMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        if (music) {
-            File file1 = new File("resources/win_pokemon.wav");
-            AudioInputStream audioStream2 = AudioSystem.getAudioInputStream(file1);
-            clip = AudioSystem.getClip();
-            clip.open(audioStream2);
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(20f * (float) Math.log10(.1));
-            clip.start();
-        }
+        music.victoryMusic();
     }
 
     /**
      * stops playing the current clip of music
      */
     public void stopMusic() {
-        clip.stop();
+        music.stopMusic();
     }
 
+
+    /**
+     * starts playing game over music
+     */
+    public void gameOverMusic() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+        music.gameOverMusic();
+    }
+
+    /**
+     * change background music volume
+     */
+    public void setBackgroundVolume() throws IOException {
+        while (true){
+            System.out.println("enter a number between 1 - 100");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String setVolume = br.readLine();
+            try {
+                float volume = Integer.parseInt(setVolume);
+                if (volume <= 100 && volume >= 1){
+                    music.setBackgroundVolume(volume/50);
+                    stopMusic();
+                    backgroundMusic();
+                    break;
+                } else {
+                    System.out.println("number is not in range");
+                }
+            } catch (Exception e){
+                System.out.println("please enter a valid number");
+            }
+        }
+    }
+
+    /**
+     * change battle music volume
+     */
+    public void setBattleVolume() throws IOException {
+        while (true){
+            System.out.println("enter a number between 1 - 100");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String setVolume = br.readLine();
+            try {
+                float volume = Integer.parseInt(setVolume);
+                if (volume <= 100 && volume >= 1){
+                    music.setBattleVolume(volume/50);
+                    break;
+                } else {
+                    System.out.println("number is not in range");
+                }
+            } catch (Exception e){
+                System.out.println("please enter a valid number");
+            }
+        }
+    }
 
     /**
      * Generates title/splash screen
@@ -159,18 +182,14 @@ public class Game {
                 "          ░  ░  ░   ░  ░       ░  ░      ░  ░      ░                           ░       ░  ░   ░  ░         \n" +
                 "                                                                                                           "
                 + ANSI_RESET;
-        String logoSubTitle = ANSI_BLUE + "\t\t\t\t\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
-        String storyIntro = "You look at your desk. On your laptop, you have X lines of code.";
-        //display intro to user
+        String logoSubTitle = ANSI_BLUE + "\t\t\tThe Last Tweet: A Twitter Survival Game" + ANSI_RESET;
         System.out.println(gameIntroLogo);
         System.out.println(logoSubTitle);
         Thread.sleep(7000);
         System.out.print("\033[H\033[2J");
         System.out.flush();
         System.out.println(Script.getFirstScene());
-        System.out.println("You cant let this happen, You need to replace Elon as CEO");
-        System.out.println(storyIntro);
-        System.out.println("There is a book on your desk");
+        System.out.println(Script.getPlayerRequest());
     }
 
     /**
@@ -179,12 +198,8 @@ public class Game {
     public void gameOver() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
         //display game over logo
         gameOver = true;
-        clip.stop();
-        File file = new File("resources/game-over.wav");
-        AudioInputStream audioStream1 = AudioSystem.getAudioInputStream(file);
-        clip = AudioSystem.getClip();
-        clip.open(audioStream1);
-        clip.start();
+        stopMusic();
+        gameOverMusic();
         String gameOverLogo = "\n\n" + ANSI_RED +
                 "  ▄████  ▄▄▄       ███▄ ▄███▓▓█████     ▒█████   ██▒   █▓▓█████  ██▀███  \n" +
                 " ██▒ ▀█▒▒████▄    ▓██▒▀█▀ ██▒▓█   ▀    ▒██▒  ██▒▓██░   █▒▓█   ▀ ▓██ ▒ ██▒\n" +
@@ -197,9 +212,13 @@ public class Game {
                 "      ░       ░  ░       ░      ░  ░       ░ ░        ░     ░  ░   ░     \n" +
                 "                                                     ░                   "
                 + ANSI_RESET;
-        String gameOverLogoSubtitleEmp = ANSI_RED + "\tYou lost your employability .....you were fired on the spot" + ANSI_RESET;
-        String gameOverLogoSubtitleHunger = ANSI_RED + "\tYou starved to death.....after that you were fired on the spot" + ANSI_RESET;
-        String gameOverLogoSubtitleSanity = ANSI_RED + "\tYou went insane ..... after that you were fired on the spot" + ANSI_RESET;
+        String gameOverLogoSubtitleEmp = ANSI_RED + "\tYou lost all of your employability ..." +
+                "you were fired on the spot" + ANSI_RESET;
+        String gameOverLogoSubtitleHunger = ANSI_RED + "\tYou starved to death ..." +
+                "upon your dead body a pink slip was placed ceremoniously by a shadowy figure, whom proceeded to " +
+                "fired you on the spot" + ANSI_RESET;
+        String gameOverLogoSubtitleSanity = ANSI_RED + "\tYou went insane ..." +
+                "after that you were fired on the spot" + ANSI_RESET;
         //display game over to user
         System.out.println(gameOverLogo);
         if (player.getSanity() == 0){
@@ -210,18 +229,19 @@ public class Game {
                 System.out.println(gameOverLogoSubtitleEmp);
         }
         Thread.sleep(4000);
-        clip.stop();
+        stopMusic();
     }
 
     /**
      * Generates main player interface
      */
-    public void commandInput() throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
+    public void commandInput() throws IOException, UnsupportedAudioFileException, LineUnavailableException,
+            InterruptedException {
         //get commands from player
         String command;
         while (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0 && !gameOver) {
             renderUserInterface();
-            System.out.println("\nWhat would you like to do?");
+            System.out.println(Script.getPlayerRequest());
 
             String[] determineAvailableCommands = determineAvailableCommands(player.getRoom().getName());
             for (String c : determineAvailableCommands) {
@@ -268,13 +288,13 @@ public class Game {
         if (currentRoom.equals("Coffee Bar")) {
             commands = coffeeBarCommands;
         }
-        if (currentRoom.equals("Meeting Room-1")) {
-            commands = meetingRoom1Commands;
+        if (currentRoom.equals("CEO")) {
+            commands = CEOCommands;
         }
-        if (currentRoom.equals("Meeting Room-2")) {
-            commands = meetingRoom2Commands;
+        if (currentRoom.equals("Empty Workstation-1")) {
+            commands = emptyWorkstationCommands;
         }
-        if (currentRoom.equals("Empty workstation")) {
+        if (currentRoom.equals("Empty Workstation-2")) {
             commands = emptyWorkstationCommands;
         }
         return commands;
@@ -318,6 +338,15 @@ public class Game {
             case "more":
                 more();
                 break;
+            case "search":
+                if (command.equals("search desk")) {
+                    if (player.getRoom().getName().equals("Empty Workstation-1") || player.getRoom().getName().equals("Empty Workstation-2")){
+                        searchDesk();
+                    }
+                } else {
+                    System.out.println("command not valid");
+                }
+                break;
             //help
             case "help":
                 help();
@@ -339,16 +368,24 @@ public class Game {
             case "stop":
                 if (command.equals("stop music")) {
                     stopMusic();
-                    music = false;
+                    music.setMusic(false);
                 } else {
                     System.out.println("Command not valid pick from the list of options");
                 }
                 break;
             case "start":
                 if (command.equals("start music")) {
-                    music = true;
+                    music.setMusic(true);
                     backgroundMusic();
-
+                } else {
+                    System.out.println("command not valid");
+                }
+                break;
+            case "set":
+                if (command.equals("set background music volume")){
+                    setBackgroundVolume();
+                } else if (command.equals("set battle music volume")){
+                    setBattleVolume();
                 } else {
                     System.out.println("Command not valid pick from the list of options");
                 }
@@ -420,7 +457,7 @@ public class Game {
         if (battleNum >= 7) {
             Random rand1 = new Random();
             int enemyIndex = rand1.nextInt(enemyArray.size() - 1);
-            battle(enemyArray.get(enemyIndex));
+            attackOrFlee(enemyArray.get(enemyIndex));
         }
     }
 
@@ -433,9 +470,9 @@ public class Game {
     }
 
     /**
-     * player battle interface
+     * determine if player wants to run or fight
      */
-    public void battle(Enemy enemy) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
+    public void attackOrFlee(Enemy enemy) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
         battleMusic();
         System.out.println(ANSI_RED + "You are starting a battle" + ANSI_RESET);
         while (true) {
@@ -448,28 +485,49 @@ public class Game {
                 int determineSuccessfulRun = rand1.nextInt(10);
                 if (determineSuccessfulRun >= 7) {
                     System.out.println("You got away successfully");
+                    stopMusic();
+                    backgroundMusic();
                     return;
                 } else {
                     System.out.println("runaway unsuccessful");
+                    fight(enemy);
                     break;
                 }
             }
             if (command.equals("attack")) {
+                fight(enemy);
                 break;
             }
             System.out.println("Command not valid pick from the list of options");
         }
+    }
 
-        //fight logic
+    /**
+     * give player a random reward
+     */
+    public void randomReward(){
+        List<String> items = new ArrayList<>(inventory.keySet());
+        Random rand2 = new Random();
+        String randomItem = items.get(rand2.nextInt(items.size()));
+        player.getInventory().put(randomItem, player.getInventory().get(randomItem) + 1);
+        System.out.println(ANSI_RED + "Congratulation you gained one " + randomItem + ANSI_RESET);
+    }
+
+    /**
+     * player battle interface
+     */
+    public void fight(Enemy enemy) throws UnsupportedAudioFileException, LineUnavailableException, IOException, InterruptedException {
         int storeEnemyHealth = enemy.getHealth();
         Random rand2 = new Random();
-        int determineAttackType = rand2.nextInt(10);
         int cooldown = 0;
         battle:
-        while (enemy.getHealth() > 1 && player.getSanity() > 0) {
+        while (enemy.getHealth() >= 1 && player.getSanity() >= 1) {
+            int determineAttackType = rand2.nextInt(10);
             if (determineAttackType >= 7) {
                 player.setSanity(player.getSanity() - enemy.getSuperAttackDmg());
                 System.out.println(enemy.getTitle() + " hit you with " + enemy.getSuperAttack() + ANSI_RED + "\nyou lost " + enemy.getSuperAttackDmg() + " sanity\nyou have " + player.getSanity() + " sanity remaining" + ANSI_RESET);
+            } else if (determineAttackType == 0) {
+                System.out.println(enemy.getTitle() + " missed an attack. you took no damage!");
             } else {
                 System.out.println(enemy.getTitle() + " hit you with " + enemy.getNormalAttack() + ANSI_RED + "\nyou lost " + enemy.getNormalAttackDmg() + " sanity\nyou have " + player.getSanity() + " remaining" + ANSI_RESET);
                 player.setSanity(player.getSanity() - enemy.getNormalAttackDmg());
@@ -515,7 +573,8 @@ public class Game {
         if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
             victoryMusic();
             System.out.println(ANSI_RED + "You won!" + ANSI_RESET);
-            battleReward();
+            player.setScore(player.getScore() + 1);
+            randomReward();
             Thread.sleep(5000);
             stopMusic();
             enemy.setHealth(storeEnemyHealth);
@@ -523,32 +582,112 @@ public class Game {
         backgroundMusic();
     }
 
+
     /**
-     * saves game
+     * saves game if db connection is good
      */
     public void save() throws IOException {
-        //save game
-        System.out.println("Saving game...");
-        String saveFile = "resources/save.json";
-        BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile));
-        Gson gson = new Gson();
-        bw.write(gson.toJson(player));
-        bw.close();
-        System.out.println("Game saved!");
+        try {
+            System.out.println("do you have an account?");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String command = br.readLine().toLowerCase();
+            if (command.equals("yes")){
+                dataBaseUserName = loginUser();
+            }
+            if (dataBaseUserName == null || dataBaseUserName.equals("") || dataBaseUserName.equals("login unsuccessful")){
+                dataBaseUserName = getUserName();
+            }
+            MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
+            MongoDatabase database = mongoClient.getDatabase("Users");
+            MongoCollection<Document> collection = database.getCollection("GameStats");
+            Document user = new Document();
+            Gson gson = new Gson();
+            user.append("username", dataBaseUserName.toLowerCase());
+            user.append("stats", gson.toJson(player));
+            collection.insertOne(user);
+            mongoClient.close();
+            System.out.println("save successful");
+        } catch (Exception e){
+            System.out.println("cannot connect to database");
+        }
+    }
+
+    String loginUser() throws IOException {
+        BufferedReader br1 = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("enter username");
+        String loginUserName = br1.readLine();
+        List<Object> results = checkIfUserNameExists(loginUserName);
+        if (results.size() > 0){
+            String[] userInfo = results.get(0).toString().split(",");
+            if (Objects.equals(userInfo[1].replace("}", ""), " username=" + loginUserName)){
+                System.out.println("login Successful");
+                return loginUserName;
+            }
+        }
+        return "login unsuccessful";
     }
 
     /**
-     * loads game
+     * grab username
+     */
+    private String getUserName() throws IOException {
+        while (true) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Please enter desired Username (must be greater than 4 characters and less than 15 characters)");
+            String username = br.readLine();
+            if (username.length() > 4 && username.length() < 15) {
+                List<Object> userNameArray = checkIfUserNameExists(username);
+                if (userNameArray.size() == 0) {
+                    return username;
+                } else {
+                    System.out.println("username is taken");
+
+                }
+            }
+            else {
+                System.out.println("UserName length is invalid");
+            }
+        }
+    }
+
+    /**
+     * check if username is in db
+     */
+    private List<Object> checkIfUserNameExists(String searchingUsername){
+        MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
+        MongoDatabase database = mongoClient.getDatabase("Users");
+        MongoCollection<Document> collection = database.getCollection("GameStats");
+        Document query = new Document("username", searchingUsername.toLowerCase());
+        List<Object> results = new ArrayList<>();
+        collection.find(query).into(results);
+        mongoClient.close();
+        return results;
+    }
+
+    /**
+     * loads game if db connection is good
      */
     public void load() throws IOException {
-        //load game
-        System.out.println("Loading game...");
-        String saveFile = "resources/save.json";
-        BufferedReader br = new BufferedReader(new FileReader(saveFile));
-        Gson gson = new Gson();
-        player = gson.fromJson(br, Player.class);
-        br.close();
-        System.out.println("Game loaded!");
+        try {
+            if (dataBaseUserName == null || dataBaseUserName.equals("")){
+                dataBaseUserName = loginUser();
+            }
+            List<Object> checkIfUserExists = checkIfUserNameExists(dataBaseUserName);
+            if (checkIfUserExists.size() > 0){
+                MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb+srv://The-dream-team:qazwsxQAZWSX123@cluster0.3982aih.mongodb.net/?retryWrites=true&w=majority"));
+                MongoDatabase database = mongoClient.getDatabase("Users");
+                MongoCollection<Document> collection = database.getCollection("GameStats");
+                Document query = new Document("username", dataBaseUserName.toLowerCase());
+                String s = (String) collection.find(query).first().get("stats");
+                mongoClient.close();
+                Gson gson = new Gson();
+                player = gson.fromJson(s, Player.class);
+            } else {
+                System.out.println("account not found");
+            }
+        } catch (Exception e) {
+            System.out.println("cannot connect to database");
+        }
     }
 
     /**
@@ -579,14 +718,16 @@ public class Game {
     public void help() {
         System.out.println("Game Description:\n" + Script.getBasicInfo() + "\n");
         System.out.println(
-                "|ACTION       | TYPE             | \n" +
-                        "|Travel       | go N or go North | \n" +
-                        "|Quit         | quit             | \n" +
-                        "|Player Stats | More             | \n" +
-                        "|Save Game    | save             | \n" +
-                        "|Load Game    | load             | \n" +
-                        "|Stop Music   | stop music       | \n" +
-                        "|Start Music  | start music      | \n"
+                        "|ACTION                         | Example                    | \n" +
+                        "|Travel                         | go N or go North           | \n" +
+                        "|Quit                           | quit                       | \n" +
+                        "|Player Stats                   | More                       | \n" +
+                        "|Save Game                      | save                       | \n" +
+                        "|Load Game                      | load                       | \n" +
+                        "|Stop Music                     | stop music                 | \n" +
+                        "|Start Music                    | start music                | \n" +
+                        "|Change Background Music Volume | set background music volume| \n" +
+                        "|Change Battle Music Volume     | set battle music volume    | \n"
         );
     }
 
@@ -720,4 +861,17 @@ public class Game {
             System.out.println("Command not valid pick from the list of options");
         }
     }
+
+    public void searchDesk(){
+        Random rand = new Random();
+        int successfulSearch = rand.nextInt(10);
+        if (successfulSearch >= 7){
+            randomReward();
+        } else {
+            System.out.println(ANSI_RED + "You tried to search and desk and were caught" + ANSI_RESET);
+            player.setEmployability(player.getEmployability() - 20);
+            System.out.println(ANSI_RED + "You lost 20 Employability" + ANSI_RESET);
+        }
+    }
+
 }
