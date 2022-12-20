@@ -118,6 +118,12 @@ public class Game {
         music.stopMusic();
     }
 
+    /**
+     * starts boss fight music
+     */
+    public void finalBossMusic() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+        music.bossMusic();
+    }
 
     /**
      * starts playing game over music
@@ -368,7 +374,7 @@ public class Game {
             case "negotiate":
                 if (command.equals("negotiate boss")) {
                     if (player.getRoom().getName().equals("CEO")) {
-                        attackOrFlee(bossArray.get(0));
+                        bossFightInit();
                     }
                 } else {
                     System.out.println("command not valid");
@@ -480,6 +486,11 @@ public class Game {
         }
     }
 
+    public void bossFightInit() throws UnsupportedAudioFileException, LineUnavailableException, IOException, InterruptedException {
+        finalBossMusic();
+        fight(bossArray.get(0));
+    }
+
     /**
      * determines if player will battle during travel
      */
@@ -497,10 +508,6 @@ public class Game {
      * determine if player wants to run or fight
      */
     public void attackOrFlee(Enemy enemy) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
-        if (enemy.getTitle().equals("Elon Musk"))    {
-            //TODO: Insert final boss music
-            //finalBossMusic();
-        }
         battleMusic();
         System.out.println(ANSI_RED + "You are starting a battle" + ANSI_RESET);
         while (true) {
