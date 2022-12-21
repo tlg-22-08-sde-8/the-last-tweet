@@ -15,7 +15,8 @@ public final class Script {
 
     //  Contains the first half of the first scene script.
     private static final String firstScene1 = "\n\nIt is October 27th. \n" +
-            "You wake up at your desk, groggy from an attack. You look around you. There are pink slips everywhere. " +
+            "You wake up at your desk, groggy from an attack. You look around you. There are pink slips " +
+            "everywhere. \n" +
             "Fires raging. Employees crying. \n" +
             "Your memory clears, and you remember what happened. \n" +
             "Elon Musk has acquired Twitter. Half of the Twitter workforce has been laid off. \n" +
@@ -26,7 +27,7 @@ public final class Script {
             "Keep these systems in check. Generate enough code lines to take down the system and ultimately \n" +
             "Elon Musk. \n" +
             "Before you is your desk. On it, you find your work computer with 10 lines of code already generated \n" +
-            "and a book. \n";
+            "and a book.";
 
     //  Contains the second half of the first scene script.
     private static final String firstScene2 =
@@ -44,24 +45,21 @@ public final class Script {
             //  TODO: This entire String needs to be overhauled
             ANSI_BLUE + "\tBug Fix Suite" + ANSI_RESET + " (cost: 500 lines of code) " +
             "- Promotes you to SDE II (level 2)\n" +
-            ANSI_BLUE + "\tTwo Factor Authentication System" + ANSI_RESET + " (cost: 1,000 lines of code) - Creating this will promote you to " +
-            "SDE III (Level 3)\n" +
-            ANSI_RED + "\t\t NOTE: Must have completed Bug Fix Suite to unlock ability to build this program \n" + ANSI_RESET +
-            ANSI_BLUE + "\tDigital Assistant" + ANSI_RESET + " (cost: 2,500 lines of code) - Creating this will promote you to SDE 4r " +
-            "(Level 4). \n" +
+            ANSI_BLUE + "\tTwo Factor Authentication System" + ANSI_RESET + " (cost: 1,000 lines of code) - " +
+            "Creating this will promote you to SDE III (Level 3)\n" +
+            ANSI_RED + "\t\t NOTE: Must have completed Bug Fix Suite to unlock ability to build this program \n" +
+            ANSI_RESET + ANSI_BLUE + "\tDigital Assistant" + ANSI_RESET + " (cost: 2,500 lines of code) - " +
+            "Creating this will promote you to SDE 4r (Level 4). \n" +
             ANSI_RED + "\t\t NOTE: Must have completed Two Factor Authentication System to unlock \n" + ANSI_RESET +
-            ANSI_BLUE + "\tContent Moderation System" + ANSI_RESET + " (cost: 5,000 lines of code) - Creating this will promote you to " +
-            "SDE 5 (Level 5). \n" +
+            ANSI_BLUE + "\tContent Moderation System" + ANSI_RESET + " (cost: 5,000 lines of code) - " +
+            "Creating this will promote you to SDE 5 (Level 5). \n" +
             ANSI_RED + "\t\t NOTE: Must have completed Digital Assistant to unlock \n" + ANSI_RESET +
-            "Buy a  program to level up or “q” to go back to " +
-            "your workstation.";
+            "Buy a  program to level up or “q” to go back to your workstation.";
 
     private static final String playerBuildsProgram = "The following program +" +
             /* Store.getMagicKeyboard() +*/
             "has been built. \n" +
             "You have lost " + /*com.twitter.game.model.Player.getHunger() +*/ "hunger. You have X hunger left.\n";
-
-    private static final String playerChoosesMore = "What would you like to know?";
 
     private static final String playerChecksStatus = "Status: \n" +
             "\tEmployment: " + /*com.twitter.game.model.Player.getCurrentEmployment() + */ "/" +
@@ -199,7 +197,7 @@ public final class Script {
      */
     public static void getFirstScene(Player player) {
         System.out.println(firstScene1);
-        System.out.println(ANSI_RED + "You have " + player.getCodeLines() + " lines of code.");
+        System.out.println(ANSI_RED + "You have " + player.getCodeLines() + " lines of code.\n" + ANSI_RESET);
         System.out.println(firstScene2);
     }
 
@@ -231,9 +229,6 @@ public final class Script {
         return playerBuildsProgram;
     }
 
-    public static String getPlayerChoosesMore() {
-        return playerChoosesMore;
-    }
 
     public static String getPlayerChecksStatus() {
         return playerChecksStatus;
