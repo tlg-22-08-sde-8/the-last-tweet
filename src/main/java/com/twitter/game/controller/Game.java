@@ -56,8 +56,8 @@ public class Game {
         for (String s : gameItems) {
             inventory.put(s, 0);
         }
+        Game.player = player;
         player.setInventory(inventory);
-
         //load in rooms
         InputStream in2 = getClass().getResourceAsStream("/rooms.json");
         BufferedReader br = new BufferedReader(new InputStreamReader(in2));
