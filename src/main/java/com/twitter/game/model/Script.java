@@ -26,7 +26,7 @@ public final class Script {
             "Before you is your desk. On it, you find your work computer with 10 lines of code already generated" +
             "and a book. \n" +
             "Your code line inventory increased by 10. \n" +
-            "Your stomach growls ferociously. You search your bag but find nothing. You should probably generate some" +
+            "Your stomach growls ferociously. You search your bag but find nothing. You should probably generate some " +
             "code lines then take a trip to the break room first to buy some food to stave off your hunger. \n";
 
     private static final String playerRequest = "What do you do?";
