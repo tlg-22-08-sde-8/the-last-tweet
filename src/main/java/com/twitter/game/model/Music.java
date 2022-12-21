@@ -18,8 +18,22 @@ public class Music {
     /**
      * Generates background music
      */
-    public void bossMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        clip.stop();
+    //business
+    public void backgroundMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        if (music) {
+            URL resource = getClass().getClassLoader().getResource("Minecraft.wav");
+            if (resource == null)
+                throw new IllegalArgumentException("file not found!");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
+            clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(20f * (float) Math.log10(backgroundVolume));
+            clip.start();
+        }
+    }
+
+    public void bossMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         if (music) {
             URL resource = getClass().getClassLoader().getResource("finalboss.wav");
             if (resource == null)
@@ -33,10 +47,9 @@ public class Music {
         }
     }
 
-    //business
-    public void backgroundMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+    public void endingMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         if (music) {
-            URL resource = getClass().getClassLoader().getResource("Minecraft.wav");
+            URL resource = getClass().getClassLoader().getResource("ending.wav");
             if (resource == null)
                 throw new IllegalArgumentException("file not found!");
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
@@ -94,8 +107,6 @@ public class Music {
         gainControl.setValue(20f * (float) Math.log10(backgroundVolume - .2));
         clip.start();
     }
-
-
 
 
     /**

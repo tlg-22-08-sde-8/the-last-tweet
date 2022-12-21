@@ -1,10 +1,9 @@
 package com.twitter.game.model;
 
 public final class Script {
-
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_RESET = "\u001B[0m";
-
+    private static final String ANSI_BLUE = "\u001B[34m";
 
     // Contains the basic information script about the game
     private static final String basicInfo = "A Text-Based Parody Survival Horror Adventure about the Great \n" +
@@ -41,20 +40,20 @@ public final class Script {
     private static final String playerCodes = "You log into the computer using your Twitter credentials, then open \n" +
             "up an Development Environment. Your fingers start tapping away. \n";
 
-    private static final String playerPrograms = "The follow program are available for building: \n" +
+    private static final String playerLevels = "The follow program are available for building: \n" +
             //  TODO: This entire String needs to be overhauled
-            "\tBug Fix Suite (cost: 500 lines of code) \n" +
-            "\t\t\tPromotes you to SDE II\n" +
-            "\tTwo Factor Authentication System (cost: 1,000 lines of code) - Creating this will promote you to " +
+            ANSI_BLUE + "\tBug Fix Suite" + ANSI_RESET + " (cost: 500 lines of code) " +
+            "- Promotes you to SDE II (level 2)\n" +
+            ANSI_BLUE + "\tTwo Factor Authentication System" + ANSI_RESET + " (cost: 1,000 lines of code) - Creating this will promote you to " +
             "SDE III (Level 3)\n" +
-            "\t\t NOTE: Must have completed Bug Fix Suite to unlock ability to build this program \n" +
-            "\tDigital Assistant (cost: 2,500 lines of code) - Creating this will promote you to Product Manager " +
+            ANSI_RED + "\t\t NOTE: Must have completed Bug Fix Suite to unlock ability to build this program \n" + ANSI_RESET +
+            ANSI_BLUE + "\tDigital Assistant" + ANSI_RESET + " (cost: 2,500 lines of code) - Creating this will promote you to SDE 4r " +
             "(Level 4). \n" +
-            "\t\t NOTE: Must have completed Two Factor Authentication System to unlock \n" +
-            "\t Content Moderation System (cost: 5,000 lines of code) - Creating this will promote you to " +
-            "Engineering Manager (Level 5). \n" +
-            "\t\t NOTE: Must have completed Digital Assistant to unlock \n" +
-            "To “program” an item into your inventory, press the corresponding number or “q” to go back to " +
+            ANSI_RED + "\t\t NOTE: Must have completed Two Factor Authentication System to unlock \n" + ANSI_RESET +
+            ANSI_BLUE + "\tContent Moderation System" + ANSI_RESET + " (cost: 5,000 lines of code) - Creating this will promote you to " +
+            "SDE 5 (Level 5). \n" +
+            ANSI_RED + "\t\t NOTE: Must have completed Digital Assistant to unlock \n" + ANSI_RESET +
+            "Buy a  program to level up or “q” to go back to " +
             "your workstation.";
 
     private static final String playerBuildsProgram = "The following program +" +
@@ -224,8 +223,8 @@ public final class Script {
      * Returns the script when the player decides they want to add 'code lines' to their inventory.
      * @return playerPrograms - returns a string that says that the player is programming.
      */
-    public static String getPlayerPrograms() {
-        return playerPrograms;
+    public static String getPlayerLevels() {
+        return playerLevels;
     }
 
     public static String getPlayerBuildsProgram() {
