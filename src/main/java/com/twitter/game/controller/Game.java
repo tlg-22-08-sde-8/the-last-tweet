@@ -28,7 +28,7 @@ public class Game {
     private final String[] coffeeBarCommands = {"Brew Coffee","Go North", "Go East"};
     private final String[] emptyWorkstationCommands = {"Search Desk", "Go North", "Go West"};
     private final String[] CEOCommands = {"Negotiate Boss", "Go South", "Go East"};
-    private static Player player = new Player(100, 100, 100);
+    private static Player player = new Player(50, 50, 50);
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
     private final ArrayList<Enemy> bossArray;
@@ -36,6 +36,7 @@ public class Game {
     private boolean gameOver = false;
     private boolean playerWon = false;
     private int coffeeCount = 0;
+    private int codeMultipleTimes = 0;
     private String dataBaseUserName;
     private Music music;
 
@@ -853,6 +854,11 @@ public class Game {
         System.out.println(ANSI_RED + "you gained " + levelCodeLines + " code-lines" + ANSI_RESET);
         player.setCodeLines(player.getCodeLines() + levelCodeLines);
         player.setHunger(player.getHunger() - 1);
+        codeMultipleTimes++;
+        if (codeMultipleTimes == 3){
+            player.setSanity(player.getSanity() - 10);
+            codeMultipleTimes = 0;
+        }
     }
 
     /**
@@ -1005,27 +1011,12 @@ public class Game {
      * brew coffee in coffee room
      */
     public void brewCoffee() throws IOException {
-        player.getInventory().put("Coffee", player.getInventory().get("Coffee") + 1);
-        System.out.println(ANSI_RED + "you gained 1 coffee" + ANSI_RESET);
-        coffeeCount++;
-         while (true) {
-            System.out.println("What would you like to do? \n> Brew Again    > Quit \n>");
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String choice = br.readLine().toLowerCase();
-            if (choice.equals("brew again")){
-                if (coffeeCount < 3) {
-                    player.getInventory().put("Coffee", player.getInventory().get("Coffee") + 1);
-                    System.out.println(ANSI_RED + "you gained 1 coffee" + ANSI_RESET);
-                    coffeeCount++;
-                } else {
-                    System.out.println( ANSI_RED +"coffee machine needs to cool down" + ANSI_RESET);
-                }
-                continue;
-            }
-            if (choice.equals("quit")){
-                break;
-            }
-            System.out.println("Command not valid pick from the list of options");
+        if (coffeeCount < 3){
+            player.getInventory().put("Coffee", player.getInventory().get("Coffee") + 1);
+            System.out.println(ANSI_RED + "you gained 1 coffee" + ANSI_RESET);
+            coffeeCount++;
+        } else {
+            System.out.println( ANSI_RED +"coffee machine needs to cool down" + ANSI_RESET);
         }
     }
 
