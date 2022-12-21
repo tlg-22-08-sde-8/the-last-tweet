@@ -11,11 +11,12 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException, UnsupportedAudioFileException, LineUnavailableException {
         Logger logger = Logger.getLogger("org.mongodb.driver");
         logger.setLevel(Level.OFF);
-        while (true) {
+        while (true){
             //start game
             Player player = new Player(100, 100, 100);
             Game game = new Game(player);
