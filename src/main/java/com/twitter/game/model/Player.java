@@ -23,7 +23,7 @@ public class Player {
     //player room field allows the game class to move character around the map
     public Player(int hunger, int employability, int sanity) {
         this.hunger = hunger;
-        this.sanity = sanity;
+        this.sanity = 9999;
         this.employability = employability;
 
     }

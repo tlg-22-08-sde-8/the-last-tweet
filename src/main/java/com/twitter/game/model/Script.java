@@ -120,7 +120,7 @@ public final class Script {
             "desk. \n" + "" +
             "The product Manager shows up! \n" +
             "“What ARE YOU DOING?!” \n" +
-            "Employability reduces to –5. ";
+            "You got reprimanded for your actions!";
 
     private static final String playerSearchesDeskEmpty = "You stick your hand into the drawer of the desk. \n" +
             "Your hands feel only the desk itself push back against your fingers as you crawl your hand deeper! \n" +
