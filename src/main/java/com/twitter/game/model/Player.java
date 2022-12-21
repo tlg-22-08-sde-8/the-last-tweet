@@ -11,12 +11,13 @@ public class Player {
     private int employability;
     private int sanity;
     private int score;
-    private int codeLines = 0;
+    private int codeLines = 50;
     private int level = 1;
     private boolean bugfix = false;
     private boolean twoFactor = false;
     private boolean digitalAss = false;
     private boolean contentModeration = false;
+
     private Map<String, Integer> inventory;
 
     //player room field allows the game class to move character around the map
