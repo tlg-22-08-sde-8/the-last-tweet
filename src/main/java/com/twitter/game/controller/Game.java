@@ -856,7 +856,7 @@ public class Game {
         player.setHunger(player.getHunger() - 1);
         codeMultipleTimes++;
         if (codeMultipleTimes == 3){
-            player.setSanity(player.getSanity() - 10);
+            player.setSanity(player.getSanity() - 5);
             codeMultipleTimes = 0;
         }
     }
