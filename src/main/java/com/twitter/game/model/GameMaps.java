@@ -24,11 +24,11 @@ public class GameMaps {
     /**
      * ASCII Extended representation of the Meeting Room separated into rows.
      */
-    private static String r1_MeetingRoom = "┌────────────────┐";
-    private static String r2_MeetingRoom = "│                │";
-    private static String r3_MeetingRoom = "│  Meeting Room  │";
-    private static String r4_MeetingRoom = "│                │";
-    private static String r5_MeetingRoom = "└────────────────┘";
+    private static String r1_CEO = "┌────────────────┐";
+    private static String r2_CEO = "│                │";
+    private static String r3_CEO = "│      CEO       │";
+    private static String r4_CEO = "│                │";
+    private static String r5_CEO = "└────────────────┘";
 
     /**
      * ASCII Extended representation of the Break Room separated into rows.
@@ -97,11 +97,11 @@ public class GameMaps {
         gameMapBlock2 = new ArrayList<>();
         gameMapBlock3 = new ArrayList<>();
 
-        gameMapBlock1.add(r1_MeetingRoom + r1_HorizontalArrows + r1_BreakRoom + r1_HorizontalArrows + r1_MeetingRoom );
-        gameMapBlock1.add(r2_MeetingRoom + r2_HorizontalArrows + r2_BreakRoom + r2_HorizontalArrows + r2_MeetingRoom );
-        gameMapBlock1.add(r3_MeetingRoom + r3_HorizontalArrows + r3_BreakRoom + r3_HorizontalArrows + r3_MeetingRoom );
-        gameMapBlock1.add(r4_MeetingRoom + r4_HorizontalArrows + r4_BreakRoom + r4_HorizontalArrows + r4_MeetingRoom );
-        gameMapBlock1.add(r5_MeetingRoom + r5_HorizontalArrows + r5_BreakRoom + r5_HorizontalArrows + r5_MeetingRoom);
+        gameMapBlock1.add(r1_EmptyWorkstation + r1_HorizontalArrows + r1_BreakRoom + r1_HorizontalArrows + r1_CEO );
+        gameMapBlock1.add(r2_EmptyWorkstation + r2_HorizontalArrows + r2_BreakRoom + r2_HorizontalArrows + r2_CEO );
+        gameMapBlock1.add(r3_EmptyWorkstation + r3_HorizontalArrows + r3_BreakRoom + r3_HorizontalArrows + r3_CEO );
+        gameMapBlock1.add(r4_EmptyWorkstation + r4_HorizontalArrows + r4_BreakRoom + r4_HorizontalArrows + r4_CEO );
+        gameMapBlock1.add(r5_EmptyWorkstation + r5_HorizontalArrows + r5_BreakRoom + r5_HorizontalArrows + r5_CEO );
 
         gameMapBlock2.add(r1_VerticalArrows + r1_EmptySpace + r1_VerticalArrows + r1_EmptySpace + r1_VerticalArrows );
         gameMapBlock2.add(r2_VerticalArrows + r2_EmptySpace + r2_VerticalArrows + r2_EmptySpace + r2_VerticalArrows );

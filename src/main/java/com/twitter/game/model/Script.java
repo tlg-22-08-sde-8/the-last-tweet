@@ -1,52 +1,77 @@
 package com.twitter.game.model;
 
 public final class Script {
-
+    private static final String ANSI_RED = "\u001B[31m";
+    private static final String ANSI_RESET = "\u001B[0m";
+    private static final String ANSI_BLUE = "\u001B[34m";
 
     // Contains the basic information script about the game
-    private static final String basicInfo = "A Text-Based Parody Survival Horror Adventure com.twitter.game.controller.Game about the Great " +
-            "Twitter Purge of 2022! You navigate and interact with the game by typing in the commands to the " +
+    private static final String basicInfo = "A Text-Based Parody Survival Horror Adventure about the Great \n" +
+            "Twitter Purge of 2022! You navigate and interact with the game by typing in the commands to the \n" +
             "console below." +
             "Type 'help' for a list of commands. \n" +
             "Co-Developed by: Brenden King, Patrick Lauer, and Mohamed Omar \n" +
             "Version: 0.0.1";
-    private static final String firstScene = "\n\nIt is October 27th. \n" +
-            "You wake up at your desk, groggy from an attack. You look around you. There are pink slips everywhere. " +
-            "Fires raging. Employees crying. \n" +
-            "Elon Musk has acquired Twitter. Half of the Twitter workforce has been laid off. \n" +
-            "You are one of the survivors. \n";
 
+    //  Contains the first half of the first scene script.
+    private static final String firstScene1 = "\n\nIt is October 27th. \n" +
+            "You wake up at your desk, groggy from an attack. You look around you. There are pink slips " +
+            "everywhere. \n" +
+            "Fires raging. Employees crying. \n" +
+            "Your memory clears, and you remember what happened. \n" +
+            "Elon Musk has acquired Twitter. Half of the Twitter workforce has been laid off. \n" +
+            "You are one of the survivors. \n" +
+            "You know what you must do. You must keep your job by providing code, but you must also stay employed \n" +
+            "by going out into the wasteland of the Twitter office to find food and supplies. You need to keep your \n" +
+            "employability up as much as your need to keep up your sanity and keep your hunger in check.\n" +
+            "Keep these systems in check. Generate enough code lines to take down the system and ultimately \n" +
+            "Elon Musk. \n" +
+            "Before you is your desk. On it, you find your work computer with 10 lines of code already generated \n" +
+            "and a book.";
+
+    //  Contains the second half of the first scene script.
+    private static final String firstScene2 =
+            "Your stomach growls ferociously. You search your bag but find nothing. You should probably generate \n" +
+            "some code lines on your laptop or take a trip to the break room first to buy some food to stave off \n" +
+                    "your hunger. \n";
+
+    //  Generic call for player action.
     private static final String playerRequest = "What do you do?";
 
-    private static final String playerCodes = "You log into the computer using your Twitter credentials, then open" +
-            "up an Development Environment. Your fingers start tapping away. \n" +
-            "You’ve gained " /*+ com.twitter.game.model.Player.getCodeLines() */ + "lines of code. \n" +
-            "You’ve lost 1 hunger. You have X hunger left. ";
+    private static final String playerCodes = "You log into the computer using your Twitter credentials, then open \n" +
+            "up an Development Environment. Your fingers start tapping away. \n";
 
-    private static final String playerPrograms = "The follow programs are available for building: \n" +
-            "\tMagic Keyboard (cost: 1000 lines of code) - Increases Attack in battle by +10 lines per code.  \n" +
-            "\tMagic mouse (cost: 500 lines of code) - Increases Attack in battle by +5 lines of code. \n" +
-            "\tDigital Assistant (cost: 10,000 lines of code) - auto generates code by +10 per action while you " +
-            "are away from your workstation. \n" +
-            "\n" +
-            "To “program” an item into your inventory, press the corresponding number or “q” to go back to " +
-            "your workstation.";
+    private static final String playerLevels = "The follow program are available for building: \n" +
+            //  TODO: This entire String needs to be overhauled
+            ANSI_BLUE + "\tBug Fix Suite" + ANSI_RESET + " (cost: 500 lines of code) " +
+            "- Promotes you to SDE II (level 2)\n" +
+            ANSI_BLUE + "\tTwo Factor Authentication System" + ANSI_RESET + " (cost: 1,000 lines of code) - " +
+            "Creating this will promote you to SDE III (Level 3)\n" +
+            ANSI_RED + "\t\t NOTE: Must have completed Bug Fix Suite to unlock ability to build this program \n" +
+            ANSI_RESET + ANSI_BLUE + "\tDigital Assistant" + ANSI_RESET + " (cost: 2,500 lines of code) - " +
+            "Creating this will promote you to SDE 4r (Level 4). \n" +
+            ANSI_RED + "\t\t NOTE: Must have completed Two Factor Authentication System to unlock \n" + ANSI_RESET +
+            ANSI_BLUE + "\tContent Moderation System" + ANSI_RESET + " (cost: 5,000 lines of code) - " +
+            "Creating this will promote you to SDE 5 (Level 5). \n" +
+            ANSI_RED + "\t\t NOTE: Must have completed Digital Assistant to unlock \n" + ANSI_RESET +
+            "Buy a  program to level up or “q” to go back to your workstation.";
 
     private static final String playerBuildsProgram = "The following program +" +
             /* Store.getMagicKeyboard() +*/
             "has been built. \n" +
             "You have lost " + /*com.twitter.game.model.Player.getHunger() +*/ "hunger. You have X hunger left.\n";
 
-    private static final String playerChoosesMore = "What would you like to know?";
-
     private static final String playerChecksStatus = "Status: \n" +
-            "\tEmployment: " + /*com.twitter.game.model.Player.getCurrentEmployment() + */ "/" + /*com.twitter.game.model.Player.getMaxEmployment() + */ "\n" +
+            "\tEmployment: " + /*com.twitter.game.model.Player.getCurrentEmployment() + */ "/" +
+            /*com.twitter.game.model.Player.getMaxEmployment() + */ "\n" +
             "\t\tDon't let this reach 0 or it's game over!\n" +
             "\n" +
-            "\tSanity: " + /*com.twitter.game.model.Player.getCurrentSanity() + */ "/" + /*com.twitter.game.model.Player.getMaxSanity() + */ "\n" +
+            "\tSanity: " + /*com.twitter.game.model.Player.getCurrentSanity() + */ "/" +
+            /*com.twitter.game.model.Player.getMaxSanity() + */ "\n" +
             "\t\tIf 0, Employment will start depleting instead!\n" +
             "\n" +
-            "\tHunger: " + /*com.twitter.game.model.Player.getCurrentHunger() + */ "/" + /*com.twitter.game.model.Player.getHunger() + */ "\n" +
+            "\tHunger: " + /*com.twitter.game.model.Player.getCurrentHunger() + */ "/" +
+            /*com.twitter.game.model.Player.getHunger() + */ "\n" +
             "\t\tIf 0, Sanity will start depleting instead!\n";
 
     private static final String playerChecksInventory = " Inventory: \n" +
@@ -76,7 +101,8 @@ public final class Script {
             "Jerky (cost: 650 lines of code) - refill hunger to 15\n" +
             "The purchased item will be added to your inventory. press the corresponding number or “q” to go back.";
 
-    private static final String playerInMeetingRoom = "This room looks like it belongs to a manager. \n" +
+    private static final String playerInCEORoom = "You peek inside. You see Elon Musk furiously typing away" +
+            "at his phone. Your palms are sweaty. Is it time to take him on? \n" +
             "(recommended codelines: " +  /*com.twitter.game.model.Enemy.bossRecommended() + */ "/current codelines: " +
             /*com.twitter.game.model.Player.getCodeLines() +*/ "\n";
 
@@ -87,13 +113,14 @@ public final class Script {
 
     private static final String playerSearchesDeskSuccessfully = "You stick your hand into the drawer of the desk." +
             "You feel something push back. \n" +
-            "You gained " + /*com.twitter.game.model.Player.gainFood() +*/ "foods, and " + /*com.twitter.game.model.Player.getCoffee() +*/ " coffee.";
+            "You gained " + /*com.twitter.game.model.Player.gainFood() +*/ "foods, and " +
+            /*com.twitter.game.model.Player.getCoffee() +*/ " coffee.";
 
     private static final String playerSearchesDeskCaught = "You feel a presence behind you as you try to search the " +
             "desk. \n" + "" +
             "The product Manager shows up! \n" +
             "“What ARE YOU DOING?!” \n" +
-            "Employability reduces to –5. ";
+            "You got reprimanded for your actions!";
 
     private static final String playerSearchesDeskEmpty = "You stick your hand into the drawer of the desk. \n" +
             "Your hands feel only the desk itself push back against your fingers as you crawl your hand deeper! \n" +
@@ -119,14 +146,32 @@ public final class Script {
                     "╱╱┃┃╰╮╭╮╭┫┃╰╮┃╰┫┃━┫┃╱┃╰━╯┃╰╯┃┃╰╮╭┫┣╮╭┫╭╮┃╰╮┃╰┻━┃╰╯┃┃╰╯┃┃━┫\n" +
                     "╱╱╰╯╱╰╯╰╯╰┻━╯╰━┻━━┻╯╱╰━━━┻━━┻╯╱╰╯╰╯╰╯╰╯╰┻━╯╰━━━┻━━┻┻━━┻━━╯\n" +
 
-            "Hi I don't know who is reading this but I was recently promoted to Principal Engineer by Elon Musk himself \n" +
+            "Hi I don't know who is reading this but I was recently promoted to Principal Engineer by " +
+                            "Elon Musk himself \n" +
              "In order to survive and thrive at Twitter I have a couple recommendations: \n" +
-                            "1. Before you travel anywhere in the office have at least 50 lines of code ready. The office is scattered with people who want to outperform/embarrass you \n" +
-                            "2. If you start feeling like your going insane, grab a cup of coffee. It has always helped me \n" +
+                            "1. Before you travel anywhere in the office have at least 50 lines of code ready. " +
+                            "The office is scattered with people who want to outperform/embarrass you \n" +
+                            "2. If you start feeling like your going insane, grab a cup of coffee. It has always " +
+                            "helped me \n" +
                             "3. Remember to get some food when your hungry. There is a break room for a reason"
 
             ;
 
+    public static final String youDefeatedTheFinalBoss =
+            "Elon Musk, exasperated from expended energy and struggling to stay on the one knee he is on, \n" +
+                    "looks up at you and says, “\"Don't think I have any intention of caressing your cheek \n" +
+                    "and saying I was wrong. I will not weep and wonder what might have been. \n" +
+                    "I'm sure you understand. \n" +
+                    "Still... I'm proud of you in a way. \n" +
+                    "You have shown great conviction. Strength. Courage. All mankind-shaping qualities.";
+
+    public static final String finalWordsOfElon = "\n\n...I should have fired you long ago.\"\n\n";
+
+    public static String postElon =
+            "And with those final last words, Elon Musk collapses - a symbolic stepping down of his reign.\n" +
+            "You walk towards his body and pick up his CEO badge. You place it upon your breast pocket. \n" +
+            "You are now the CEO of Twitter. With a sigh of relief, you look forward to try and salvage Twitter.\n";
+    //TODO: add either YOU WIN or THE END in ASCII.
 
     //access methods
     public static String getSurvivalGuide(){
@@ -150,8 +195,10 @@ public final class Script {
      *
      * @return firstScene
      */
-    public static String getFirstScene() {
-        return firstScene;
+    public static void getFirstScene(Player player) {
+        System.out.println(firstScene1);
+        System.out.println(ANSI_RED + "You have " + player.getCodeLines() + " lines of code.\n" + ANSI_RESET);
+        System.out.println(firstScene2);
     }
 
     /**
@@ -174,17 +221,14 @@ public final class Script {
      * Returns the script when the player decides they want to add 'code lines' to their inventory.
      * @return playerPrograms - returns a string that says that the player is programming.
      */
-    public static String getPlayerPrograms() {
-        return playerPrograms;
+    public static String getPlayerLevels() {
+        return playerLevels;
     }
 
     public static String getPlayerBuildsProgram() {
         return playerBuildsProgram;
     }
 
-    public static String getPlayerChoosesMore() {
-        return playerChoosesMore;
-    }
 
     public static String getPlayerChecksStatus() {
         return playerChecksStatus;
@@ -210,8 +254,8 @@ public final class Script {
         return playerAtVendingMachine;
     }
 
-    public static String getPlayerInMeetingRoom() {
-        return playerInMeetingRoom;
+    public static String getPlayerInCEORoom() {
+        return playerInCEORoom;
     }
 
     public static String getPlayerFindsAbandonedWorkstation() {
@@ -241,6 +285,16 @@ public final class Script {
     public static String getPlayerBrewsCoffee3x() {
         return playerBrewsCoffee3x;
     }
+
+    public static void getPostFinalBossDialogue() throws InterruptedException {
+        System.out.println(youDefeatedTheFinalBoss);
+        Thread.sleep(5000);
+        System.out.println(finalWordsOfElon);
+        Thread.sleep(3000);
+        System.out.println(postElon);
+    }
+
+
 
 
 
