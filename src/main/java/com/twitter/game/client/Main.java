@@ -1,6 +1,7 @@
 package com.twitter.game.client;
 
 import com.twitter.game.controller.Game;
+import com.twitter.game.model.Player;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -16,7 +17,8 @@ public class Main {
         logger.setLevel(Level.OFF);
         while (true) {
             //start game
-            Game game = new Game();
+            Player player = new Player(100, 100, 100);
+            Game game = new Game(player);
             game.gameIntro();
             game.commandInput();
             //new game logic
