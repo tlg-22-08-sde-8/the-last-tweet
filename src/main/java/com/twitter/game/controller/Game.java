@@ -239,7 +239,7 @@ public class Game {
         //display game over logo
         gameOver = true;
         stopMusic();
-        gameOverMusic();
+//        gameOverMusic();
         String gameOverLogo = "\n\n" + ANSI_RED +
                 "  ▄████  ▄▄▄       ███▄ ▄███▓▓█████     ▒█████   ██▒   █▓▓█████  ██▀███  \n" +
                 " ██▒ ▀█▒▒████▄    ▓██▒▀█▀ ██▒▓█   ▀    ▒██▒  ██▒▓██░   █▒▓█   ▀ ▓██ ▒ ██▒\n" +
@@ -269,7 +269,7 @@ public class Game {
                 System.out.println(gameOverLogoSubtitleEmp);
         }
         Thread.sleep(4000);
-        stopMusic();
+//        stopMusic();
     }
 
     /**
@@ -299,6 +299,7 @@ public class Game {
         if (!gameOver) {
             gameOver();
         }
+        stopMusic();
     }
 
     /**
