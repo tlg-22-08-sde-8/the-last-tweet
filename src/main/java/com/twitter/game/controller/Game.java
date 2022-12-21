@@ -56,6 +56,9 @@ public class Game {
         for (String s : gameItems) {
             inventory.put(s, 0);
         }
+
+        //player setup
+        Game.player = player;
         player.setInventory(inventory);
 
         //load in rooms
