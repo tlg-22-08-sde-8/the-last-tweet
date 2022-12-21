@@ -28,7 +28,7 @@ public class Game {
     private final String[] coffeeBarCommands = {"Brew Coffee","Go North", "Go East"};
     private final String[] emptyWorkstationCommands = {"Search Desk", "Go North", "Go West"};
     private final String[] CEOCommands = {"Negotiate Boss", "Go South", "Go East"};
-    private static Player player = new Player(25, 25, 25);
+    private static Player player = new Player(100, 100, 100);
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
     private final ArrayList<Enemy> bossArray;
@@ -36,6 +36,7 @@ public class Game {
     private boolean gameOver = false;
     private boolean playerWon = false;
     private int coffeeCount = 0;
+    private int codeMultipleTimes = 0;
     private String dataBaseUserName;
     private Music music;
 
@@ -475,6 +476,9 @@ public class Game {
                         if (player.getCodeLines() >= 500) {
                             player.setCodeLines(player.getCodeLines() - 500);
                             player.setLevel(2);
+                            player.setSanity(100 * player.getLevel());
+                            player.setHunger(100 * player.getLevel());
+                            player.setEmployability(100 * player.getLevel());
                             System.out.println(ANSI_RED + "you are now level 2" + ANSI_RESET);
                         } else {
                             System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
@@ -488,6 +492,9 @@ public class Game {
                         if (player.getCodeLines() >= 1000) {
                             player.setCodeLines(player.getCodeLines() - 1000);
                             player.setLevel(3);
+                            player.setSanity(100 * player.getLevel());
+                            player.setHunger(100 * player.getLevel());
+                            player.setEmployability(100 * player.getLevel());
                             System.out.println(ANSI_RED + "you are now level 3" + ANSI_RESET);
                         } else {
                             System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
@@ -501,6 +508,9 @@ public class Game {
                         if (player.getCodeLines() >= 2500) {
                             player.setCodeLines(player.getCodeLines() - 2500);
                             player.setLevel(4);
+                            player.setSanity(100 * player.getLevel());
+                            player.setHunger(100 * player.getLevel());
+                            player.setEmployability(100 * player.getLevel());
                             System.out.println(ANSI_RED + "you are now level 4" + ANSI_RESET);
                         } else {
                             System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
@@ -514,6 +524,9 @@ public class Game {
                         if (player.getCodeLines() >= 5000) {
                             player.setCodeLines(player.getCodeLines() - 5000);
                             player.setLevel(5);
+                            player.setSanity(100 * player.getLevel());
+                            player.setHunger(100 * player.getLevel());
+                            player.setEmployability(100 * player.getLevel());
                             System.out.println(ANSI_RED + "you are now level 5" + ANSI_RESET);
                         } else {
                             System.out.println(ANSI_RED + "you do not have enough code-lines" + ANSI_RESET);
@@ -565,7 +578,7 @@ public class Game {
                 determineBattle();
                 if (player.getSanity() > 0 && player.getHunger() > 0 && player.getEmployability() > 0) {
                     System.out.println(ANSI_RED + "You traveled " + direction + ANSI_RESET + "\n" + gameMap.get(go).getName() + "\n" + gameMap.get(go).getDescription());
-                    player.setHunger(player.getHunger() - 5);
+                    player.setHunger(player.getHunger() - 1);
                 }
                 coffeeCount = 0;
             } else {
@@ -841,9 +854,15 @@ public class Game {
      * adds one code-line to player inventory
      */
     public void code() {
-        System.out.println(Script.getPlayerCodes());
-        System.out.println(ANSI_RED + "you gained 1 code-line" + ANSI_RESET);
-        player.setCodeLines(player.getCodeLines() + 20);
+        int levelCodeLines = 10 * player.getLevel();
+        System.out.println(ANSI_RED + "you gained " + levelCodeLines + " code-lines" + ANSI_RESET);
+        player.setCodeLines(player.getCodeLines() + levelCodeLines);
+        player.setHunger(player.getHunger() - 1);
+        codeMultipleTimes++;
+        if (codeMultipleTimes == 3){
+            player.setSanity(player.getSanity() - 5);
+            codeMultipleTimes = 0;
+        }
     }
 
     /**
@@ -885,14 +904,14 @@ public class Game {
      */
     public void Inventory() throws IOException {
         System.out.println("ITEM:   QUANTITY");
-        System.out.println("code-lines:" + player.getCodeLines() + "\n");
+        System.out.println("code-lines: " + player.getCodeLines());
         for (String m : player.getInventory().keySet()) {
             System.out.printf("%s:   %d \n", m, player.getInventory().get(m));
         }
         for (String m : player.getInventory().keySet()) {
             System.out.printf("> use %s    ", m);
         }
-        System.out.print("> Exit \n");
+        System.out.print("> Quit \n");
         while (true) {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine().toLowerCase();
@@ -928,8 +947,18 @@ public class Game {
                     }
                     break;
                 }
+                if (command.equals("use coffee")) {
+                    if (player.getInventory().get("Coffee") >= 1) {
+                        System.out.println(ANSI_RED + "You used 1 coffee" + ANSI_RESET);
+                        player.setHunger(player.getHunger() + 5);
+                        player.getInventory().put("Coffee", player.getInventory().get("Coffee") - 1);
+                    } else {
+                        System.out.println("You don't have enough");
+                    }
+                    break;
+                }
             }
-            if (command.equals("exit")) {
+            if (command.equals("quit")) {
                 break;
             }
             System.out.println("Command not valid pick from the list of options");
@@ -986,27 +1015,12 @@ public class Game {
      * brew coffee in coffee room
      */
     public void brewCoffee() throws IOException {
-        player.getInventory().put("Coffee", player.getInventory().get("Coffee") + 1);
-        System.out.println(ANSI_RED + "you gained 1 coffee" + ANSI_RESET);
-        coffeeCount++;
-         while (true) {
-            System.out.println("What would you like to do? \n> Brew Again    > Quit \n>");
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String choice = br.readLine().toLowerCase();
-            if (choice.equals("brew again")){
-                if (coffeeCount < 3) {
-                    player.getInventory().put("Coffee", player.getInventory().get("Coffee") + 1);
-                    System.out.println(ANSI_RED + "you gained 1 coffee" + ANSI_RESET);
-                    coffeeCount++;
-                } else {
-                    System.out.println( ANSI_RED +"coffee machine needs to cool down" + ANSI_RESET);
-                }
-                continue;
-            }
-            if (choice.equals("quit")){
-                break;
-            }
-            System.out.println("Command not valid pick from the list of options");
+        if (coffeeCount < 3){
+            player.getInventory().put("Coffee", player.getInventory().get("Coffee") + 1);
+            System.out.println(ANSI_RED + "you gained 1 coffee" + ANSI_RESET);
+            coffeeCount++;
+        } else {
+            System.out.println( ANSI_RED +"coffee machine needs to cool down" + ANSI_RESET);
         }
     }
 
