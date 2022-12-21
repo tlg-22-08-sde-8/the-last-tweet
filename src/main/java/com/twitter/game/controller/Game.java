@@ -26,9 +26,10 @@ public class Game {
     private final String[] workstationCommands = {"Code", "Level Up", "Read Book", "Go North", "Go East", "Go West"};
     private final String[] breakRoomCommands = {"Access Vending Machine", "Go South", "Go West", "Go East"};
     private final String[] coffeeBarCommands = {"Brew Coffee","Go North", "Go East"};
-    private final String[] emptyWorkstationCommands = {"Search Desk", "Go North", "Go West"};
+    private final String[] emptyWorkstation1Commands = {"Search Desk", "Go North", "Go East"};
+    private final String[] emptyWorkstation2Commands = {"Search Desk", "Go North", "Go West"};
     private final String[] CEOCommands = {"Negotiate Boss", "Go South", "Go East"};
-    private static Player player = new Player(100, 100, 100);
+    private static Player player;
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
     private final ArrayList<Enemy> bossArray;
@@ -40,7 +41,7 @@ public class Game {
     private String dataBaseUserName;
     private Music music;
 
-    public Game() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+    public Game(Player player) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
         //start background music
         backgroundMusic();
 
@@ -328,10 +329,10 @@ public class Game {
             commands = CEOCommands;
         }
         if (currentRoom.equals("Empty Workstation-1")) {
-            commands = emptyWorkstationCommands;
+            commands = emptyWorkstation1Commands;
         }
         if (currentRoom.equals("Empty Workstation-2")) {
-            commands = emptyWorkstationCommands;
+            commands = emptyWorkstation2Commands;
         }
         return commands;
     }
@@ -438,7 +439,7 @@ public class Game {
                 }
                 break;
             case "set":
-                if (command.equals("set background music volume")){
+                if (command.equals("set music volume")){
                     setBackgroundVolume();
                 } else if (command.equals("set battle music volume")){
                     setBattleVolume();
@@ -619,7 +620,7 @@ public class Game {
         System.out.println(ANSI_RED + "You are starting a battle" + ANSI_RESET);
         while (true) {
             //determine if player wants to battle
-            System.out.println("What would you like to do \n > Attack > Runaway");
+            System.out.println("What would you like to do \n> Attack > Runaway");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String command = br.readLine().toLowerCase();
             if (command.equals("runaway")) {
@@ -652,7 +653,7 @@ public class Game {
         Random rand2 = new Random();
         String randomItem = items.get(rand2.nextInt(items.size()));
         player.getInventory().put(randomItem, player.getInventory().get(randomItem) + 1);
-        System.out.println(ANSI_RED + "Congratulation you gained one " + randomItem + ANSI_RESET);
+        System.out.println(ANSI_RED + "you gained one " + randomItem + ANSI_RESET);
     }
 
     /**
@@ -893,7 +894,7 @@ public class Game {
                         "|Load Game                      | load                       | \n" +
                         "|Stop Music                     | stop music                 | \n" +
                         "|Start Music                    | start music                | \n" +
-                        "|Change Background Music Volume | set background music volume| \n" +
+                        "|Change Background Music Volume | set music volume           | \n" +
                         "|Change Battle Music Volume     | set battle music volume    | \n"
         );
     }
@@ -950,7 +951,7 @@ public class Game {
                 if (command.equals("use coffee")) {
                     if (player.getInventory().get("Coffee") >= 1) {
                         System.out.println(ANSI_RED + "You used 1 coffee" + ANSI_RESET);
-                        player.setHunger(player.getHunger() + 5);
+                        player.setSanity(player.getSanity() + 5);
                         player.getInventory().put("Coffee", player.getInventory().get("Coffee") - 1);
                     } else {
                         System.out.println("You don't have enough");
@@ -975,9 +976,9 @@ public class Game {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String choice = br.readLine().toLowerCase();
             if ("buy jerky".equals(choice)) {
-                if (player.getCodeLines() >= 650) {
+                if (player.getCodeLines() >= 65) {
                     player.getInventory().put("Jerky", player.getInventory().get("Jerky") + 1);
-                    player.setCodeLines(player.getCodeLines() - 650);
+                    player.setCodeLines(player.getCodeLines() - 65);
                     System.out.println(ANSI_RED + "You gained 1 jerky" + ANSI_RESET);
                 } else {
                     System.out.println("you do not have enough code-lines");
@@ -985,9 +986,9 @@ public class Game {
                 continue;
             }
             if ("buy chips".equals(choice)) {
-                if (player.getCodeLines() >= 500) {
+                if (player.getCodeLines() >= 50) {
                     player.getInventory().put("Chips", player.getInventory().get("Chips") + 1);
-                    player.setCodeLines(player.getCodeLines() - 500);
+                    player.setCodeLines(player.getCodeLines() - 50);
                     System.out.println(ANSI_RED + "You gained 1 Chip" + ANSI_RESET);
                 } else {
                     System.out.println("you do not have enough code-lines");
@@ -995,9 +996,9 @@ public class Game {
                 continue;
             }
             if ("buy candy bar".equals(choice)) {
-                if (player.getCodeLines() >= 200) {
+                if (player.getCodeLines() >= 20) {
                     player.getInventory().put("Candy Bar", player.getInventory().get("Candy Bar") + 1);
-                    player.setCodeLines(player.getCodeLines() - 200);
+                    player.setCodeLines(player.getCodeLines() - 20);
                     System.out.println(ANSI_RED + "You gained 1 Candy Bar" + ANSI_RESET);
                 } else {
                     System.out.println("you do not have enough code-lines");
@@ -1028,9 +1029,10 @@ public class Game {
         Random rand = new Random();
         int successfulSearch = rand.nextInt(10);
         if (successfulSearch >= 7){
+            System.out.println(Script.getPlayerSearchesDeskSuccessfully());
             randomReward();
         } else {
-            System.out.println(ANSI_RED + "You tried to search and desk and were caught" + ANSI_RESET);
+            System.out.println(Script.getPlayerSearchesDeskCaught());
             player.setEmployability(player.getEmployability() - 20);
             System.out.println(ANSI_RED + "You lost 20 Employability" + ANSI_RESET);
         }
