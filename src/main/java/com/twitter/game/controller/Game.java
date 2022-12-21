@@ -203,7 +203,7 @@ public class Game {
         Thread.sleep(7000);
         System.out.print("\033[H\033[2J");
         System.out.flush();
-        System.out.println(Script.getFirstScene());
+        Script.getFirstScene(player);
         System.out.println(Script.getPlayerRequest());
     }
 
@@ -577,6 +577,10 @@ public class Game {
     public void bossFightInit() throws UnsupportedAudioFileException, LineUnavailableException, IOException, InterruptedException {
         stopMusic();
         finalBossMusic();
+        System.out.println("\n\n\t\t\t\t\t\t\t\t\t\tELON MUSK STANDS BEFORE YOU IN ALL HIS GRANDEUR.\n\n");
+        Thread.sleep(5000);
+        System.out.println("\t\t\t\t\t\t\t\t\t\t\tTHERE'S NO TURNING BACK NOW. THIS IS IT.\n\n\n");
+        Thread.sleep(6000);
         fight(bossArray.get(0));
     }
 
@@ -837,6 +841,7 @@ public class Game {
      * adds one code-line to player inventory
      */
     public void code() {
+        System.out.println(Script.getPlayerCodes());
         System.out.println(ANSI_RED + "you gained 1 code-line" + ANSI_RESET);
         player.setCodeLines(player.getCodeLines() + 20);
     }
