@@ -299,7 +299,6 @@ public class Game {
         if (!gameOver) {
             gameOver();
         }
-        stopMusic();
     }
 
     /**

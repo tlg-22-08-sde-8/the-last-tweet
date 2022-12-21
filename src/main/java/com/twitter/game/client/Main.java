@@ -17,12 +17,12 @@ public class Main {
         Logger logger = Logger.getLogger("org.mongodb.driver");
         logger.setLevel(Level.OFF);
         while (true){
-                //start game
-                Player player = new Player(100, 100, 100);
-                Game game = new Game(player);
-    //            game.gameIntro();
-                game.commandInput();
-                //new game logic
+            //start game
+            Player player = new Player(100, 100, 100);
+            Game game = new Game(player);
+    //      game.gameIntro();
+            game.commandInput();
+            //new game logic
             System.out.println("want to play again? (enter 'yes' for new game)");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String newGame = br.readLine().toLowerCase();
