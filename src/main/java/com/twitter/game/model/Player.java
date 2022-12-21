@@ -11,7 +11,7 @@ public class Player {
     private int employability;
     private int sanity;
     private int score;
-    private int codeLines = 0;
+    private static int codeLines = 50;
     private int level;
 
     private Map<String, Integer> inventory;
@@ -42,7 +42,7 @@ public class Player {
         this.inventory = inventory;
     }
 
-    public int getCodeLines() {
+    public static int getCodeLines() {
         return codeLines;
     }
 

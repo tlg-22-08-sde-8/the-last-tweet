@@ -201,7 +201,7 @@ public class Game {
         Thread.sleep(7000);
         System.out.print("\033[H\033[2J");
         System.out.flush();
-        System.out.println(Script.getFirstScene());
+        Script.getFirstScene(player);
         System.out.println(Script.getPlayerRequest());
     }
 
@@ -733,6 +733,7 @@ public class Game {
      * adds one code-line to player inventory
      */
     public void code() {
+        System.out.println(Script.getPlayerCodes());
         System.out.println(ANSI_RED + "you gained 1 code-line" + ANSI_RESET);
         player.setCodeLines(player.getCodeLines() + 1);
     }

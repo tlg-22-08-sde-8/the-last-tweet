@@ -2,37 +2,44 @@ package com.twitter.game.model;
 
 public final class Script {
 
+    private static final String ANSI_RED = "\u001B[31m";
+    private static final String ANSI_RESET = "\u001B[0m";
+
 
     // Contains the basic information script about the game
-    private static final String basicInfo = "A Text-Based Parody Survival Horror Adventure about the Great " +
-            "Twitter Purge of 2022! You navigate and interact with the game by typing in the commands to the " +
+    private static final String basicInfo = "A Text-Based Parody Survival Horror Adventure about the Great \n" +
+            "Twitter Purge of 2022! You navigate and interact with the game by typing in the commands to the \n" +
             "console below." +
             "Type 'help' for a list of commands. \n" +
             "Co-Developed by: Brenden King, Patrick Lauer, and Mohamed Omar \n" +
             "Version: 0.0.1";
-    private static final String firstScene = "\n\nIt is October 27th. \n" +
+
+    //  Contains the first half of the first scene script.
+    private static final String firstScene1 = "\n\nIt is October 27th. \n" +
             "You wake up at your desk, groggy from an attack. You look around you. There are pink slips everywhere. " +
             "Fires raging. Employees crying. \n" +
             "Your memory clears, and you remember what happened. \n" +
             "Elon Musk has acquired Twitter. Half of the Twitter workforce has been laid off. \n" +
             "You are one of the survivors. \n" +
-            "You know what you must do. You must keep your job by providing code, but you must also stay employed " +
-            "by going out into the wasteland of the Twitter office to find food and supplies. You need to keep your" +
+            "You know what you must do. You must keep your job by providing code, but you must also stay employed \n" +
+            "by going out into the wasteland of the Twitter office to find food and supplies. You need to keep your \n" +
             "employability up as much as your need to keep up your sanity and keep your hunger in check.\n" +
-            "Keep these systems in check. Generate enough code lines to take down the system and ultimately " +
+            "Keep these systems in check. Generate enough code lines to take down the system and ultimately \n" +
             "Elon Musk. \n" +
-            "Before you is your desk. On it, you find your work computer with 10 lines of code already generated" +
-            "and a book. \n" +
-            "Your code line inventory increased by 10. \n" +
-            "Your stomach growls ferociously. You search your bag but find nothing. You should probably generate some" +
-            "code lines then take a trip to the break room first to buy some food to stave off your hunger. \n";
+            "Before you is your desk. On it, you find your work computer with 10 lines of code already generated \n" +
+            "and a book. \n";
 
+    //  Contains the second half of the first scene script.
+    private static final String firstScene2 =
+            "Your stomach growls ferociously. You search your bag but find nothing. You should probably generate \n" +
+            "some code lines on your laptop or take a trip to the break room first to buy some food to stave off \n" +
+                    "your hunger. \n";
+
+    //  Generic call for player action.
     private static final String playerRequest = "What do you do?";
 
-    private static final String playerCodes = "You log into the computer using your Twitter credentials, then open" +
-            "up an Development Environment. Your fingers start tapping away. \n" +
-            "You’ve gained " /*+ com.twitter.game.model.Player.getCodeLines() */ + "lines of code. \n" +
-            "You’ve lost 1 hunger. You have X hunger left. ";
+    private static final String playerCodes = "You log into the computer using your Twitter credentials, then open \n" +
+            "up an Development Environment. Your fingers start tapping away. \n";
 
     private static final String playerPrograms = "The follow program are available for building: \n" +
             //  TODO: This entire String needs to be overhauled
@@ -191,8 +198,10 @@ public final class Script {
      *
      * @return firstScene
      */
-    public static String getFirstScene() {
-        return firstScene;
+    public static void getFirstScene(Player player) {
+        System.out.println(firstScene1);
+        System.out.println(ANSI_RED + "You have " + player.getCodeLines() + " lines of code.");
+        System.out.println(firstScene2);
     }
 
     /**
@@ -290,6 +299,8 @@ public final class Script {
         Thread.sleep(3000);
         System.out.println(postElon);
     }
+
+
 
 
 
