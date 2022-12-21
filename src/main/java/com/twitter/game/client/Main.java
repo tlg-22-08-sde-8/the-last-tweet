@@ -20,7 +20,7 @@ public class Main {
             //start game
             Player player = new Player(100, 100, 100);
             Game game = new Game(player);
-    //      game.gameIntro();
+            game.gameIntro();
             game.commandInput();
             //new game logic
             System.out.println("want to play again? (enter 'yes' for new game)");
