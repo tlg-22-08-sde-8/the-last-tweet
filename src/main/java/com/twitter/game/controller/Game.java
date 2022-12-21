@@ -28,7 +28,7 @@ public class Game {
     private final String[] coffeeBarCommands = {"Brew Coffee","Go North", "Go East"};
     private final String[] emptyWorkstationCommands = {"Search Desk", "Go North", "Go West"};
     private final String[] CEOCommands = {"Negotiate Boss", "Go South", "Go East"};
-    private static Player player = new Player(50, 50, 50);
+    private static Player player = new Player(100, 100, 100);
     private final List<Room> gameMap;
     private final ArrayList<Enemy> enemyArray;
     private final ArrayList<Enemy> bossArray;
